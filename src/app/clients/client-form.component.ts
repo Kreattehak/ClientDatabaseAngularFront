@@ -11,14 +11,14 @@ import {Validation} from '../shared/validation';
 })
 export class ClientFormComponent implements OnInit {
 
-  private activeClient: Client;
-  private isNewClient: boolean;
-  private shouldRedirectToAddressForm: boolean;
+  public activeClient: Client;
+  public isNewClient: boolean;
+  public shouldRedirectToAddressForm: boolean;
 
-  private clientForm: FormGroup;
-  private submitted: boolean;
+  public clientForm: FormGroup;
+  public submitted: boolean;
 
-  private formErrors = {
+  public formErrors = {
     'firstName': '',
     'lastName': ''
   };

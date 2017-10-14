@@ -12,10 +12,10 @@ declare var bootbox: any;
 export class ClientListComponent implements OnInit {
 
   private clients: Client[];
-  private filteredClients: Client[];
-  private activeClient: Client;
+  public filteredClients: Client[];
+  public activeClient: Client;
   private _filter: string;
-  private errorMessage = 'Please wait while data is being resolved.';
+  public errorMessage = 'Please wait while data is being resolved.';
 
   constructor(private _clientService: ClientService, private _router: Router,
               private _route: ActivatedRoute, private _toastr: ToastsManager,

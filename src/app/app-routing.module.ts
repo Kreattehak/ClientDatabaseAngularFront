@@ -10,8 +10,7 @@ import {AddressDetailResolver} from './addresses/address-detail-resolver.service
 import {ClientDetailResolver} from './clients/client-detail-resolver.service';
 import {AddressDetailComponent} from './addresses/address-detail.component';
 import {CanActivateAuthGuard} from './login/can-activate-authguard';
-import {LoginComponent} from 'app/login/login.component';
-import {ClientListResolver} from './clients/client-list-resolver';
+import {LoginComponent} from './login/login.component';
 
 @NgModule({
   imports: [

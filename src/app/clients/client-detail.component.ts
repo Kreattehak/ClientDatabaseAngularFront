@@ -13,9 +13,9 @@ declare var bootbox: any;
 })
 export class ClientDetailComponent implements OnInit {
 
-  private client: Client;
-  private addresses: Address[];
-  private activeAddress: Address;
+  public client: Client;
+  public addresses: Address[];
+  public activeAddress: Address;
 
   constructor(private _clientService: ClientService, private _addressService: AddressService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,

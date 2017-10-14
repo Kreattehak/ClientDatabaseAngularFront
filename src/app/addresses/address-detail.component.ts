@@ -13,15 +13,15 @@ import {Validation} from '../shared/validation';
 })
 export class AddressDetailComponent implements OnInit {
 
-  private activeAddress: Address;
-  private activeClient: Client;
+  public activeAddress: Address;
+  public activeClient: Client;
   private clientId: number;
-  private isNewAddress: boolean;
+  public isNewAddress: boolean;
 
-  private addressForm: FormGroup;
-  private submitted: boolean;
+  public addressForm: FormGroup;
+  public submitted: boolean;
 
-  private formErrors = {
+  public formErrors = {
     'cityName': '',
     'streetName': '',
     'zipCode': ''

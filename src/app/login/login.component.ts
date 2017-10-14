@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Validation} from 'app/shared/validation';
+import {Validation} from '../shared/validation';
 import {AuthenticationService} from './authentication.service';
 import {ToastsManager} from 'ng2-toastr';
 
@@ -13,8 +13,8 @@ declare var bootbox: any;
 })
 export class LoginComponent implements OnInit {
 
-  private userForm: FormGroup;
-  private formErrors = {
+  public userForm: FormGroup;
+  public formErrors = {
     'username': '',
     'password': '',
   };
