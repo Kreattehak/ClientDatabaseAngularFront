@@ -1,0 +1,39 @@
+<div class="container">
+  <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">
+    <fieldset>
+
+      <legend> Please login to use this application</legend>
+
+      <div class="form-group">
+        <label class="control-label col-lg-2" for="username">Username</label>
+        <div class="col-lg-5">
+          <input class="form-control" id="username" type="text" placeholder="Username"
+                 formControlName="username" required/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-md-2 control-label" for="password">Password</label>
+        <div class="col-lg-5">
+          <input class="form-control" id="password" type="password"
+                 placeholder="Password" formControlName="password"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-2">
+          <button type="submit" class="btn btn-success">Log in</button>
+        </div>
+      </div>
+
+    </fieldset>
+  </form>
+
+  <div *ngIf="formErrors.username || formErrors.password" class="alert alert-danger">
+    <p>{{ formErrors.username }}</p>
+    <p>{{ formErrors.password }}</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+
+</div>

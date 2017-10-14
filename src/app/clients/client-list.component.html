@@ -1,0 +1,53 @@
+<div class="container" *ngIf="filteredClients && filteredClients.length !== 0; else emptyTable">
+  <table class="table" id="clientsTable">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Date of registration</th>
+      <th>City</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor='let client of filteredClients' (click)="markAsActive(client)" [class.success]="client === activeClient">
+      <th scope="row">{{ client.id }}</th>
+      <td>{{ client.firstName }}</td>
+      <td>{{ client.lastName }}</td>
+      <td>{{ client.dateOfRegistration | date:'dd.MM.y' }}</td>
+      <td>{{ client.mainAddress?.cityName}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="form-group">
+      <div class="col-lg-4">
+        <button type="button" id="bInfo" class="btn btn-success" (click)="onInfo()">
+          Client Details
+        </button>
+        <button type="button" id="bEditClient" class="btn btn-info" (click)="onEditClient()">
+          Edit Client
+        </button>
+        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemove()">
+          Remove
+        </button>
+      </div>
+      <div class="col-xs-2 col-md-2 pull-right">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Filter clients" [(ngModel)]='filter'/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyTable>
+  <div class="container">
+    <div class="jumbotron">
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+</ng-template>

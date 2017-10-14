@@ -1,1 +1,163 @@
 /* You can add global styles to this file, and also import other style files */
+
+html {
+  height: 100%;
+}
+
+body {
+  padding-top: 70px;
+}
+
+.jumbotron {
+  color: #2c3e50;
+  background: #ecf0f1;
+  padding: 20px 30px;
+}
+
+.navbar-inverse {
+  background-color: #2c3e50;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: white;
+}
+
+.navbar-inverse .navbar-brand {
+  color: white;
+}
+
+.language-polish {
+  color: red;
+}
+
+#content {
+  text-align: center;
+  padding-top: 10%;
+  text-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4),
+  0px 8px 14px rgba(0, 0, 0, 0.1),
+  0px 18px 23px rgba(0, 0, 0, 0.1);
+  /*xoffset, yoffset, radius, color*/
+}
+
+hr {
+  width: 400px;
+  border-top: 1px solid #f8f8f8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 5em;
+}
+
+.alert-warning {
+  font-size: 20px;
+}
+
+.thumbnail {
+  padding: 10px 0;
+  margin: 10px 0;
+}
+
+.stylish-input-group .input-group-addon {
+  background: white !important;
+}
+
+.stylish-input-group .form-control {
+  border-right: 0;
+  box-shadow: 0 0 0;
+  border-color: #ccc;
+}
+
+.stylish-input-group button {
+  border: 0;
+  background: transparent;
+}
+table td {
+  cursor: pointer
+}
+
+table th {
+  padding: 20px;
+  background-color: #D7D7D7;
+  position: relative;
+  cursor: pointer;
+}
+
+table th:after {
+  content: "";
+  display: none;
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+
+  position: absolute;
+  top: 50%;
+  right: 20px;
+}
+
+table th.asc:after {
+  display: block;
+  border-style: solid;
+  border-width: 0 5px 10px 5px;
+  border-color: transparent transparent #FFFFFF transparent;
+}
+
+table th.desc:after {
+  display: block;
+  border-style: solid;
+  border-width: 10px 5px 0 5px;
+  border-color: #FFFFFF transparent transparent transparent;
+}
+
+ul.errors {
+  width: 600px;
+  padding: 20px;
+  margin: 0 auto 30px auto;
+  background-color: #FFD4DE;
+}
+
+ul.errors li {
+  list-style: none;
+  line-height: 30px;
+  color: #F70053;
+}
+
+div.address {
+  padding-top: 30px;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
