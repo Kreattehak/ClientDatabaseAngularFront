@@ -130,6 +130,9 @@ export class ClientListComponent implements OnInit {
     // this.filteredClients = this.clients;
     this._clientService.getAllClients().subscribe(
       clients => {
+        if (clients.length === 0) {
+          this.errorMessage = 'Server returned empty array, there are no users in database!';
+        }
         this.clients = clients;
         this.filteredClients = this.clients;
       }, error => {

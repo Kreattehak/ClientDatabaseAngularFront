@@ -66,9 +66,13 @@ export class ClientFormComponent implements OnInit {
     if (this.isNewClient) {
       console.log(this.activeClient);
       this._clientService.saveNewClient(this.activeClient).subscribe(
-        response => this.processSaveNewClient(response),
-        error => this._toastr.error('Client wasn\'t added.', 'Error!'));
-      this._toastr.success('Client was successfully added.', 'Success!');
+        response => {
+          if (this.shouldRedirectToAddressForm) {
+            this._router.navigate(['/clients', response, 'newAddress']);
+          } else {
+            this._toastr.success('Client was successfully added.', 'Success!');
+          }
+        }, error => this._toastr.error('Client wasn\'t added.', 'Error!'));
     } else {
       this.activeClient.id = id;
       console.log(this.activeClient);
@@ -78,12 +82,6 @@ export class ClientFormComponent implements OnInit {
       // setTimeout(this._router.navigate(['/clients']), 10000);
     }
 
-  }
-
-  private processSaveNewClient(response: number): void {
-    if (this.shouldRedirectToAddressForm) {
-      this._router.navigate(['/clients', response, 'newAddress']);
-    }
   }
 
   private goBack(): void {
