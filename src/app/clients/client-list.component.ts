@@ -68,7 +68,7 @@ export class ClientListComponent implements OnInit {
     if (!this.isFieldSelected()) {
       return false;
     } else {
-      this._router.navigate(['/clients', 'details', this.activeClient.id]);
+      this._router.navigate(['/clients', this.activeClient.id], 'details');
       return true;
     }
   }

@@ -90,7 +90,7 @@ export class AddressDetailComponent implements OnInit {
   }
 
   private onBack(): void {
-    this._router.navigate(['/clients/details', this.clientId]);
+    this._router.navigate(['/clients', this.clientId, 'details']);
   }
 
   private onValueChanged(data ?: any) {

@@ -19,7 +19,7 @@ import {LoginComponent} from './login/login.component';
       {path: 'clients', component: ClientListComponent},
       {path: 'clients/new', component: ClientFormComponent, canActivate: [CanActivateAuthGuard]},
       {
-        path: 'clients/details/:id', // zmiana kolejnosci
+        path: 'clients/:id/details',
         component: ClientDetailComponent,
         resolve: {
           client: ClientDetailResolver,

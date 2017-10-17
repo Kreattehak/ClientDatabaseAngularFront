@@ -99,7 +99,7 @@ export class ClientDetailComponent implements OnInit {
               this._toastr.success(response, 'Success!');
               this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
               this.activeAddress = null;
-              this._router.navigate(['/clients/details', this.client.id]);
+              this._router.navigate(['/clients', this.client.id, 'details']);
             }, error => this._toastr.error(error, 'Error!'));
           return true;
         } else {
