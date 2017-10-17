@@ -54,7 +54,7 @@ export class ClientFormComponent implements OnInit {
     this.onValueChanged(); // (re)set validation messages now
   }
 
-  private onSubmit(id: number): void {
+  onSubmit(id: number): void {
     if (this.activeClient === this.clientForm.value) {
       this._toastr.error('Client already exists', 'Error!');
       return;
@@ -84,7 +84,7 @@ export class ClientFormComponent implements OnInit {
 
   }
 
-  private goBack(): void {
+  goBack(): void {
     this._router.navigate(['/clients']);
   }
 

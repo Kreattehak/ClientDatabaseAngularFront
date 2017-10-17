@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
 
   constructor(private _router: Router, public _authenticationService: AuthenticationService) { }
 
-  private showAboutAuthor(): void {
+  showAboutAuthor(): void {
     if (!this.isAboutAuthorDisplayed) {
       this._router.navigate([{ outlets: { messages: ['aboutUs'] } }]);
       this.isAboutAuthorDisplayed = !this.isAboutAuthorDisplayed;
