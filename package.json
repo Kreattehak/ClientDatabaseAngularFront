@@ -5,6 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy-conf.json",
+    "startpl": "ng serve --proxy-config proxy-conf.json --aot --locale pl --i18n-format xlf --i18n-file src/locale/messages.pl.xlf",
+    "starten": "ng serve --proxy-config proxy-conf.json --aot --locale en --i18n-format xlf --i18n-file src/locale/messages.en.xlf",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
