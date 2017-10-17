@@ -3,10 +3,10 @@
     <thead>
     <tr>
       <th>#</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Date of registration</th>
-      <th>City</th>
+      <th i18n="clientList.firstName">First Name</th>
+      <th i18n="clientList.lastName">Last Name</th>
+      <th i18n="clientList.dateOfRegistration">Date of registration</th>
+      <th i18n="clientList.city">City</th>
     </tr>
     </thead>
     <tbody>
@@ -20,30 +20,30 @@
     </tbody>
   </table>
 </div>
-<h1 i18n="header">some</h1>
+<h1></h1>
 <div class="container">
   <div class="row">
     <div class="form-group">
       <div class="col-lg-4">
-        <button type="button" id="bInfo" class="btn btn-success" (click)="onInfo()">
+        <button type="button" id="bInfo" class="btn btn-success" (click)="onInfo()" i18n="clientList.button.clientDetails">
           Client Details
         </button>
-        <button type="button" id="bEditClient" class="btn btn-info" (click)="onEditClient()">
+        <button type="button" id="bEditClient" class="btn btn-info" (click)="onEditClient()" i18n="clientList.button.editClient">
           Edit Client
         </button>
-        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemove()">
+        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemove()" i18n="clientList.button.remove">
           Remove
         </button>
       </div>
       <div class="col-xs-2 col-md-2 pull-right">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Filter clients" [(ngModel)]='filter'/>
+          <input type="text" class="form-control" placeholder="Filter clients" i18n-placeholder="clientList.filterPlaceholder" [(ngModel)]='filter'/>
         </div>
       </div>
     </div>
   </div>
 </div>
-<h1 i18n="anotherHeader">another</h1>
+<h1></h1>
 <ng-template #emptyTable>
   <div class="container">
     <div class="jumbotron">
