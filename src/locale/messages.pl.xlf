@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="clientList.firstName" datatype="html">
+        <source>First Name</source>
+        <target>Imię</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.lastName" datatype="html">
+        <source>Last Name</source>
+        <target>Nazwisko</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.dateOfRegistration" datatype="html">
+        <source>Date of registration</source>
+        <target>Data rejestracji</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.city" datatype="html">
+        <source>City</source>
+        <target>Miasto</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.button.clientDetails" datatype="html">
+        <source>Client Details</source>
+        <target>Detale klienta</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.button.editClient" datatype="html">
+        <source>Edit Client</source>
+        <target>Edytuj klienta</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.button.remove" datatype="html">
+        <source>Remove</source>
+        <target>Usuń</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="clientList.filterPlaceholder" datatype="html">
+        <source>Filter clients</source>
+        <target>Filtruj klientów</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app\clients\client-list.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
