@@ -13,19 +13,19 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-nav-hide">
       <ul class="nav navbar-nav">
-        <li><a (click)="showAboutAuthor()" [ngStyle]="{'cursor':'pointer'}">About Author</a></li>
+        <li><a (click)="showAboutAuthor()" [ngStyle]="{'cursor':'pointer'}" i18n="@@navbar.aboutAuthor">About Author</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="?language=en">ENG</a></li>
         <li><a href="?language=pl">P<span class="language-polish">L</span></a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-             aria-expanded="false">Admin Panel <span class="caret"></span></a>
+             aria-expanded="false" i18n="@@navbar.adminPanel">Admin Panel <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a [routerLink]="['/clients/new']">Add Client</a>
+            <li><a [routerLink]="['/clients/new']" i18n="@@navbar.addClient">Add Client</a>
             </li>
             <li role="separator" class="divider"></li>
-            <li><a [routerLink]="['/login']">Logout</a>
+            <li><a [routerLink]="['/login']" i18n="@@navbar.logout">Logout</a>
             </li>
           </ul>
         </li>

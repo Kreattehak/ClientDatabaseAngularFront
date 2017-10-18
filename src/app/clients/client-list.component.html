@@ -3,8 +3,8 @@
     <thead>
     <tr>
       <th>#</th>
-      <th i18n="@@clientList.firstName">First Name</th>
-      <th i18n="@@clientList.lastName">Last Name</th>
+      <th i18n="@@clientForm.firstName">First Name</th>
+      <th i18n="@@clientForm.lastName">Last Name</th>
       <th i18n="@@clientList.dateOfRegistration">Date of registration</th>
       <th i18n="@@clientList.city">City</th>
     </tr>
@@ -25,15 +25,9 @@
   <div class="row">
     <div class="form-group">
       <div class="col-lg-4">
-        <button type="button" id="bInfo" class="btn btn-success" (click)="onInfo()" i18n="@@clientList.button.clientDetails">
-          Client Details
-        </button>
-        <button type="button" id="bEditClient" class="btn btn-info" (click)="onEditClient()" i18n="@@clientList.button.editClient">
-          Edit Client
-        </button>
-        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemove()" i18n="@@clientList.button.remove">
-          Remove
-        </button>
+        <button type="button" id="bInfo" class="btn btn-success" (click)="onInfo()" i18n="@@clientDetailsButton">Client Details</button>
+        <button type="button" id="bEditClient" class="btn btn-info" (click)="onEditClient()" i18n="@@editClientButton">Edit Client</button>
+        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemove()" i18n="@@removeButton">Remove</button>
       </div>
       <div class="col-xs-2 col-md-2 pull-right">
         <div class="input-group">

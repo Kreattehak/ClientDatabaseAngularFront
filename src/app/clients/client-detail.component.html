@@ -1,17 +1,17 @@
 <div class="container" *ngIf="addresses.length; else clientWithoutAddress">
   <div class="jumbotron">
     <h2>{{client.firstName + ' ' + client.lastName}}</h2>
-    <p>Date of registration: {{client.dateOfRegistration | date:'dd.MM.y'}}</p>
-    <p>Main address: {{client.mainAddress.cityName + ', ' + client.mainAddress.streetName + ', '
+    <p i18n="@@clientDetail.dateOfRegistrationParagraph">Date of registration: {{client.dateOfRegistration | date:'dd.MM.y'}}</p>
+    <p i18n="@@clientDetail.mainAddressParagraph">Main address: {{client.mainAddress.cityName + ', ' + client.mainAddress.streetName + ', '
       + client.mainAddress.zipCode}}</p>
   </div>
   <table class="table" id="clientDetails">
     <thead>
     <tr>
       <th>#</th>
-      <th>City Name</th>
-      <th>Street Name</th>
-      <th>Zip Code</th>
+      <th i18n="@@addressForm.cityName">City Name</th>
+      <th i18n="@@addressForm.streetName">Street Name</th>
+      <th i18n="@@addressForm.zipCode">Zip Code</th>
     </tr>
     </thead>
     <tbody>
@@ -29,21 +29,11 @@
   <div class="row">
     <div class="form-group">
       <div class="col-lg-10">
-        <button type="button" id="bAddAddress" class="btn btn-info" (click)="onAddAddress()">
-          Add Address
-        </button>
-        <button type="button" id="bEditAddresses" class="btn btn-info" (click)="onEditAddresses()">
-          Edit Client's Addresses
-        </button>
-        <button type="button" id="bSetAsMainAddress" class="btn btn-info" (click)="onSetAsMainAddress()">
-          Set as Main Address
-        </button>
-        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemoveAddress()">
-          Remove Address
-        </button>
-        <button type="button" class="btn btn-warning" (click)="onBack()">
-          Back
-        </button>
+        <button type="button" id="bAddAddress" class="btn btn-info" (click)="onAddAddress()" i18n="addAddressButton">Add Address</button>
+        <button type="button" id="bEditAddresses" class="btn btn-info" (click)="onEditAddresses()" i18n="editAddressesButton">Edit Client's Addresses</button>
+        <button type="button" id="bSetAsMainAddress" class="btn btn-info" (click)="onSetAsMainAddress()" i18n="setMainAddressButton">Set as Main Address</button>
+        <button type="button" id="bRemove" class="btn btn-danger" (click)="onRemoveAddress()" i18n="@@removeAddressButton">Remove Address</button>
+        <button type="button" class="btn btn-warning" (click)="onBack()" i18n="@@backButton">Back</button>
       </div>
     </div>
   </div>
@@ -52,7 +42,7 @@
 <ng-template #clientWithoutAddress>
   <div class="container">
     <div class="jumbotron">
-      <p>This client doesn't have any addresses.</p>
+      <p i18n="clientWithoutAddressesParagraph">This client doesn't have any addresses.</p>
     </div>
   </div>
 </ng-template>
