@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ClientService} from './client.service';
 import {ToastsManager} from 'ng2-toastr';
-import {Validation} from '../shared/validation';
+import {ValidationService} from '../shared/validation.service';
 
 @Component({
   templateUrl: './client-form.component.html',
@@ -23,8 +23,8 @@ export class ClientFormComponent implements OnInit {
     'lastName': ''
   };
 
-  constructor(private _clientService: ClientService, private _route: ActivatedRoute, private _router: Router,
-              private _toastr: ToastsManager, private vcr: ViewContainerRef) {
+  constructor(private _clientService: ClientService, private _validationService: ValidationService,
+              private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager, private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
   }
 
@@ -105,7 +105,7 @@ export class ClientFormComponent implements OnInit {
     const control = form.get(field);
 
     if (control && control.dirty && !control.valid) {
-      const messages = Validation.validationMessages[field];
+      const messages = this._validationService.getLocalizedValidationMessages(field);
       for (const key in control.errors) {
         if (control.errors.hasOwnProperty(key)) {
           this.formErrors[field] += messages[key] + ' ';

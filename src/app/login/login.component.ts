@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Validation} from '../shared/validation';
+import {ValidationService} from '../shared/validation.service';
 import {AuthenticationService} from './authentication.service';
 import {ToastsManager} from 'ng2-toastr';
 
-declare var bootbox: any;
+declare const bootbox: any;
 
 @Component({
   templateUrl: './login.component.html',
@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   };
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
-              private _toastr: ToastsManager, private vcr: ViewContainerRef) {
+              private _validationService: ValidationService, private _toastr: ToastsManager,
+              private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
   }
 
@@ -79,7 +80,7 @@ export class LoginComponent implements OnInit {
     const control = form.get(field);
 
     if (control && control.dirty && !control.valid) {
-      const messages = Validation.validationMessages[field];
+      const messages = this._validationService.getLocalizedValidationMessages(field);
       for (const key in control.errors) {
         if (control.errors.hasOwnProperty(key)) {
           this.formErrors[field] += messages[key] + ' ';

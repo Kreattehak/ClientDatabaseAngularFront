@@ -4,7 +4,7 @@ import {RouterModule} from '@angular/router';
 import {ClientListComponent} from './clients/client-list.component';
 import {ClientFormComponent} from './clients/client-form.component';
 import {ClientDetailComponent} from './clients/client-detail.component';
-import {AboutUsComponent} from './utils/about-us.component';
+import {AboutAuthorComponent} from './utils/about-author.component';
 import {PathNotFoundComponent} from './utils/path-not-found.component';
 import {AddressDetailResolver} from './addresses/address-detail-resolver.service';
 import {ClientDetailResolver} from './clients/client-detail-resolver.service';
@@ -47,7 +47,7 @@ import {LoginComponent} from './login/login.component';
         component: AddressDetailComponent,
         canActivate: [CanActivateAuthGuard]
       },
-      {path: 'aboutUs', component: AboutUsComponent, outlet: 'messages'},
+      {path: 'aboutUs', component: AboutAuthorComponent, outlet: 'messages'},
       {path: 'login', component: LoginComponent},
       {path: '', redirectTo: 'clients', pathMatch: 'full'},
       {path: '**', component: PathNotFoundComponent},

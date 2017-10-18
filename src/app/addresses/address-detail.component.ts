@@ -1,12 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Address} from './address';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {AddressService} from './address.service';
 import {Client} from '../clients/client';
-import {ClientService} from '../clients/client.service';
-import {Validation} from '../shared/validation';
+import {ValidationService} from '../shared/validation.service';
 
 @Component({
   templateUrl: './address-detail.component.html',
@@ -27,7 +26,7 @@ export class AddressDetailComponent implements OnInit {
     'zipCode': ''
   };
 
-  constructor(private _addressService: AddressService, private _clientService: ClientService,
+  constructor(private _addressService: AddressService, private _validationService: ValidationService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
               private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
@@ -53,7 +52,7 @@ export class AddressDetailComponent implements OnInit {
       [Validators.required, Validators.minLength(3)]);
     const zipCode = new FormControl(this.activeAddress.zipCode,
       [Validators.required, Validators.minLength(6),
-      Validators.maxLength(6), Validators.pattern(/\d{2}-\d{3}/ig)]);
+        Validators.maxLength(6), Validators.pattern(/\d{2}-\d{3}/ig)]);
 
     this.addressForm = new FormGroup({
       id: id,
@@ -67,7 +66,7 @@ export class AddressDetailComponent implements OnInit {
     this.onValueChanged();
   }
 
-  private onSubmit(id: number): void {
+  onSubmit(id: number): void {
     if (this.activeAddress === this.addressForm.value) {
       this._toastr.error('Client already exists', 'Error!');
       return;
@@ -79,8 +78,8 @@ export class AddressDetailComponent implements OnInit {
     if (this.isNewAddress) {
       this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
         response => this._toastr.success('Address was successfully added.', 'Success!'),
-            error => this._toastr.error('Address wasn\'t added.', 'Error!')
-        );
+        error => this._toastr.error('Address wasn\'t added.', 'Error!')
+      );
     } else {
       this.activeAddress.id = id;
       this._addressService.updateAddress(this.activeAddress).subscribe(
@@ -89,7 +88,7 @@ export class AddressDetailComponent implements OnInit {
     }
   }
 
-  private onBack(): void {
+  onBack(): void {
     this._router.navigate(['/clients', this.clientId, 'details']);
   }
 
@@ -110,7 +109,7 @@ export class AddressDetailComponent implements OnInit {
     const control = form.get(field);
 
     if (control && control.dirty && !control.valid) {
-      const messages = Validation.validationMessages[field];
+      const messages = this._validationService.getLocalizedValidationMessages(field);
       for (const key in control.errors) {
         if (control.errors.hasOwnProperty(key)) {
           this.formErrors[field] += messages[key] + ' ';

@@ -1,9 +1,9 @@
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {ClientFormComponent} from './clients/client-form.component';
 import {ClientDetailComponent} from './clients/client-detail.component';
 import {ClientListComponent} from './clients/client-list.component';
-import {AboutUsComponent} from './utils/about-us.component';
+import {AboutAuthorComponent} from './utils/about-author.component';
 import {PathNotFoundComponent} from './utils/path-not-found.component';
 import {AddressDetailComponent} from './addresses/address-detail.component';
 import {BrowserModule} from '@angular/platform-browser';
@@ -20,6 +20,7 @@ import {LoginComponent} from './login/login.component';
 import {CanActivateAuthGuard} from './login/can-activate-authguard';
 import {AuthenticationService} from './login/authentication.service';
 import {ClientListResolver} from './clients/client-list-resolver';
+import {ValidationService} from './shared/validation.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import {ClientListResolver} from './clients/client-list-resolver';
     ClientDetailComponent,
     ClientFormComponent,
     PathNotFoundComponent,
-    AboutUsComponent,
+    AboutAuthorComponent,
     AddressDetailComponent,
     LoginComponent,
   ],
@@ -42,13 +43,15 @@ import {ClientListResolver} from './clients/client-list-resolver';
     BrowserAnimationsModule
   ],
   providers: [
+    {provide: LOCALE_ID, useValue: 'en'},
     ClientService,
     ClientDetailResolver,
     ClientListResolver,
     AddressService,
     AddressDetailResolver,
     AuthenticationService,
-    CanActivateAuthGuard
+    CanActivateAuthGuard,
+    ValidationService
   ],
   bootstrap: [AppComponent]
 })
