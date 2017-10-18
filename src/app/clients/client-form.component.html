@@ -2,7 +2,7 @@
   <form [formGroup]="clientForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(activeClient.id)">
     <fieldset>
 
-      <legend *ngIf="activeClient.id; else newClient" i18n="clientForm.legendEditClient">Client to be edited:
+      <legend *ngIf="activeClient.id; else newClient" i18n="@@clientForm.legendEditClient">Client to be edited:
         {{activeClient?.firstName}}
         {{activeClient?.lastName}}
       </legend>

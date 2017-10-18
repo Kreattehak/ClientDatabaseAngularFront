@@ -2,11 +2,11 @@
   <form [formGroup]="addressForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(activeAddress.id)">
     <fieldset>
 
-      <legend *ngIf="!isNewAddress; else newAddress" i18n="addressForm.legendEditAddress">Address to be edited:
+      <legend *ngIf="!isNewAddress; else newAddress" i18n="@@addressForm.legendEditAddress">Address to be edited:
         {{activeAddress.streetName}}, {{activeAddress.cityName}}, {{activeAddress.zipCode}}
       </legend>
       <ng-template #newAddress>
-        <legend i18n="addressForm.legendAddAddress">Add new address for client {{activeClient?.firstName}}
+        <legend i18n="@@addressForm.legendAddAddress">Add new address for client {{activeClient?.firstName}}
           {{activeClient?.lastName}}
         </legend>
       </ng-template>
