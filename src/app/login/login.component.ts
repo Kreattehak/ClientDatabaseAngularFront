@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidationService} from '../shared/validation.service';
 import {AuthenticationService} from './authentication.service';
@@ -18,15 +18,20 @@ export class LoginComponent implements OnInit {
     'username': '',
     'password': '',
   };
+  public errorMessage: string;
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
               private _validationService: ValidationService, private _toastr: ToastsManager,
-              private vcr: ViewContainerRef) {
+              private vcr: ViewContainerRef, private _route: ActivatedRoute) {
     this._toastr.setRootViewContainerRef(vcr);
   }
 
   ngOnInit() {
     this._authenticationService.logout();
+
+    if (this._route.snapshot.paramMap.get('expired')) {
+      this.errorMessage = 'User token has expired!';
+    }
 
     const username = new FormControl('', [Validators.required, Validators.minLength(3)]);
     const password = new FormControl('', [Validators.required]);
@@ -44,22 +49,21 @@ export class LoginComponent implements OnInit {
   login(): void {
     this._authenticationService.login(this.userForm.value.username, this.userForm.value.password)
       .subscribe(response => {
-        if (response === true) {
-          // login successful
-          this._router.navigate(['/clients']);
-        } else {
-          this.loginFailed();
-        }
-      }, error => {
-        this.loginFailed();
-      });
+          if (response === true) {
+            // login successful
+            this._router.navigate(['/clients']);
+          }
+        },
+        error => {
+          this.loginFailed(error);
+        });
   }
 
-  private loginFailed(): void {
+  private loginFailed(message: Response): void {
     bootbox.alert({
-      message: 'Username or password is incorrect',
+      message: message,
       size: 'medium',
       backdrop: true
     });
   }
-  }
+}

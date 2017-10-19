@@ -47,9 +47,9 @@
       <div class="form-group">
         <div class="col-lg-offset-2 col-lg-1">
           <input type="submit" class="btn btn-primary" *ngIf="isNewClient; else oldClient" value="Add"
-                 [disabled]="!clientForm.valid || submitted" i18n-value="@@buttonAdd"/>
+                 [disabled]="!clientForm.valid || submitted" i18n-value="@@addButton"/>
           <ng-template #oldClient>
-            <input type="submit" class="btn btn-primary" value="Edit" i18n-value="@@buttonEdit"
+            <input type="submit" class="btn btn-primary" value="Edit" i18n-value="@@editButton"
                    [disabled]="!clientForm.valid || submitted"/>
           </ng-template>
         </div>

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http, RequestOptions, Headers, Response} from '@angular/http';
 import {Observable} from 'rxjs/Rx';
+import {JwtHelper} from 'angular2-jwt';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -10,17 +11,29 @@ export class AuthenticationService {
 
   _postSetUp: RequestOptions = new RequestOptions({
     headers: new Headers({
-      'Content-Type': 'application/json', })
+      'Content-Type': 'application/json',
+    })
   });
 
   _authUrl = '/api/auth';
 
+  private _jwtHelper: JwtHelper;
+
   constructor(private _http: Http) {
+    this._jwtHelper = new JwtHelper();
   }
 
   isLoggedIn(): boolean {
     const token: String = this.getToken();
     return token && token.length > 0;
+  }
+
+  isTokenExpired(): boolean {
+    const token: string = this.getToken();
+    if (token && token.length > 0) {
+      return this._jwtHelper.isTokenExpired(token);
+    }
+    return true;
   }
 
   login(username: string, password: string): Observable<boolean> {
@@ -38,10 +51,9 @@ export class AuthenticationService {
           // return true to indicate successful login
           return true;
         } else {
-          // return false to indicate failed login
-          return false;
+          Observable.throw(response.text());
         }
-      }).catch((error: any) => Observable.throw('Server error'));
+      }).catch((error: Response) => Observable.throw(error.text()));
   }
 
   getToken(): string {

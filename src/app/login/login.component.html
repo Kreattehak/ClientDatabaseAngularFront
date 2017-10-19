@@ -1,37 +1,43 @@
 <div class="container">
-  <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">
-    <fieldset>
+  <section class="row" *ngIf="errorMessage">
+    <div class="alert alert-info col-lg-3">
+      <strong>Info:</strong> {{errorMessage}}
+    </div>
+  </section>
+  <div class="row">
+    <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">
+      <fieldset>
 
-      <legend i18n="@@login.legend">Please login to use this application</legend>
+        <legend i18n="@@login.legend">Please login to use this application</legend>
 
-      <div class="form-group">
-        <label class="control-label col-lg-2" for="username" i18n="@@login.username">Username</label>
-        <div class="col-lg-5">
-          <input class="form-control" id="username" type="text" placeholder="Username"
-                 formControlName="username" required i18n-placeholder="@@login.username"/>
+        <div class="form-group">
+          <label class="control-label col-lg-2" for="username" i18n="@@login.username">Username</label>
+          <div class="col-lg-5">
+            <input class="form-control" id="username" type="text" placeholder="Username"
+                   formControlName="username" required i18n-placeholder="@@login.username"/>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label class="col-md-2 control-label" for="password" i18n="@@login.password">Password</label>
-        <div class="col-lg-5">
-          <input class="form-control" id="password" type="password"
-                 placeholder="Password" formControlName="password" i18n-placeholder="@@login.password"/>
+        <div class="form-group">
+          <label class="col-md-2 control-label" for="password" i18n="@@login.password">Password</label>
+          <div class="col-lg-5">
+            <input class="form-control" id="password" type="password"
+                   placeholder="Password" formControlName="password" i18n-placeholder="@@login.password"/>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <div class="col-lg-offset-2 col-lg-2">
-          <button type="submit" class="btn btn-success" i18n="@@login.loginButton">Log in</button>
+        <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-2">
+            <button type="submit" class="btn btn-success" i18n="@@login.loginButton">Log in</button>
+          </div>
         </div>
-      </div>
 
-    </fieldset>
-  </form>
+      </fieldset>
+    </form>
 
-  <div *ngIf="formErrors.username || formErrors.password" class="alert alert-danger">
-    <p>{{ formErrors.username }}</p>
-    <p>{{ formErrors.password }}</p>
+    <div *ngIf="formErrors.username || formErrors.password" class="alert alert-danger">
+      <p>{{ formErrors.username }}</p>
+      <p>{{ formErrors.password }}</p>
+    </div>
   </div>
-
 </div>
