@@ -2,13 +2,9 @@
   <form [formGroup]="addressForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(activeAddress.id)">
     <fieldset>
 
-      <legend *ngIf="!isNewAddress; else newAddress" i18n="@@addressForm.legendEditAddress">Address to be edited:
-        {{activeAddress.streetName}}, {{activeAddress.cityName}}, {{activeAddress.zipCode}}
-      </legend>
+      <legend *ngIf="!isNewAddress; else newAddress" i18n="@@addressForm.legendEditAddress">Address to be edited: {{activeAddress.streetName}}, {{activeAddress.cityName}}, {{activeAddress.zipCode}}</legend>
       <ng-template #newAddress>
-        <legend i18n="@@addressForm.legendAddAddress">Add new address for client {{activeClient?.firstName}}
-          {{activeClient?.lastName}}
-        </legend>
+        <legend i18n="@@addressForm.legendAddAddress">Add new address for client {{activeClient?.firstName}} {{activeClient?.lastName}}</legend>
       </ng-template>
 
       <div class="form-group">
@@ -52,10 +48,9 @@
 
       <div class="form-group">
         <div class="col-lg-offset-2 col-lg-1">
-          <input type="submit" class="btn btn-primary" *ngIf="isNewAddress; else oldAddress" value="Add"
-                 [disabled]="!addressForm.valid || submitted" i18n="@@buttonAdd"/>
+          <input type="submit" class="btn btn-primary" *ngIf="isNewAddress; else oldAddress" value="Add" [disabled]="!addressForm.valid || submitted" i18n-value="@@buttonAdd"/>
           <ng-template #oldAddress>
-            <input type="submit" class="btn btn-primary" value="Edit" i18n="@@buttonEdit"
+            <input type="submit" class="btn btn-primary" value="Edit" i18n-value="@@buttonEdit"
                    [disabled]="!addressForm.valid || submitted"/>
           </ng-template>
         </div>

@@ -26,7 +26,6 @@ export class ClientDetailComponent implements OnInit {
   ngOnInit() {
     this.client = this._route.snapshot.data['client'];
     this.addresses = this._route.snapshot.data['addresses'];
-    console.log(this.client);
   }
 
   markAsActive(activeRow: Address): void {

@@ -49,9 +49,9 @@ export class ClientFormComponent implements OnInit {
       lastName: lastName
     });
 
-    this.clientForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.clientForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.clientForm, this.formErrors, data));
 
-    this.onValueChanged(); // (re)set validation messages now
+    this._validationService.onValueChanged(this.clientForm, this.formErrors) // (re)set validation messages now
   }
 
   onSubmit(id: number): void {
@@ -87,33 +87,6 @@ export class ClientFormComponent implements OnInit {
   goBack(): void {
     this._router.navigate(['/clients']);
   }
-
-  onValueChanged(data?: any) {
-    if (!this.clientForm) {
-      return;
-    }
-    for (const field in this.formErrors) {
-      if (this.formErrors.hasOwnProperty(field)) {
-        this.checkField(field);
-      }
-    }
-  }
-
-  private checkField(field: any) {
-    const form = this.clientForm;
-    this.formErrors[field] = '';
-    const control = form.get(field);
-
-    if (control && control.dirty && !control.valid) {
-      const messages = this._validationService.getLocalizedValidationMessages(field);
-      for (const key in control.errors) {
-        if (control.errors.hasOwnProperty(key)) {
-          this.formErrors[field] += messages[key] + ' ';
-        }
-      }
-    }
-  }
-
 }
 
 

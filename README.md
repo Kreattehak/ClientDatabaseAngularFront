@@ -34,11 +34,11 @@ This project shows client data stored in database. You can add new, delete or mo
 ![main page](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/main_page.png "Main page with table of clients")
 Main page with table of clients
 
-![client details](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/client_details.png "Client details page")
-Client details page
-
 ![filtering clients](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/filter_applied.png "Filtering clients by <any devito>")
 Filtering clients by `any devito`
+
+![client details](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/client_details.png "Client details page")
+Client details page
 
 ![secondary route](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/secondary_route.png "Use of secondary route when clicking About Author")
 Use of secondary route when clicking About Author
@@ -87,4 +87,5 @@ font-awesome - awesome fonts
 
 ## Future of this project
 
+It's very likely possible that I will provide some data which would allow this app to work even without rest resources. 
 It's very likely possible that I will implement Angular unit tests in this project, then I probably use it as a base for more complex project.

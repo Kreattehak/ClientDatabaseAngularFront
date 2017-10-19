@@ -2,10 +2,7 @@
   <form [formGroup]="clientForm" class="form-horizontal" novalidate (ngSubmit)="onSubmit(activeClient.id)">
     <fieldset>
 
-      <legend *ngIf="activeClient.id; else newClient" i18n="@@clientForm.legendEditClient">Client to be edited:
-        {{activeClient?.firstName}}
-        {{activeClient?.lastName}}
-      </legend>
+      <legend *ngIf="activeClient.id; else newClient" i18n="@@clientForm.legendEditClient">Client to be edited: {{activeClient?.firstName}} {{activeClient?.lastName}}</legend>
       <ng-template #newClient>
         <legend i18n="@@clientForm.legendAddClient">Add new client</legend>
       </ng-template>
@@ -50,9 +47,9 @@
       <div class="form-group">
         <div class="col-lg-offset-2 col-lg-1">
           <input type="submit" class="btn btn-primary" *ngIf="isNewClient; else oldClient" value="Add"
-                 [disabled]="!clientForm.valid || submitted" i18n="@@buttonAdd"/>
+                 [disabled]="!clientForm.valid || submitted" i18n-value="@@buttonAdd"/>
           <ng-template #oldClient>
-            <input type="submit" class="btn btn-primary" value="Edit" i18n="@@buttonEdit"
+            <input type="submit" class="btn btn-primary" value="Edit" i18n-value="@@buttonEdit"
                    [disabled]="!clientForm.valid || submitted"/>
           </ng-template>
         </div>

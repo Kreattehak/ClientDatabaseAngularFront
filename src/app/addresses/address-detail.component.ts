@@ -26,7 +26,7 @@ export class AddressDetailComponent implements OnInit {
     'zipCode': ''
   };
 
-  constructor(private _addressService: AddressService, private _validationService: ValidationService,
+  constructor(private _addressService: AddressService, public _validationService: ValidationService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
               private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
@@ -61,9 +61,9 @@ export class AddressDetailComponent implements OnInit {
       zipCode: zipCode
     });
 
-    this.addressForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.addressForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.addressForm, this.formErrors, data));
 
-    this.onValueChanged();
+    this._validationService.onValueChanged(this.addressForm, this.formErrors);
   }
 
   onSubmit(id: number): void {
@@ -90,31 +90,5 @@ export class AddressDetailComponent implements OnInit {
 
   onBack(): void {
     this._router.navigate(['/clients', this.clientId, 'details']);
-  }
-
-  private onValueChanged(data ?: any) {
-    if (!this.addressForm) {
-      return;
-    }
-    for (const field in this.formErrors) {
-      if (this.formErrors.hasOwnProperty(field)) {
-        this.checkField(field);
-      }
-    }
-  }
-
-  private checkField(field: any) {
-    const form = this.addressForm;
-    this.formErrors[field] = '';
-    const control = form.get(field);
-
-    if (control && control.dirty && !control.valid) {
-      const messages = this._validationService.getLocalizedValidationMessages(field);
-      for (const key in control.errors) {
-        if (control.errors.hasOwnProperty(key)) {
-          this.formErrors[field] += messages[key] + ' ';
-        }
-      }
-    }
   }
 }

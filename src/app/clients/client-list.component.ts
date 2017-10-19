@@ -40,18 +40,24 @@ export class ClientListComponent implements OnInit {
     filter = filter.toLocaleLowerCase();
     const filterBy: string[] = filter.split(/\s/);
     console.log(filterBy);
+    let filteredClients: Client[];
+
     if (filterBy.length === 2) {
-      return this.clients.filter((client: Client) => {
+      filteredClients = this.clients.filter((client: Client) => {
         return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
           && client.lastName.toLocaleLowerCase().indexOf(filterBy[1]) !== -1;
       });
     } else if (filterBy.length === 1) {
-      return this.clients.filter((client: Client) => {
+      filteredClients = this.clients.filter((client: Client) => {
         return client.firstName.toLocaleLowerCase().indexOf(filter) !== -1
           || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
       });
-    } else {
+    }
+    if (!filteredClients) {
+      this.errorMessage = 'There are no clients that match your filter sentence.';
       return null;
+    } else {
+      return filteredClients;
     }
   }
 
@@ -68,7 +74,7 @@ export class ClientListComponent implements OnInit {
     if (!this.isFieldSelected()) {
       return false;
     } else {
-      this._router.navigate(['/clients', this.activeClient.id], 'details');
+      this._router.navigate(['/clients', this.activeClient.id, 'details']);
       return true;
     }
   }

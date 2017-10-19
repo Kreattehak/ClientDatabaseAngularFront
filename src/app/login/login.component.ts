@@ -36,9 +36,9 @@ export class LoginComponent implements OnInit {
       password: password
     });
 
-    this.userForm.valueChanges.subscribe(data => this.onValueChanged(data));
+    this.userForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.userForm, this.formErrors, data));
 
-    this.onValueChanged();
+    this._validationService.onValueChanged(this.userForm, this.formErrors);
   }
 
   login(): void {
@@ -62,30 +62,4 @@ export class LoginComponent implements OnInit {
       backdrop: true
     });
   }
-
-  private onValueChanged(data ?: any) {
-    if (!this.userForm) {
-      return;
-    }
-    for (const field in this.formErrors) {
-      if (this.formErrors.hasOwnProperty(field)) {
-        this.checkField(field);
-      }
-    }
   }
-
-  private checkField(field: any) {
-    const form = this.userForm;
-    this.formErrors[field] = '';
-    const control = form.get(field);
-
-    if (control && control.dirty && !control.valid) {
-      const messages = this._validationService.getLocalizedValidationMessages(field);
-      for (const key in control.errors) {
-        if (control.errors.hasOwnProperty(key)) {
-          this.formErrors[field] += messages[key] + ' ';
-        }
-      }
-    }
-  }
-}
