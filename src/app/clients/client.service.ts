@@ -1,5 +1,5 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Http, RequestOptions, Response, Headers} from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Headers, Http, RequestOptions, Response} from '@angular/http';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -8,7 +8,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 
 import {Client} from './client';
-import {Address} from '../addresses/address';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {AuthenticationService} from '../login/authentication.service';
 
@@ -26,7 +25,7 @@ export class ClientService {
 
   getAllClients(): Observable<Client[]> {
     return this._http.get(this._getAllClients)
-      .map((response: Response) => this.parseClients(response))
+      .map((response: Response) => response.json() as Client[])
       .catch(this.handleError);
   }
 
@@ -56,19 +55,6 @@ export class ClientService {
 
   private handleError(error: Response): ErrorObservable {
     return Observable.throw(error.json().errorMessage || 'Server error');
-  }
-
-  private parseClients(response: Response): Client[] {
-    const clients: Client[] = response.json() as Client[];
-    for (const client of clients) {
-      Object.assign(new Client, client);
-      Object.setPrototypeOf(client, Client.prototype);
-      if (client.mainAddress) {
-        Object.assign(new Address, client.mainAddress);
-        Object.setPrototypeOf(client.mainAddress, Address.prototype);
-      }
-    }
-    return clients;
   }
 
   private requestBearer(): RequestOptions {

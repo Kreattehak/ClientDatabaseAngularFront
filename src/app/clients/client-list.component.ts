@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Client} from './client';
 import {ClientService} from './client.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
 declare var bootbox: any;
 
@@ -15,11 +16,11 @@ export class ClientListComponent implements OnInit {
   public filteredClients: Client[];
   public activeClient: Client;
   private _filter: string;
-  public errorMessage = 'Please wait while data is being resolved.';
+  public errorMessage = this._validationService.getLocalizedMessages('dataBeingResolved');
 
   constructor(private _clientService: ClientService, private _router: Router,
-              private _route: ActivatedRoute, private _toastr: ToastsManager,
-              private vcr: ViewContainerRef) {
+              private _validationService: ValidationAndLocaleMessagesService,
+              private _toastr: ToastsManager, private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
   }
 
@@ -40,7 +41,7 @@ export class ClientListComponent implements OnInit {
     filter = filter.toLocaleLowerCase();
     const filterBy: string[] = filter.split(/\s/);
     console.log(filterBy);
-    let filteredClients: Client[];
+    let filteredClients: Client[] = [];
 
     if (filterBy.length === 2) {
       filteredClients = this.clients.filter((client: Client) => {
@@ -53,8 +54,8 @@ export class ClientListComponent implements OnInit {
           || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
       });
     }
-    if (!filteredClients) {
-      this.errorMessage = 'There are no clients that match your filter sentence.';
+    if (filteredClients.length === 0) {
+      this.errorMessage = this._validationService.getLocalizedMessages('noMatchForFilter');
       return null;
     } else {
       return filteredClients;
@@ -93,14 +94,14 @@ export class ClientListComponent implements OnInit {
       return;
     }
     bootbox.confirm({
-      title: 'Delete client',
-      message: 'Do you want to remove selected client?',
+      title: this._validationService.getLocalizedMessages('removeClientConfirmTitle'),
+      message: this._validationService.getLocalizedMessages('removeClientConfirmMessage'),
       buttons: {
         cancel: {
-          label: '<i class="fa fa-times"></i> Cancel'
+          label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
         },
         confirm: {
-          label: '<i class="fa fa-check"></i> Confirm'
+          label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
         }
       },
       callback: (result) => {
@@ -137,12 +138,12 @@ export class ClientListComponent implements OnInit {
     this._clientService.getAllClients().subscribe(
       clients => {
         if (clients.length === 0) {
-          this.errorMessage = 'Server returned empty array, there are no users in database!';
+          this.errorMessage = this._validationService.getLocalizedMessages('emptyDatabase');
         }
         this.clients = clients;
         this.filteredClients = this.clients;
       }, error => {
-        this.errorMessage = 'Server is offline.';
+        this.errorMessage = this._validationService.getLocalizedMessages('serverOffline');
         this._toastr.error(this.errorMessage, 'Error!');
       });
   }
@@ -150,7 +151,7 @@ export class ClientListComponent implements OnInit {
   private isFieldSelected(): boolean {
     if (!this.activeClient) {
       bootbox.alert({
-        message: 'Please select a row',
+        message: this._validationService.getLocalizedMessages('rowNotSelected'),
         size: 'small',
         backdrop: true
       });

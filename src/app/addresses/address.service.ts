@@ -11,8 +11,6 @@ import {Address} from './address';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {AuthenticationService} from '../login/authentication.service';
 
-export const LAST_AVAILABLE_ADDRESS = 1;
-
 @Injectable()
 export class AddressService {
 

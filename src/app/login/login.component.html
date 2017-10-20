@@ -1,8 +1,6 @@
 <div class="container">
   <section class="row" *ngIf="errorMessage">
-    <div class="alert alert-info col-lg-3">
-      <strong>Info:</strong> {{errorMessage}}
-    </div>
+    <div class="alert alert-info col-lg-6">{{errorMessage}}</div>
   </section>
   <div class="row">
     <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">

@@ -2,7 +2,7 @@ import {Inject, Injectable, LOCALE_ID} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Injectable()
-export class ValidationAndLocaleService {
+export class ValidationAndLocaleMessagesService {
   public validationMessages = {
     en: {
       'firstName': {

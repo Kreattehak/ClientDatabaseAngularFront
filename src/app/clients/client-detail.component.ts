@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
-import {ClientService} from './client.service';
-import {AddressService, LAST_AVAILABLE_ADDRESS} from '../addresses/address.service';
+import {AddressService} from '../addresses/address.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Client} from './client';
 import {Address} from '../addresses/address';
 import {ToastsManager} from 'ng2-toastr';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
 declare var bootbox: any;
 
@@ -17,9 +17,9 @@ export class ClientDetailComponent implements OnInit {
   public addresses: Address[];
   public activeAddress: Address;
 
-  constructor(private _clientService: ClientService, private _addressService: AddressService,
-              private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
-              private vcr: ViewContainerRef) {
+  constructor(private _addressService: AddressService, private _route: ActivatedRoute,
+              private _validationService: ValidationAndLocaleMessagesService,
+              private _router: Router, private _toastr: ToastsManager, private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
   }
 
@@ -43,7 +43,7 @@ export class ClientDetailComponent implements OnInit {
 
   onEditAddresses(): boolean {
     if (!this.activeAddress) {
-      return this.cannotProceed('Please select an address');
+      return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
     } else {
       this._router.navigate(['/clients', this.client.id, 'address', this.activeAddress.id]);
       return true;
@@ -52,9 +52,9 @@ export class ClientDetailComponent implements OnInit {
 
   onSetAsMainAddress(): boolean {
     if (!this.activeAddress) {
-      return this.cannotProceed('Please select an address');
+      return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
     } else if (this.activeAddress.id === this.client.mainAddress.id) {
-      return this.cannotProceed('This address is already main address');
+      return this.cannotProceed(this._validationService.getLocalizedMessages('alreadyMainAddress'));
     } else {
       this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
         response => {
@@ -68,12 +68,9 @@ export class ClientDetailComponent implements OnInit {
 
   onRemoveAddress(): boolean {
     if (!this.activeAddress) {
-      return this.cannotProceed('Please select an address');
+      return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
     } else if (this.client.mainAddress.id === this.activeAddress.id) {
-      return this.cannotProceed('You can\'t delete address that is currently a main address.', 'medium');
-    } else if (this.addresses.length <= LAST_AVAILABLE_ADDRESS) {
-      return this.cannotProceed('You can\'t delete last address or address that is currently ' +
-        'set as main client\'s address', 'medium');
+      return this.cannotProceed('cannotDeleteMainAddress', 'medium');
     } else {
       this.removeConfirm();
     }
@@ -81,14 +78,14 @@ export class ClientDetailComponent implements OnInit {
 
   private removeConfirm(): void {
     bootbox.confirm({
-      title: 'Address deletion',
-      message: 'Do you want to remove selected address?',
+      title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
+      message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
       buttons: {
         cancel: {
-          label: '<i class="fa fa-times"></i> Cancel'
+          label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
         },
         confirm: {
-          label: '<i class="fa fa-check"></i> Confirm'
+          label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
         }
       },
       callback: (result) => {

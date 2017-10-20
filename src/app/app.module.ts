@@ -20,7 +20,7 @@ import {LoginComponent} from './login/login.component';
 import {CanActivateAuthGuard} from './login/can-activate-authguard';
 import {AuthenticationService} from './login/authentication.service';
 import {ClientListResolver} from './clients/client-list-resolver';
-import {ValidationService} from './shared/validation.service';
+import {ValidationAndLocaleMessagesService} from './shared/validation-and-locale-messages.service';
 
 @NgModule({
   declarations: [
@@ -51,7 +51,7 @@ import {ValidationService} from './shared/validation.service';
     AddressDetailResolver,
     AuthenticationService,
     CanActivateAuthGuard,
-    ValidationService
+    ValidationAndLocaleMessagesService
   ],
   bootstrap: [AppComponent]
 })

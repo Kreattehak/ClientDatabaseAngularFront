@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {AddressService} from './address.service';
 import {Client} from '../clients/client';
-import {ValidationService} from '../shared/validation.service';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
 @Component({
   templateUrl: './address-detail.component.html',
@@ -26,7 +26,7 @@ export class AddressDetailComponent implements OnInit {
     'zipCode': ''
   };
 
-  constructor(private _addressService: AddressService, public _validationService: ValidationService,
+  constructor(private _addressService: AddressService, public _validationService: ValidationAndLocaleMessagesService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
               private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
@@ -68,7 +68,7 @@ export class AddressDetailComponent implements OnInit {
 
   onSubmit(id: number): void {
     if (this.activeAddress === this.addressForm.value) {
-      this._toastr.error('Client already exists', 'Error!');
+      this._toastr.error(this._validationService.getLocalizedMessages('addressExists'), 'Error!');
       return;
     }
 
@@ -77,8 +77,10 @@ export class AddressDetailComponent implements OnInit {
 
     if (this.isNewAddress) {
       this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
-        response => this._toastr.success('Address was successfully added.', 'Success!'),
-        error => this._toastr.error('Address wasn\'t added.', 'Error!')
+        response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
+          'Success!'),
+        error => this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
+          'Error!')
       );
     } else {
       this.activeAddress.id = id;

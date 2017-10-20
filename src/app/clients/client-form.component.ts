@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ClientService} from './client.service';
 import {ToastsManager} from 'ng2-toastr';
-import {ValidationService} from '../shared/validation.service';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
 @Component({
   templateUrl: './client-form.component.html',
@@ -23,7 +23,7 @@ export class ClientFormComponent implements OnInit {
     'lastName': ''
   };
 
-  constructor(private _clientService: ClientService, private _validationService: ValidationService,
+  constructor(private _clientService: ClientService, private _validationService: ValidationAndLocaleMessagesService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager, private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);
   }
@@ -56,7 +56,7 @@ export class ClientFormComponent implements OnInit {
 
   onSubmit(id: number): void {
     if (this.activeClient === this.clientForm.value) {
-      this._toastr.error('Client already exists', 'Error!');
+      this._toastr.error(this._validationService.getLocalizedMessages('clientExists'), 'Error!');
       return;
     }
 
@@ -70,9 +70,9 @@ export class ClientFormComponent implements OnInit {
           if (this.shouldRedirectToAddressForm) {
             this._router.navigate(['/clients', response, 'newAddress']);
           } else {
-            this._toastr.success('Client was successfully added.', 'Success!');
+            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'), 'Success!');
           }
-        }, error => this._toastr.error('Client wasn\'t added.', 'Error!'));
+        }, error => this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), 'Error!'));
     } else {
       this.activeClient.id = id;
       console.log(this.activeClient);

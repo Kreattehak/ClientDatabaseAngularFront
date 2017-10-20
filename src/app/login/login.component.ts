@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ValidationService} from '../shared/validation.service';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 import {AuthenticationService} from './authentication.service';
 import {ToastsManager} from 'ng2-toastr';
 
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   public errorMessage: string;
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
-              private _validationService: ValidationService, private _toastr: ToastsManager,
+              private _validationService: ValidationAndLocaleMessagesService, private _toastr: ToastsManager,
               private vcr: ViewContainerRef, private _route: ActivatedRoute) {
     this._toastr.setRootViewContainerRef(vcr);
   }
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     this._authenticationService.logout();
 
     if (this._route.snapshot.paramMap.get('expired')) {
-      this.errorMessage = 'User token has expired!';
+      this.errorMessage = this._validationService.getLocalizedMessages('tokenHasExpired');
     }
 
     const username = new FormControl('', [Validators.required, Validators.minLength(3)]);
