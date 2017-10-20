@@ -2,7 +2,7 @@ import {Inject, Injectable, LOCALE_ID} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
 @Injectable()
-export class ValidationService {
+export class ValidationAndLocaleService {
   public validationMessages = {
     en: {
       'firstName': {
@@ -68,11 +68,64 @@ export class ValidationService {
     }
   };
 
+  public applicationMessages = {
+    en: {
+      'addressExists': 'Address already exists!',
+      'addressAdded': 'Address was successfully added.',
+      'addressNotAdded': 'Address wasn\'t added.',
+      'alreadyMainAddress': 'This address is already a main address!',
+      'cannotDeleteMainAddress': 'You can\'t delete address that is currently a main address.',
+      'removeAddressConfirmTitle': 'Address deletion',
+      'removeAddressConfirmMessage': 'Do you want to remove selected address?',
+
+      'clientExists': 'Client already exists!',
+      'clientAdded': 'Client was successfully added.',
+      'clientNotAdded': 'Client wasn\'t added.',
+      'removeClientConfirmTitle': 'Client deletion',
+      'removeClientConfirmMessage': 'Do you want to remove selected client?',
+
+      'dataBeingResolved': 'Please wait while data is being resolved.',
+      'noMatchForFilter': 'There are no clients that match your filter sentence.',
+      'cancelAction': 'Cancel',
+      'confirmAction': 'Confirm',
+      'rowNotSelected': 'Please select an row.',
+      'tokenHasExpired': 'User token has expired! Please login again.',
+      'emptyDatabase': 'Server returned empty array, there are no users in database!',
+      'serverOffline': 'Server is offline.'
+    },
+    pl: {
+      'addressExists': 'Adres już istnieje!',
+      'addressAdded': 'Adres został pomyślnie dodany.',
+      'addressNotAdded': 'Adres nie został dodany.',
+      'alreadyMainAddress': 'Ten adres już jest domyślnym adresem!',
+      'cannotDeleteMainAddress': 'Usunięcie domyślnego adresu jest niemożliwe.',
+      'removeAddressConfirmTitle': 'Usunięcie adresu',
+      'removeAddressConfirmMessage': 'Czy na pewno chcesz usunąć ten adres?',
+
+      'clientExists': 'Klient już istnieje!',
+      'clientAdded': 'Klient został pomyślnie dodany.',
+      'clientNotAdded': 'Adres nie został dodany.',
+      'removeClientConfirmTitle': 'Usunięcie klienta',
+      'removeClientConfirmMessage': 'Czy na pewno chcesz usunąć tego klienta?',
+
+      'dataBeingResolved': 'Proszę czekać, dane są pobierane w tle.',
+      'noMatchForFilter': 'Nie istnieje żaden klient spełniający kryteria wyszukiwania.',
+      'cancelAction': 'Anuluj',
+      'confirmAction': 'Kontynuuj',
+      'rowNotSelected': 'Proszę wybrać wiersz.',
+      'tokenHasExpired': 'Token użytkownika wygasł! Proszę zalogować się ponownie.'
+    }
+  };
+
   constructor(@Inject(LOCALE_ID) public localeId: string) {
   }
 
   public getLocalizedValidationMessages(field: any) {
     return this.validationMessages[this.localeId][field];
+  }
+
+  public getLocalizedMessages(field: string) {
+    return this.applicationMessages[this.localeId][field];
   }
 
   public onValueChanged(form: FormGroup, formErrors: {}, data ?: any) {
