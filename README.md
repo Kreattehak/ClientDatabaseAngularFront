@@ -23,7 +23,9 @@ For the best user experience please use this app with that project.
 
 This project was created to learn how angular 2 works and how to consume REST in Java.
 It was created simultaneously with `ClientDatabase`.
-In the process of creating, it went through few phases, from simple one page app with table of clients to fully operational CRUD app that communicates with back-end server and makes changes on the database. Later I added JSON Web Token authentication, to provide some control on what data can see and change particular user.
+In the process of creating, it went through few phases, from simple one page app with table of clients to fully operational CRUD app that communicates with back-end server and makes changes on the database. Later I added JSON Web Token authentication, to provide some control on what data can see and change particular user. 
+
+The hardest part of creating this app was to always consider change detection implications as I developed it over time.
 
 ### But what it exactly does?
 
@@ -58,6 +60,15 @@ npm start
 The npm start command first compiles the application and then simultaneously re-compiles and runs the application whenever a change was made.
 
 > The `scripts` object in `package.json` has property `start` changed to `ng serve --proxy-config proxy-conf.json` which allows to obtain JSON from RESTful Web Service.
+
+## Internationalization
+
+`Package.json` contains two additional scripts to build and then serve app with specified locale.
+
+Use:
+`npm run-script start[locale]` - where locale can be 'en' or 'pl' e.g. `npm run-script startpl`
+
+You have to use npm `run-script` because `startpl` isn't build in script name that can be overridden. Both scripts take care of launching app with a proxy, so you don't have to specify it. 
 
 ## REST resources
 
