@@ -30,10 +30,7 @@ export class AuthenticationService {
 
   isTokenExpired(): boolean {
     const token: string = this.getToken();
-    if (token && token.length > 0) {
-      return this._jwtHelper.isTokenExpired(token);
-    }
-    return true;
+    return this._jwtHelper.isTokenExpired(token);
   }
 
   login(username: string, password: string): Observable<boolean> {
