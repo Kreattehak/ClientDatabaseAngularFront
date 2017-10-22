@@ -91,7 +91,9 @@ export class ValidationAndLocaleMessagesService {
       'rowNotSelected': 'Please select an row.',
       'tokenHasExpired': 'User token has expired! Please login again.',
       'emptyDatabase': 'Server returned empty array, there are no users in database!',
-      'serverOffline': 'Server is offline.'
+      'serverOffline': 'Server is offline.',
+      'errorTitle': 'Error!',
+      'successTitle': 'Success!'
     },
     pl: {
       'addressExists': 'Adres już istnieje!',
@@ -113,11 +115,17 @@ export class ValidationAndLocaleMessagesService {
       'cancelAction': 'Anuluj',
       'confirmAction': 'Kontynuuj',
       'rowNotSelected': 'Proszę wybrać wiersz.',
-      'tokenHasExpired': 'Token użytkownika wygasł! Proszę zalogować się ponownie.'
+      'tokenHasExpired': 'Token użytkownika wygasł! Proszę zalogować się ponownie.',
+      'errorTitle': 'Błąd!',
+      'successTitle': 'Sukces!'
     }
   };
 
   constructor(@Inject(LOCALE_ID) public localeId: string) {
+  }
+
+  public setCookie(): void {
+    document.cookie = 'myLocaleCookie=' + this.localeId;
   }
 
   public getLocalizedValidationMessages(field: any) {

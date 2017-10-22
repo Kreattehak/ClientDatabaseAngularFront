@@ -26,6 +26,7 @@ export class ClientListComponent implements OnInit {
 
   ngOnInit() {
     this.generateTable();
+    this._validationService.setCookie();
   }
 
   get filter(): string {
@@ -111,9 +112,9 @@ export class ClientListComponent implements OnInit {
               const data = this.clients.filter(client => client !== this.activeClient);
               this.clients = data;
               this.filteredClients = data;
-              this._toastr.success(response, 'Success!');
+              this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
               this.activeClient = null;
-            }, error => this._toastr.error(error, 'Error!')
+            }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
           );
           return true;
         } else {
@@ -144,7 +145,7 @@ export class ClientListComponent implements OnInit {
         this.filteredClients = this.clients;
       }, error => {
         this.errorMessage = this._validationService.getLocalizedMessages('serverOffline');
-        this._toastr.error(this.errorMessage, 'Error!');
+        this._toastr.error(this.errorMessage, this._validationService.getLocalizedMessages('errorTitle'));
       });
   }
 
