@@ -58,11 +58,11 @@ export class ClientDetailComponent implements OnInit {
     } else {
       this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
         response => {
-          this._toastr.success(response, 'Success!');
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
           this.client.mainAddress = this.activeAddress;
           this.activeAddress = null;
         },
-        error => this._toastr.error(error, 'Error!'));
+        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
     }
   }
 
@@ -70,7 +70,8 @@ export class ClientDetailComponent implements OnInit {
     if (!this.activeAddress) {
       return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
     } else if (this.client.mainAddress.id === this.activeAddress.id) {
-      return this.cannotProceed('cannotDeleteMainAddress', 'medium');
+      return this.cannotProceed(this._validationService.getLocalizedMessages('cannotDeleteMainAddress'),
+        'medium');
     } else {
       this.removeConfirm();
     }
@@ -92,11 +93,11 @@ export class ClientDetailComponent implements OnInit {
         if (result) {
           this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
             response => {
-              this._toastr.success(response, 'Success!');
+              this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
               this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
               this.activeAddress = null;
               this._router.navigate(['/clients', this.client.id, 'details']);
-            }, error => this._toastr.error(error, 'Error!'));
+            }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
           return true;
         } else {
           return;

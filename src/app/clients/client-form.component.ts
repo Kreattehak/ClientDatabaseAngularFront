@@ -56,7 +56,8 @@ export class ClientFormComponent implements OnInit {
 
   onSubmit(id: number): void {
     if (this.activeClient === this.clientForm.value) {
-      this._toastr.error(this._validationService.getLocalizedMessages('clientExists'), 'Error!');
+      this._toastr.error(this._validationService.getLocalizedMessages('clientExists'),
+        this._validationService.getLocalizedMessages('errorTitle'));
       return;
     }
 
@@ -70,15 +71,17 @@ export class ClientFormComponent implements OnInit {
           if (this.shouldRedirectToAddressForm) {
             this._router.navigate(['/clients', response, 'newAddress']);
           } else {
-            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'), 'Success!');
+            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
+              this._validationService.getLocalizedMessages('successTitle'));
           }
-        }, error => this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), 'Error!'));
+        }, error => this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
+          this._validationService.getLocalizedMessages('errorTitle')));
     } else {
       this.activeClient.id = id;
       console.log(this.activeClient);
       this._clientService.updateClient(this.activeClient).subscribe(
-        response => this._toastr.success(response, 'Success!'),
-        error => this._toastr.error(error, 'Error!'));
+        response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
+        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
       // setTimeout(this._router.navigate(['/clients']), 10000);
     }
 
