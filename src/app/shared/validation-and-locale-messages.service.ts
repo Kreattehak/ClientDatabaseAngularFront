@@ -116,6 +116,8 @@ export class ValidationAndLocaleMessagesService {
       'confirmAction': 'Kontynuuj',
       'rowNotSelected': 'Proszę wybrać wiersz.',
       'tokenHasExpired': 'Token użytkownika wygasł! Proszę zalogować się ponownie.',
+      'emptyDatabase': 'Serwer zwrócił pustą tablicę, baza danych jest pusta!',
+      'serverOffline': 'Serwer jest offline.',
       'errorTitle': 'Błąd!',
       'successTitle': 'Sukces!'
     }
