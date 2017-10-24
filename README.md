@@ -33,19 +33,19 @@ This project shows client data stored in database. You can add new, delete or mo
 
 ## Screenshots
 
-![main page](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/main_page.png "Main page with table of clients")
+![main page](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/main_page.png "Main page with table of clients")
 Main page with table of clients
 
-![filtering clients](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/filter_applied.png "Filtering clients by <any devito>")
+![filtering clients](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/filter_applied.png "Filtering clients by <any devito>")
 Filtering clients by `any devito`
 
-![client details](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/client_details.png "Client details page")
+![client details](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/client_details.png "Client details page")
 Client details page
 
-![secondary route](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/secondary_route.png "Use of secondary route when clicking About Author")
+![secondary route](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/secondary_route.png "Use of secondary route when clicking About Author")
 Use of secondary route when clicking About Author
 
-![selected client](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/Screenshots/selected_row.png "Selected row with client data")
+![selected client](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/selected_row.png "Selected row with client data")
 Table on main page is 'clickable', before you can perform any action from buttons below you need to select
 one row.
 
