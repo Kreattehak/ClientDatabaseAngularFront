@@ -225,7 +225,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var AddressService = (function () {
     function AddressService(_http) {
         this._http = _http;
-        this._getAllAddresses = '/api/admin/getAllAddresses?id=';
+        this._getAllAddresses = '/api/clientAddresses/';
         this._saveNewAddress = '/api/admin/saveNewAddress?id=';
         this._updateAddress = '/api/admin/updateAddress';
         this._deleteAddress = '/api/admin/deleteAddress';
@@ -233,7 +233,7 @@ var AddressService = (function () {
     }
     AddressService.prototype.getAllAddresses = function (id) {
         return this._http.get(this._getAllAddresses + id, this.requestBearer())
-            .map(function (response) { return response.json(); })
+            .map(function (response) { return response.json().addresses; })
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
@@ -424,7 +424,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-nav-hide\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutAuthor()\" [ngStyle]=\"{'cursor':'pointer'}\" i18n=\"@@navbar.aboutAuthor\">About Author</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\" i18n=\"@@navbar.adminPanel\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\" i18n=\"@@navbar.addClient\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login', {'logout': 'true'}]\" i18n=\"@@navbar.logout\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
+module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-nav-hide\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutAuthor()\" [ngStyle]=\"{'cursor':'pointer'}\" i18n=\"@@navbar.aboutAuthor\">About Author</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\" i18n=\"@@navbar.adminPanel\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\" i18n=\"@@navbar.addClient\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login']\" i18n=\"@@navbar.logout\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
 
 /***/ }),
 
@@ -995,7 +995,6 @@ var ClientListComponent = (function () {
     }
     ClientListComponent.prototype.ngOnInit = function () {
         this.generateTable();
-        this._validationService.setCookie();
     };
     Object.defineProperty(ClientListComponent.prototype, "filter", {
         get: function () {
@@ -1589,9 +1588,6 @@ var ValidationAndLocaleMessagesService = (function () {
             }
         };
     }
-    ValidationAndLocaleMessagesService.prototype.setCookie = function () {
-        document.cookie = 'myLocaleCookie=' + this.localeId;
-    };
     ValidationAndLocaleMessagesService.prototype.getLocalizedValidationMessages = function (field) {
         return this.validationMessages[this.localeId][field];
     };
@@ -1682,86 +1678,195 @@ var MockData = (function () {
     MockData.prototype.createDb = function () {
         var clients = [
             {
-                "id": 1,
-                "firstName": "Dany",
-                "lastName": "Devito",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 1,
-                    "streetName": "Krakowska",
-                    "cityName": "Katowice",
-                    "zipCode": "47-789"
+                'id': 1,
+                'firstName': 'Dany',
+                'lastName': 'Devito',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 1,
+                    'streetName': 'Krakowska',
+                    'cityName': 'Katowice',
+                    'zipCode': '47-789'
                 }
             },
             {
-                "id": 2,
-                "firstName": "Bany",
-                "lastName": "Devito",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 5,
-                    "streetName": "Warszawska",
-                    "cityName": "Wrocław",
-                    "zipCode": "78-987"
+                'id': 2,
+                'firstName': 'Bany',
+                'lastName': 'Devito',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 5,
+                    'streetName': 'Warszawska',
+                    'cityName': 'Wrocław',
+                    'zipCode': '78-987'
                 }
             },
             {
-                "id": 3,
-                "firstName": "Nany",
-                "lastName": "Devito",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 3,
-                    "streetName": "Gliwicka",
-                    "cityName": "Mysłowice",
-                    "zipCode": "47-987"
+                'id': 3,
+                'firstName': 'Nany',
+                'lastName': 'Devito',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 3,
+                    'streetName': 'Gliwicka',
+                    'cityName': 'Mysłowice',
+                    'zipCode': '47-987'
                 }
             },
             {
-                "id": 4,
-                "firstName": "Without",
-                "lastName": "Address",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": null
+                'id': 4,
+                'firstName': 'Without',
+                'lastName': 'Address',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': null
             },
             {
-                "id": 5,
-                "firstName": "Devito",
-                "lastName": "Kurkuma",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 7,
-                    "streetName": "Baker",
-                    "cityName": "Czikago",
-                    "zipCode": "66-789"
+                'id': 5,
+                'firstName': 'Devito',
+                'lastName': 'Kurkuma',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 7,
+                    'streetName': 'Baker',
+                    'cityName': 'Czikago',
+                    'zipCode': '66-789'
                 }
             },
             {
-                "id": 6,
-                "firstName": "Bill",
-                "lastName": "Colab",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 9,
-                    "streetName": "Jasnogórska",
-                    "cityName": "Zamość",
-                    "zipCode": "64-745"
+                'id': 6,
+                'firstName': 'Bill',
+                'lastName': 'Colab',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 9,
+                    'streetName': 'Jasnogórska',
+                    'cityName': 'Zamość',
+                    'zipCode': '64-745'
                 }
             },
             {
-                "id": 7,
-                "firstName": "Andrzej",
-                "lastName": "Chrząszcz",
-                "dateOfRegistration": 1508104800000,
-                "mainAddress": {
-                    "id": 10,
-                    "streetName": "Górnośląska",
-                    "cityName": "Katowice",
-                    "zipCode": "34-576"
+                'id': 7,
+                'firstName': 'Andrzej',
+                'lastName': 'Chrząszcz',
+                'dateOfRegistration': 1508104800000,
+                'mainAddress': {
+                    'id': 10,
+                    'streetName': 'Górnośląska',
+                    'cityName': 'Katowice',
+                    'zipCode': '34-576'
                 }
             }
         ];
-        return { clients: clients };
+        // need to extract data from this array by id in address service
+        var clientAddresses = [
+            {
+                'id': 1,
+                'addresses': [
+                    {
+                        'id': 1,
+                        'streetName': 'Krakowska',
+                        'cityName': 'Katowice',
+                        'zipCode': '47-789'
+                    },
+                    {
+                        'id': 2,
+                        'streetName': 'Katowicka',
+                        'cityName': 'Kraków',
+                        'zipCode': '65-789'
+                    },
+                    {
+                        'id': 11,
+                        'streetName': 'Mysłowicka',
+                        'cityName': 'Katowice',
+                        'zipCode': '40-478'
+                    },
+                    {
+                        'id': 12,
+                        'streetName': 'Katowicka',
+                        'cityName': 'Mysłowice',
+                        'zipCode': '47-977'
+                    }
+                ]
+            },
+            {
+                'id': 2,
+                'addresses': [
+                    {
+                        'id': 5,
+                        'streetName': 'Warszawska',
+                        'cityName': 'Wrocław',
+                        'zipCode': '78-987'
+                    },
+                    {
+                        'id': 6,
+                        'streetName': 'Wrocławska',
+                        'cityName': 'Warszawa',
+                        'zipCode': '98-784'
+                    }
+                ]
+            },
+            {
+                'id': 3,
+                'addresses': [
+                    {
+                        'id': 3,
+                        'streetName': 'Gliwicka',
+                        'cityName': 'Mysłowice',
+                        'zipCode': '47-987'
+                    },
+                    {
+                        'id': 4,
+                        'streetName': 'Mysłowicka',
+                        'cityName': 'Gliwice',
+                        'zipCode': '98-784'
+                    }
+                ]
+            },
+            {
+                'id': 4,
+                'addresses': []
+            },
+            {
+                'id': 5,
+                'addresses': [
+                    {
+                        'id': 7,
+                        'streetName': 'Baker',
+                        'cityName': 'Czikago',
+                        'zipCode': '66-789'
+                    },
+                    {
+                        'id': 8,
+                        'streetName': 'Downtown',
+                        'cityName': 'Arkanzas',
+                        'zipCode': '12-345'
+                    }
+                ]
+            },
+            {
+                'id': 6,
+                'addresses': [
+                    {
+                        'id': 9,
+                        'streetName': 'Jasnogórska',
+                        'cityName': 'Zamość',
+                        'zipCode': '64-745'
+                    }
+                ]
+            },
+            {
+                'id': 7,
+                'addresses': [
+                    {
+                        'id': 10,
+                        'streetName': 'Górnośląska',
+                        'cityName': 'Katowice',
+                        'zipCode': '34-576'
+                    }
+                ]
+            },
+        ];
+        return { clients: clients, clientAddresses: clientAddresses };
     };
     return MockData;
 }());
