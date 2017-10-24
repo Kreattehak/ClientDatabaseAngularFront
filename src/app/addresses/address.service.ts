@@ -25,7 +25,7 @@ export class AddressService {
 
   getAllAddresses(id: number): Observable<Address[]> {
     return this._http.get(this._getAllAddresses + id, this.requestBearer())
-      .map((response: Response) => this.parseAddresses(response))
+      .map((response: Response) => response.json() as Address[])
       .do(data => console.log('All: ' + JSON.stringify(data)))
       .catch(this.handleError);
   }
@@ -61,16 +61,14 @@ export class AddressService {
   }
 
   private handleError(error: Response): ErrorObservable {
-    return Observable.throw(error.json().errorMessage || 'Server error');
-  }
-
-  private parseAddresses(response: Response): Address[] {
-    const addresses: Address[] = response.json() as Address[];
-    for (const address of addresses) {
-      Object.assign(new Address, address);
-      Object.setPrototypeOf(address, Address.prototype);
+    let errorMessage;
+    try {
+      errorMessage = error.json().errorMessage;
+    } catch (e) {
+      errorMessage = error.text();
+    } finally {
+      return Observable.throw(errorMessage || 'Server error');
     }
-    return addresses;
   }
 
   private requestBearer(): RequestOptions {

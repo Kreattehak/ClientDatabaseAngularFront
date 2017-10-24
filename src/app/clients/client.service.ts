@@ -54,7 +54,14 @@ export class ClientService {
   }
 
   private handleError(error: Response): ErrorObservable {
-    return Observable.throw(error.json().errorMessage || 'Server error');
+    let errorMessage;
+    try {
+      errorMessage = error.json().errorMessage;
+    } catch (e) {
+      errorMessage = error.text();
+    } finally {
+      return Observable.throw(errorMessage || 'Server error');
+    }
   }
 
   private requestBearer(): RequestOptions {
@@ -62,7 +69,7 @@ export class ClientService {
       headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + this._authenticationService.getToken(),
-        'Logged-User' : this._authenticationService.getUserName()
+        'Logged-User': this._authenticationService.getUserName()
       })
     });
   }
