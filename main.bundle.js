@@ -205,7 +205,6 @@ var _a, _b, _c, _d, _e, _f;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__ = __webpack_require__("../../../../../src/app/login/authentication.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddressService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -223,11 +222,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AddressService = (function () {
-    function AddressService(_http, _authenticationService) {
+    function AddressService(_http) {
         this._http = _http;
-        this._authenticationService = _authenticationService;
         this._getAllAddresses = '/api/admin/getAllAddresses?id=';
         this._saveNewAddress = '/api/admin/saveNewAddress?id=';
         this._updateAddress = '/api/admin/updateAddress';
@@ -279,11 +276,9 @@ var AddressService = (function () {
         }
     };
     AddressService.prototype.requestBearer = function () {
-        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this._authenticationService.getToken(),
-                'Logged-User': this._authenticationService.getUserName()
+        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* RequestOptions */]({
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Headers */]({
+                'Content-Type': 'application/json'
             })
         });
     };
@@ -291,10 +286,10 @@ var AddressService = (function () {
 }());
 AddressService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object])
 ], AddressService);
 
-var _a, _b;
+var _a;
 //# sourceMappingURL=address.service.js.map
 
 /***/ }),
@@ -570,7 +565,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_8__angular_platform_browser__["BrowserModule"],
             __WEBPACK_IMPORTED_MODULE_9__angular_forms__["a" /* ReactiveFormsModule */],
             __WEBPACK_IMPORTED_MODULE_9__angular_forms__["b" /* FormsModule */],
-            __WEBPACK_IMPORTED_MODULE_12__angular_http__["HttpModule"],
+            __WEBPACK_IMPORTED_MODULE_12__angular_http__["a" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_17__app_routing_module__["a" /* AppRoutingModule */],
             __WEBPACK_IMPORTED_MODULE_10_ng2_toastr__["ToastModule"].forRoot(),
             __WEBPACK_IMPORTED_MODULE_11__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
@@ -1163,7 +1158,6 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__ = __webpack_require__("../../../../../src/app/login/authentication.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1181,15 +1175,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ClientService = (function () {
-    function ClientService(_http, _authenticationService) {
+    function ClientService(_http) {
         this._http = _http;
-        this._authenticationService = _authenticationService;
         this._getAllClients = '/api/clients';
         this._updateClient = '/api/admin/updateClient';
         this._deleteClient = '/api/admin/deleteClient';
-        this._getClient = '/api/admin/getClient?id=';
+        this._getClient = '/api/clients/';
         this._saveNewClient = '/api/admin/saveNewClient';
     }
     ClientService.prototype.getAllClients = function () {
@@ -1230,11 +1222,9 @@ var ClientService = (function () {
         }
     };
     ClientService.prototype.requestBearer = function () {
-        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this._authenticationService.getToken(),
-                'Logged-User': this._authenticationService.getUserName()
+        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* RequestOptions */]({
+            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Headers */]({
+                'Content-Type': 'application/json'
             })
         });
     };
@@ -1242,10 +1232,10 @@ var ClientService = (function () {
 }());
 ClientService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__login_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object])
 ], ClientService);
 
-var _a, _b;
+var _a;
 //# sourceMappingURL=client.service.js.map
 
 /***/ }),
@@ -1270,17 +1260,12 @@ var Client = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_jwt__ = __webpack_require__("../../../../angular2-jwt/angular2-jwt.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_angular2_jwt___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_angular2_jwt__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_throw__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AuthenticationService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1288,75 +1273,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
 
 
 
 
 var AuthenticationService = (function () {
-    function AuthenticationService(_http) {
-        this._http = _http;
-        this._postSetUp = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]({
-                'Content-Type': 'application/json',
-            })
-        });
-        this._authUrl = '/api/auth';
-        this._jwtHelper = new __WEBPACK_IMPORTED_MODULE_3_angular2_jwt__["JwtHelper"]();
+    function AuthenticationService() {
     }
     AuthenticationService.prototype.isLoggedIn = function () {
-        var token = this.getToken();
-        return token && token.length > 0;
-    };
-    AuthenticationService.prototype.isTokenExpired = function () {
-        var token = this.getToken();
-        return this._jwtHelper.isTokenExpired(token);
+        return !!localStorage.getItem('currentUser');
     };
     AuthenticationService.prototype.login = function (username, password) {
-        return this._http.post(this._authUrl, JSON.stringify({
-            username: username,
-            password: password
-        }), this._postSetUp)
-            .map(function (response) {
-            // login successful if there's a jwt token in the response
-            var token = response.json() && response.json().token;
-            if (token) {
-                // store username and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
-                // return true to indicate successful login
-                return true;
-            }
-            else {
-                __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].throw(response.text());
-            }
-        }).catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].throw(error.text()); });
-    };
-    AuthenticationService.prototype.getToken = function () {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        var token = currentUser && currentUser.token;
-        return token ? token : '';
-    };
-    AuthenticationService.prototype.getUserName = function () {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        var username = currentUser && currentUser.username;
-        return username ? username : '';
+        this.username = username;
+        this.password = password;
+        localStorage.setItem('currentUser', JSON.stringify({ username: username }));
     };
     AuthenticationService.prototype.logout = function () {
         localStorage.removeItem('currentUser');
     };
+    AuthenticationService.prototype.getUserName = function () {
+        return this.username;
+    };
     return AuthenticationService;
 }());
 AuthenticationService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["Http"]) === "function" && _a || Object])
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])()
 ], AuthenticationService);
 
-var _a;
 //# sourceMappingURL=authentication.service.js.map
 
 /***/ }),
@@ -1388,10 +1331,7 @@ var CanActivateAuthGuard = (function () {
     }
     CanActivateAuthGuard.prototype.canActivate = function (_route, _state) {
         if (this.authService.isLoggedIn()) {
-            if (!this.authService.isTokenExpired()) {
-                return true;
-            }
-            this.router.navigate(['/login', { expired: 'true' }]);
+            return true;
         }
         else {
             this.router.navigate(['/login']);
@@ -1479,9 +1419,6 @@ var LoginComponent = (function () {
     LoginComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._authenticationService.logout();
-        if (this._route.snapshot.paramMap.get('expired')) {
-            this.errorMessage = this._validationService.getLocalizedMessages('tokenHasExpired');
-        }
         var username = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('', [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
         var password = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('', [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required]);
         this.userForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
@@ -1492,23 +1429,7 @@ var LoginComponent = (function () {
         this._validationService.onValueChanged(this.userForm, this.formErrors);
     };
     LoginComponent.prototype.login = function () {
-        var _this = this;
-        this._authenticationService.login(this.userForm.value.username, this.userForm.value.password)
-            .subscribe(function (response) {
-            if (response === true) {
-                // login successful
-                _this._router.navigate(['/clients']);
-            }
-        }, function (error) {
-            _this.loginFailed(error);
-        });
-    };
-    LoginComponent.prototype.loginFailed = function (message) {
-        bootbox.alert({
-            message: message,
-            size: 'medium',
-            backdrop: true
-        });
+        this._authenticationService.login(this.userForm.value.username, this.userForm.value.password);
     };
     return LoginComponent;
 }());
