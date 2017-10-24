@@ -424,7 +424,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-nav-hide\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutAuthor()\" [ngStyle]=\"{'cursor':'pointer'}\" i18n=\"@@navbar.aboutAuthor\">About Author</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\" i18n=\"@@navbar.adminPanel\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\" i18n=\"@@navbar.addClient\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login']\" i18n=\"@@navbar.logout\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
+module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#bs-nav-hide\"\n              aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutAuthor()\" [ngStyle]=\"{'cursor':'pointer'}\" i18n=\"@@navbar.aboutAuthor\">About Author</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\" i18n=\"@@navbar.adminPanel\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\" i18n=\"@@navbar.addClient\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login', {'logout': 'true'}]\" i18n=\"@@navbar.logout\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
 
 /***/ }),
 
@@ -1371,7 +1371,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n  <section class=\"row\" *ngIf=\"errorMessage\">\r\n    <div class=\"alert alert-info col-lg-6\">{{errorMessage}}</div>\r\n  </section>\r\n  <div class=\"row\">\r\n    <form [formGroup]=\"userForm\" class=\"form-horizontal\" novalidate (ngSubmit)=\"login()\">\r\n      <fieldset>\r\n\r\n        <legend i18n=\"@@login.legend\">Please login to use this application</legend>\r\n\r\n        <div class=\"form-group\">\r\n          <label class=\"control-label col-lg-2\" for=\"username\" i18n=\"@@login.username\">Username</label>\r\n          <div class=\"col-lg-5\">\r\n            <input class=\"form-control\" id=\"username\" type=\"text\" placeholder=\"Username\"\r\n                   formControlName=\"username\" required i18n-placeholder=\"@@login.username\"/>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n          <label class=\"col-md-2 control-label\" for=\"password\" i18n=\"@@login.password\">Password</label>\r\n          <div class=\"col-lg-5\">\r\n            <input class=\"form-control\" id=\"password\" type=\"password\"\r\n                   placeholder=\"Password\" formControlName=\"password\" i18n-placeholder=\"@@login.password\"/>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n          <div class=\"col-lg-offset-2 col-lg-2\">\r\n            <button type=\"submit\" class=\"btn btn-success\" i18n=\"@@login.loginButton\">Log in</button>\r\n          </div>\r\n        </div>\r\n\r\n      </fieldset>\r\n    </form>\r\n\r\n    <div *ngIf=\"formErrors.username || formErrors.password\" class=\"alert alert-danger\">\r\n      <p>{{ formErrors.username }}</p>\r\n      <p>{{ formErrors.password }}</p>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
+module.exports = "<div class=\"container\">\r\n  <section class=\"row\" *ngIf=\"logoutMessage\">\r\n    <div class=\"alert alert-info col-lg-6\">{{logoutMessage}}</div>\r\n  </section>\r\n  <div class=\"row\">\r\n    <form [formGroup]=\"userForm\" class=\"form-horizontal\" novalidate (ngSubmit)=\"login()\">\r\n      <fieldset>\r\n\r\n        <legend i18n=\"@@login.legend\">Please login to use this application</legend>\r\n\r\n        <div class=\"form-group\">\r\n          <label class=\"control-label col-lg-2\" for=\"username\" i18n=\"@@login.username\">Username</label>\r\n          <div class=\"col-lg-5\">\r\n            <input class=\"form-control\" id=\"username\" type=\"text\" placeholder=\"Username\"\r\n                   formControlName=\"username\" required i18n-placeholder=\"@@login.username\"/>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n          <label class=\"col-md-2 control-label\" for=\"password\" i18n=\"@@login.password\">Password</label>\r\n          <div class=\"col-lg-5\">\r\n            <input class=\"form-control\" id=\"password\" type=\"password\"\r\n                   placeholder=\"Password\" formControlName=\"password\" i18n-placeholder=\"@@login.password\"/>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"form-group\">\r\n          <div class=\"col-lg-offset-2 col-lg-2\">\r\n            <button type=\"submit\" class=\"btn btn-success\" i18n=\"@@login.loginButton\">Log in</button>\r\n          </div>\r\n        </div>\r\n\r\n      </fieldset>\r\n    </form>\r\n\r\n    <div *ngIf=\"formErrors.username || formErrors.password\" class=\"alert alert-danger\">\r\n      <p>{{ formErrors.username }}</p>\r\n      <p>{{ formErrors.password }}</p>\r\n    </div>\r\n  </div>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -1419,6 +1419,9 @@ var LoginComponent = (function () {
     LoginComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._authenticationService.logout();
+        if (this._route.snapshot.paramMap.get('logout')) {
+            this.logoutMessage = this._validationService.getLocalizedMessages('userHasLogout');
+        }
         var username = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('', [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
         var password = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('', [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required]);
         this.userForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
@@ -1430,6 +1433,7 @@ var LoginComponent = (function () {
     };
     LoginComponent.prototype.login = function () {
         this._authenticationService.login(this.userForm.value.username, this.userForm.value.password);
+        this._router.navigate(['/clients']);
     };
     return LoginComponent;
 }());
@@ -1551,6 +1555,7 @@ var ValidationAndLocaleMessagesService = (function () {
                 'cancelAction': 'Cancel',
                 'confirmAction': 'Confirm',
                 'rowNotSelected': 'Please select an row.',
+                'userHasLogout': 'Logout successful.',
                 'tokenHasExpired': 'User token has expired! Please login again.',
                 'emptyDatabase': 'Server returned empty array, there are no users in database!',
                 'serverOffline': 'Server is offline.',
@@ -1575,6 +1580,7 @@ var ValidationAndLocaleMessagesService = (function () {
                 'cancelAction': 'Anuluj',
                 'confirmAction': 'Kontynuuj',
                 'rowNotSelected': 'Proszę wybrać wiersz.',
+                'userHasLogout': 'Nastąpiło poprawne wylogowanie.',
                 'tokenHasExpired': 'Token użytkownika wygasł! Proszę zalogować się ponownie.',
                 'emptyDatabase': 'Serwer zwrócił pustą tablicę, baza danych jest pusta!',
                 'serverOffline': 'Serwer jest offline.',
