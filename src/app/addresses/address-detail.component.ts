@@ -51,8 +51,8 @@ export class AddressDetailComponent implements OnInit {
     const cityName = new FormControl(this.activeAddress.cityName,
       [Validators.required, Validators.minLength(3)]);
     const zipCode = new FormControl(this.activeAddress.zipCode,
-      [Validators.required, Validators.minLength(6),
-        Validators.maxLength(6), Validators.pattern(/\d{2}-\d{3}/ig)]);
+      [Validators.required, Validators.minLength(6), Validators.maxLength(6),
+        Validators.pattern(/\d{2}-\d{3}/ig)]);
 
     this.addressForm = new FormGroup({
       id: id,
@@ -67,28 +67,54 @@ export class AddressDetailComponent implements OnInit {
   }
 
   onSubmit(id: number): void {
-    if (this.activeAddress === this.addressForm.value) {
-      this._toastr.error(this._validationService.getLocalizedMessages('addressExists'),
-        this._validationService.getLocalizedMessages('errorTitle'));
-      return;
-    }
-
     this.submitted = true;
-    this.activeAddress = this.addressForm.value;
 
     if (this.isNewAddress) {
-      this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
-        response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
-          this._validationService.getLocalizedMessages('successTitle')),
-        error => this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
-          this._validationService.getLocalizedMessages('errorTitle'))
-      );
+      this.tryToSaveNewAddress();
     } else {
-      this.activeAddress.id = id;
-      this._addressService.updateAddress(this.activeAddress).subscribe(
-        response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
-        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+      if (this.checkForAddressDataDuplication()) {
+        return;
+      } else {
+        this.tryToUpdateAddress(id);
+      }
     }
+  }
+
+  private tryToSaveNewAddress() {
+    this.activeAddress = this.addressForm.value;
+    this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
+      response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
+        this._validationService.getLocalizedMessages('successTitle')),
+      error => {
+        if (error === -1) {
+          this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
+            this._validationService.getLocalizedMessages('errorTitle'));
+        } else {
+          this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+        }
+      }
+    );
+  }
+
+  private tryToUpdateAddress(id: number): void {
+    this.activeAddress = this.addressForm.value;
+    this.activeAddress.id = id;
+    this._addressService.updateAddress(this.activeAddress).subscribe(
+      response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
+      error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+  }
+
+  private checkForAddressDataDuplication(): boolean {
+    // first check values that can differ the most
+    if (this.activeAddress.streetName === this.addressForm.value.streetName
+      && this.activeAddress.zipCode === this.addressForm.value.zipCode
+      && this.activeAddress.cityName === this.addressForm.value.cityName) {
+      this._toastr.error(this._validationService.getLocalizedMessages('addressExists'),
+        this._validationService.getLocalizedMessages('errorTitle'));
+      this.submitted = false;
+      return true;
+    }
+    return false;
   }
 
   onBack(): void {

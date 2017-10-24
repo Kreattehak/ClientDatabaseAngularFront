@@ -72,7 +72,7 @@ export class ValidationAndLocaleMessagesService {
     en: {
       'addressExists': 'Address already exists!',
       'addressAdded': 'Address was successfully added.',
-      'addressNotAdded': 'Address wasn\'t added.',
+      'addressNotAdded': 'Address wasn\'t added. Please check if given address does not already exists.',
       'alreadyMainAddress': 'This address is already a main address!',
       'cannotDeleteMainAddress': 'You can\'t delete address that is currently a main address.',
       'removeAddressConfirmTitle': 'Address deletion',
@@ -98,7 +98,7 @@ export class ValidationAndLocaleMessagesService {
     pl: {
       'addressExists': 'Adres już istnieje!',
       'addressAdded': 'Adres został pomyślnie dodany.',
-      'addressNotAdded': 'Adres nie został dodany.',
+      'addressNotAdded': 'Adres nie został dodany. Proszę sprawdzić czy dany adres już nie istnieje.',
       'alreadyMainAddress': 'Ten adres już jest domyślnym adresem!',
       'cannotDeleteMainAddress': 'Usunięcie domyślnego adresu jest niemożliwe.',
       'removeAddressConfirmTitle': 'Usunięcie adresu',

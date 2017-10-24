@@ -55,36 +55,59 @@ export class ClientFormComponent implements OnInit {
   }
 
   onSubmit(id: number): void {
-    if (this.activeClient === this.clientForm.value) {
-      this._toastr.error(this._validationService.getLocalizedMessages('clientExists'),
-        this._validationService.getLocalizedMessages('errorTitle'));
-      return;
-    }
-
     this.submitted = true;
-    this.activeClient = this.clientForm.value;
 
     if (this.isNewClient) {
-      console.log(this.activeClient);
-      this._clientService.saveNewClient(this.activeClient).subscribe(
-        response => {
-          if (this.shouldRedirectToAddressForm) {
-            this._router.navigate(['/clients', response, 'newAddress']);
-          } else {
-            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
-              this._validationService.getLocalizedMessages('successTitle'));
-          }
-        }, error => this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
-          this._validationService.getLocalizedMessages('errorTitle')));
+      this.tryToSaveNewClient();
     } else {
-      this.activeClient.id = id;
-      console.log(this.activeClient);
-      this._clientService.updateClient(this.activeClient).subscribe(
-        response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
-        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
-      // setTimeout(this._router.navigate(['/clients']), 10000);
+      if (this.checkForClientDataDuplication()) {
+        return;
+      } else {
+        this.tryToUpdateClient(id);
+      }
     }
+  }
 
+  private tryToSaveNewClient() {
+    this.activeClient = this.clientForm.value;
+    this._clientService.saveNewClient(this.activeClient).subscribe(
+      response => {
+        if (this.shouldRedirectToAddressForm) {
+          this._router.navigate(['/clients', response, 'newAddress']);
+        } else {
+          this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
+            this._validationService.getLocalizedMessages('successTitle'));
+        }
+      }, error => {
+        if (error === -1) {
+          this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
+            this._validationService.getLocalizedMessages('errorTitle'));
+        } else {
+          this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+        }
+      }
+    );
+  }
+
+  private tryToUpdateClient(id: number) {
+    this.activeClient = this.clientForm.value;
+    this.activeClient.id = id;
+    this._clientService.updateClient(this.activeClient).subscribe(
+      response => this._toastr.success(response,
+        this._validationService.getLocalizedMessages('successTitle')),
+      error => this._toastr.error(error,
+        this._validationService.getLocalizedMessages('errorTitle')));
+  }
+
+  private checkForClientDataDuplication(): boolean {
+    if (this.activeClient.lastName === this.clientForm.value.lastName
+      && this.activeClient.firstName === this.clientForm.value.firstName) {
+      this._toastr.error(this._validationService.getLocalizedMessages('clientExists'),
+        this._validationService.getLocalizedMessages('errorTitle'));
+      this.submitted = false;
+      return true;
+    }
+    return false;
   }
 
   goBack(): void {
