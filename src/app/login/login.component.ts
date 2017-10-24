@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
     'password': '',
   };
   public errorMessage: string;
+  public logoutMessage: string;
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
               private _validationService: ValidationAndLocaleMessagesService, private _toastr: ToastsManager,
@@ -29,6 +30,9 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this._authenticationService.logout();
 
+    if (this._route.snapshot.paramMap.get('logout')) {
+      this.logoutMessage = this._validationService.getLocalizedMessages('userHasLogout');
+    }
     if (this._route.snapshot.paramMap.get('expired')) {
       this.errorMessage = this._validationService.getLocalizedMessages('tokenHasExpired');
     }

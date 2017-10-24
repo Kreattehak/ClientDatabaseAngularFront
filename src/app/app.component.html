@@ -23,7 +23,7 @@
             <li><a [routerLink]="['/clients/new']" i18n="@@navbar.addClient">Add Client</a>
             </li>
             <li role="separator" class="divider"></li>
-            <li><a [routerLink]="['/login']" i18n="@@navbar.logout">Logout</a>
+            <li><a [routerLink]="['/login', {'logout': 'true'}]" i18n="@@navbar.logout">Logout</a>
             </li>
           </ul>
         </li>
