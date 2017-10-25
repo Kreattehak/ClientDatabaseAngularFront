@@ -80,7 +80,7 @@ export class AddressDetailComponent implements OnInit {
     }
   }
 
-  private tryToSaveNewAddress() {
+  private tryToSaveNewAddress(): void {
     this.activeAddress = this.addressForm.value;
     this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
       response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),

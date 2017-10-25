@@ -49,9 +49,11 @@ export class ClientFormComponent implements OnInit {
       lastName: lastName
     });
 
-    this.clientForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.clientForm, this.formErrors, data));
+    this.clientForm.valueChanges.subscribe(
+      data => this._validationService.onValueChanged(this.clientForm, this.formErrors, data));
 
-    this._validationService.onValueChanged(this.clientForm, this.formErrors) // (re)set validation messages now
+    // (re)set validation messages now
+    this._validationService.onValueChanged(this.clientForm, this.formErrors);
   }
 
   onSubmit(id: number): void {
@@ -68,7 +70,7 @@ export class ClientFormComponent implements OnInit {
     }
   }
 
-  private tryToSaveNewClient() {
+  private tryToSaveNewClient(): void {
     this.activeClient = this.clientForm.value;
     this._clientService.saveNewClient(this.activeClient).subscribe(
       response => {
@@ -89,7 +91,7 @@ export class ClientFormComponent implements OnInit {
     );
   }
 
-  private tryToUpdateClient(id: number) {
+  private tryToUpdateClient(id: number): void {
     this.activeClient = this.clientForm.value;
     this.activeClient.id = id;
     this._clientService.updateClient(this.activeClient).subscribe(
