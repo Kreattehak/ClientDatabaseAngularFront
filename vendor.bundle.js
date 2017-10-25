@@ -3558,6 +3558,18 @@ function flattenUnsubscriptionErrors(errors) {
 
 /***/ }),
 
+/***/ "../../../../rxjs/add/observable/of.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var Observable_1 = __webpack_require__("../../../../rxjs/Observable.js");
+var of_1 = __webpack_require__("../../../../rxjs/observable/of.js");
+Observable_1.Observable.of = of_1.of;
+//# sourceMappingURL=of.js.map
+
+/***/ }),
+
 /***/ "../../../../rxjs/add/observable/throw.js":
 /***/ (function(module, exports, __webpack_require__) {
 

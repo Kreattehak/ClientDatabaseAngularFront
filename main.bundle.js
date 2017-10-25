@@ -866,32 +866,32 @@ var ClientFormComponent = (function () {
     };
     ClientFormComponent.prototype.tryToSaveNewClient = function () {
         this.activeClient = this.clientForm.value;
-        // this._clientService.saveNewClient(this.activeClient).subscribe(
-        //   response => {
-        //     if (this.shouldRedirectToAddressForm) {
-        //       this._router.navigate(['/clients', response, 'newAddress']);
-        //     } else {
-        //       this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
-        //         this._validationService.getLocalizedMessages('successTitle'));
-        //     }
-        //   }, error => {
-        //     if (error === -1) {
-        //       this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
-        //         this._validationService.getLocalizedMessages('errorTitle'));
-        //     } else {
-        //       this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
-        //     }
-        //   }
-        // );
+        var clients = JSON.parse(localStorage.getItem('clients'));
+        this.activeClient.id = this._clientService.getBiggestId() + 1;
+        if (this.activeClient.id === -1) {
+            this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), this._validationService.getLocalizedMessages('errorTitle'));
+        }
+        else {
+            clients.push(this.activeClient);
+            localStorage.setItem('clients', JSON.stringify(clients));
+        }
+        if (this.shouldRedirectToAddressForm) {
+            this._router.navigate(['/clients', this.activeClient.id, 'newAddress']);
+        }
+        else {
+            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'), this._validationService.getLocalizedMessages('successTitle'));
+        }
     };
     ClientFormComponent.prototype.tryToUpdateClient = function (id) {
+        var _this = this;
         this.activeClient = this.clientForm.value;
         this.activeClient.id = id;
-        // this._clientService.updateClient(this.activeClient).subscribe(
-        //   response => this._toastr.success(response,
-        //     this._validationService.getLocalizedMessages('successTitle')),
-        //   error => this._toastr.error(error,
-        //     this._validationService.getLocalizedMessages('errorTitle')));
+        var clients = JSON.parse(localStorage.getItem('clients'));
+        var wantedClient = clients.find(function (client) { return client.id === _this.activeClient.id; });
+        wantedClient.firstName = this.activeClient.firstName;
+        wantedClient.lastName = this.activeClient.lastName;
+        localStorage.setItem('clients', JSON.stringify(clients));
+        this._toastr.success(this._validationService.getLocalizedMessages('clientUpdated'), this._validationService.getLocalizedMessages('successTitle'));
     };
     ClientFormComponent.prototype.checkForClientDataDuplication = function () {
         if (this.activeClient.lastName === this.clientForm.value.lastName
@@ -1065,7 +1065,6 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.removeConfirm = function () {
         var _this = this;
-        console.log('xD');
         if (!JSON.parse(localStorage.getItem('currentUser'))) {
             this._router.navigate(['/login']);
             return;
@@ -1086,7 +1085,7 @@ var ClientListComponent = (function () {
                     var data = _this.clients.filter(function (client) { return client !== _this.activeClient; });
                     _this.clients = data;
                     _this.filteredClients = data;
-                    _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemove'), _this._validationService.getLocalizedMessages('successTitle'));
+                    _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                     _this.activeClient = null;
                     localStorage.setItem('clients', JSON.stringify(_this.clients));
                     return true;
@@ -1111,19 +1110,24 @@ var ClientListComponent = (function () {
         var localClients = localStorage.getItem('clients');
         if (localClients) {
             this.clients = JSON.parse(localStorage.getItem('clients'));
+            this.checkArrayForClients();
             this.filteredClients = this.clients;
         }
         else {
             this._clientService.getAllClients().subscribe(function (clients) {
-                if (clients.length === 0) {
-                    _this.errorMessage = _this._validationService.getLocalizedMessages('emptyDatabase');
-                }
                 _this.clients = clients;
+                _this.checkArrayForClients();
                 _this.filteredClients = _this.clients;
+                localStorage.setItem('clients', JSON.stringify(_this.clients));
             }, function (error) {
                 _this.errorMessage = _this._validationService.getLocalizedMessages('serverOffline');
                 _this._toastr.error(_this.errorMessage, _this._validationService.getLocalizedMessages('errorTitle'));
             });
+        }
+    };
+    ClientListComponent.prototype.checkArrayForClients = function () {
+        if (this.clients.length === 0) {
+            this.errorMessage = this._validationService.getLocalizedMessages('emptyDatabase');
         }
     };
     ClientListComponent.prototype.isFieldSelected = function () {
@@ -1167,6 +1171,8 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__ = __webpack_require__("../../../../rxjs/add/observable/of.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1184,11 +1190,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ClientService = (function () {
     function ClientService(_http) {
         this._http = _http;
         this._getAllClients = '/api/clients';
-        this._getClient = '/api/clients/';
     }
     ClientService.prototype.getAllClients = function () {
         return this._http.get(this._getAllClients)
@@ -1196,9 +1202,19 @@ var ClientService = (function () {
             .catch(this.handleError);
     };
     ClientService.prototype.getClient = function (clientId) {
-        return this._http.get(this._getClient + clientId, this.requestBearer())
-            .map(function (response) { return response.json(); })
-            .catch(this.handleError);
+        var clients = JSON.parse(localStorage.getItem('clients'));
+        var wantedClient = clients.find(function (client) { return client.id === clientId; });
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(wantedClient);
+    };
+    ClientService.prototype.getBiggestId = function () {
+        var clients = JSON.parse(localStorage.getItem('clients'));
+        var biggestId = -1;
+        clients.map(function (currentValue, index, array) {
+            if (biggestId < currentValue.id) {
+                biggestId = currentValue.id;
+            }
+        });
+        return biggestId;
     };
     ClientService.prototype.handleError = function (error) {
         var errorMessage;
@@ -1553,7 +1569,8 @@ var ValidationAndLocaleMessagesService = (function () {
                 'errorTitle': 'Error!',
                 'successTitle': 'Success!',
                 // additional messages that would have been returned by back-end server
-                'clientRemove': 'Client was successfully deleted.'
+                'clientRemoved': 'Client was successfully deleted.',
+                'clientUpdated': 'Client was successfully updated.'
             },
             pl: {
                 'addressExists': 'Adres już istnieje!',
