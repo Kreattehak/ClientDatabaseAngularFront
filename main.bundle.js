@@ -570,7 +570,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_10_ng2_toastr__["ToastModule"].forRoot(),
             __WEBPACK_IMPORTED_MODULE_11__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_23_angular_in_memory_web_api__["a" /* InMemoryWebApiModule */].forRoot(__WEBPACK_IMPORTED_MODULE_24__utils_mock_data__["a" /* MockData */], {
-                passThruUnknownUrl: true
+                passThruUnknownUrl: true,
+                delay: 150
             }),
         ],
         providers: [
@@ -864,29 +865,33 @@ var ClientFormComponent = (function () {
         }
     };
     ClientFormComponent.prototype.tryToSaveNewClient = function () {
-        var _this = this;
         this.activeClient = this.clientForm.value;
-        this._clientService.saveNewClient(this.activeClient).subscribe(function (response) {
-            if (_this.shouldRedirectToAddressForm) {
-                _this._router.navigate(['/clients', response, 'newAddress']);
-            }
-            else {
-                _this._toastr.success(_this._validationService.getLocalizedMessages('clientAdded'), _this._validationService.getLocalizedMessages('successTitle'));
-            }
-        }, function (error) {
-            if (error === -1) {
-                _this._toastr.error(_this._validationService.getLocalizedMessages('clientNotAdded'), _this._validationService.getLocalizedMessages('errorTitle'));
-            }
-            else {
-                _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle'));
-            }
-        });
+        // this._clientService.saveNewClient(this.activeClient).subscribe(
+        //   response => {
+        //     if (this.shouldRedirectToAddressForm) {
+        //       this._router.navigate(['/clients', response, 'newAddress']);
+        //     } else {
+        //       this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
+        //         this._validationService.getLocalizedMessages('successTitle'));
+        //     }
+        //   }, error => {
+        //     if (error === -1) {
+        //       this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
+        //         this._validationService.getLocalizedMessages('errorTitle'));
+        //     } else {
+        //       this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+        //     }
+        //   }
+        // );
     };
     ClientFormComponent.prototype.tryToUpdateClient = function (id) {
-        var _this = this;
         this.activeClient = this.clientForm.value;
         this.activeClient.id = id;
-        this._clientService.updateClient(this.activeClient).subscribe(function (response) { return _this._toastr.success(response, _this._validationService.getLocalizedMessages('successTitle')); }, function (error) { return _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle')); });
+        // this._clientService.updateClient(this.activeClient).subscribe(
+        //   response => this._toastr.success(response,
+        //     this._validationService.getLocalizedMessages('successTitle')),
+        //   error => this._toastr.error(error,
+        //     this._validationService.getLocalizedMessages('errorTitle')));
     };
     ClientFormComponent.prototype.checkForClientDataDuplication = function () {
         if (this.activeClient.lastName === this.clientForm.value.lastName
@@ -1060,6 +1065,7 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.removeConfirm = function () {
         var _this = this;
+        console.log('xD');
         if (!JSON.parse(localStorage.getItem('currentUser'))) {
             this._router.navigate(['/login']);
             return;
@@ -1077,13 +1083,12 @@ var ClientListComponent = (function () {
             },
             callback: function (result) {
                 if (result) {
-                    _this._clientService.deleteClient(_this.activeClient).subscribe(function (response) {
-                        var data = _this.clients.filter(function (client) { return client !== _this.activeClient; });
-                        _this.clients = data;
-                        _this.filteredClients = data;
-                        _this._toastr.success(response, _this._validationService.getLocalizedMessages('successTitle'));
-                        _this.activeClient = null;
-                    }, function (error) { return _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle')); });
+                    var data = _this.clients.filter(function (client) { return client !== _this.activeClient; });
+                    _this.clients = data;
+                    _this.filteredClients = data;
+                    _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemove'), _this._validationService.getLocalizedMessages('successTitle'));
+                    _this.activeClient = null;
+                    localStorage.setItem('clients', JSON.stringify(_this.clients));
                     return true;
                 }
                 else {
@@ -1103,18 +1108,23 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.generateTable = function () {
         var _this = this;
-        // this.clients = this._route.snapshot.data['clients'];
-        // this.filteredClients = this.clients;
-        this._clientService.getAllClients().subscribe(function (clients) {
-            if (clients.length === 0) {
-                _this.errorMessage = _this._validationService.getLocalizedMessages('emptyDatabase');
-            }
-            _this.clients = clients;
-            _this.filteredClients = _this.clients;
-        }, function (error) {
-            _this.errorMessage = _this._validationService.getLocalizedMessages('serverOffline');
-            _this._toastr.error(_this.errorMessage, _this._validationService.getLocalizedMessages('errorTitle'));
-        });
+        var localClients = localStorage.getItem('clients');
+        if (localClients) {
+            this.clients = JSON.parse(localStorage.getItem('clients'));
+            this.filteredClients = this.clients;
+        }
+        else {
+            this._clientService.getAllClients().subscribe(function (clients) {
+                if (clients.length === 0) {
+                    _this.errorMessage = _this._validationService.getLocalizedMessages('emptyDatabase');
+                }
+                _this.clients = clients;
+                _this.filteredClients = _this.clients;
+            }, function (error) {
+                _this.errorMessage = _this._validationService.getLocalizedMessages('serverOffline');
+                _this._toastr.error(_this.errorMessage, _this._validationService.getLocalizedMessages('errorTitle'));
+            });
+        }
     };
     ClientListComponent.prototype.isFieldSelected = function () {
         if (!this.activeClient) {
@@ -1178,34 +1188,16 @@ var ClientService = (function () {
     function ClientService(_http) {
         this._http = _http;
         this._getAllClients = '/api/clients';
-        this._updateClient = '/api/admin/updateClient';
-        this._deleteClient = '/api/admin/deleteClient';
         this._getClient = '/api/clients/';
-        this._saveNewClient = '/api/admin/saveNewClient';
     }
     ClientService.prototype.getAllClients = function () {
         return this._http.get(this._getAllClients)
             .map(function (response) { return response.json(); })
             .catch(this.handleError);
     };
-    ClientService.prototype.deleteClient = function (activeClient) {
-        return this._http.post(this._deleteClient, activeClient, this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
-    };
-    ClientService.prototype.updateClient = function (activeClient) {
-        return this._http.put(this._updateClient, activeClient, this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
-    };
     ClientService.prototype.getClient = function (clientId) {
         return this._http.get(this._getClient + clientId, this.requestBearer())
             .map(function (response) { return response.json(); })
-            .catch(this.handleError);
-    };
-    ClientService.prototype.saveNewClient = function (newClient) {
-        return this._http.post(this._saveNewClient, newClient, this.requestBearer())
-            .map(function (response) { return response.text(); })
             .catch(this.handleError);
     };
     ClientService.prototype.handleError = function (error) {
@@ -1559,7 +1551,9 @@ var ValidationAndLocaleMessagesService = (function () {
                 'emptyDatabase': 'Server returned empty array, there are no users in database!',
                 'serverOffline': 'Server is offline.',
                 'errorTitle': 'Error!',
-                'successTitle': 'Success!'
+                'successTitle': 'Success!',
+                // additional messages that would have been returned by back-end server
+                'clientRemove': 'Client was successfully deleted.'
             },
             pl: {
                 'addressExists': 'Adres już istnieje!',
