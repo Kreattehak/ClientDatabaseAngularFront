@@ -693,44 +693,45 @@ var ClientDetailComponent = (function () {
             this._toastr.success(this._validationService.getLocalizedMessages('mainAddressUpdated'), this._validationService.getLocalizedMessages('successTitle'));
         }
     };
-    // onRemoveAddress(): boolean {
-    //   if (!this.activeAddress) {
-    //     return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
-    //   } else if (this.client.mainAddress.id === this.activeAddress.id) {
-    //     return this.cannotProceed(this._validationService.getLocalizedMessages('cannotDeleteMainAddress'),
-    //       'medium');
-    //   } else {
-    //     this.removeConfirm();
-    //   }
-    // }
-    // private removeConfirm(): void {
-    //   bootbox.confirm({
-    //     title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
-    //     message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
-    //     buttons: {
-    //       cancel: {
-    //         label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
-    //       },
-    //       confirm: {
-    //         label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
-    //       }
-    //     },
-    //     callback: (result) => {
-    //       if (result) {
-    //         this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
-    //           response => {
-    //             this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-    //             this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
-    //             this.activeAddress = null;
-    //             this._router.navigate(['/clients', this.client.id, 'details']);
-    //           }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
-    //         return true;
-    //       } else {
-    //         return;
-    //       }
-    //     }
-    //   });
-    // }
+    ClientDetailComponent.prototype.onRemoveAddress = function () {
+        if (!this.activeAddress) {
+            return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
+        }
+        else if (this.client.mainAddress.id === this.activeAddress.id) {
+            return this.cannotProceed(this._validationService.getLocalizedMessages('cannotDeleteMainAddress'), 'medium');
+        }
+        else {
+            this.removeConfirm();
+        }
+    };
+    ClientDetailComponent.prototype.removeConfirm = function () {
+        var _this = this;
+        bootbox.confirm({
+            title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
+            message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    var data = _this.addresses.filter(function (address) { return address !== _this.activeAddress; });
+                    _this.addresses = data;
+                    _this._toastr.success(_this._validationService.getLocalizedMessages('addressRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
+                    _this.activeAddress = null;
+                    localStorage.setItem('addresses', JSON.stringify(_this.addresses));
+                    return true;
+                }
+                else {
+                    return;
+                }
+            }
+        });
+    };
     ClientDetailComponent.prototype.cannotProceed = function (message, size) {
         if (size === void 0) { size = 'small'; }
         bootbox.alert({
@@ -1060,10 +1061,6 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.removeConfirm = function () {
         var _this = this;
-        if (!JSON.parse(localStorage.getItem('currentUser'))) {
-            this._router.navigate(['/login']);
-            return;
-        }
         bootbox.confirm({
             title: this._validationService.getLocalizedMessages('removeClientConfirmTitle'),
             message: this._validationService.getLocalizedMessages('removeClientConfirmMessage'),
@@ -1565,6 +1562,7 @@ var ValidationAndLocaleMessagesService = (function () {
                 'successTitle': 'Success!',
                 // additional messages that would have been returned by back-end server
                 'clientRemoved': 'Client was successfully deleted.',
+                'addressRemoved': 'Address was successfully deleted.',
                 'clientUpdated': 'Client was successfully updated.',
                 'mainAddressUpdated': 'Main address was succesfully updated'
             },
