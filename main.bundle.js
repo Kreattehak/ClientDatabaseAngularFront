@@ -129,38 +129,41 @@ var AddressDetailComponent = (function () {
         this.addressForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.addressForm, _this.formErrors, data); });
         this._validationService.onValueChanged(this.addressForm, this.formErrors);
     };
-    AddressDetailComponent.prototype.onSubmit = function (id) {
-        this.submitted = true;
-        if (this.isNewAddress) {
-            this.tryToSaveNewAddress();
-        }
-        else {
-            if (this.checkForAddressDataDuplication()) {
-                return;
-            }
-            else {
-                this.tryToUpdateAddress(id);
-            }
-        }
-    };
-    AddressDetailComponent.prototype.tryToSaveNewAddress = function () {
-        var _this = this;
-        this.activeAddress = this.addressForm.value;
-        this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(function (response) { return _this._toastr.success(_this._validationService.getLocalizedMessages('addressAdded'), _this._validationService.getLocalizedMessages('successTitle')); }, function (error) {
-            if (error === -1) {
-                _this._toastr.error(_this._validationService.getLocalizedMessages('addressNotAdded'), _this._validationService.getLocalizedMessages('errorTitle'));
-            }
-            else {
-                _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle'));
-            }
-        });
-    };
-    AddressDetailComponent.prototype.tryToUpdateAddress = function (id) {
-        var _this = this;
-        this.activeAddress = this.addressForm.value;
-        this.activeAddress.id = id;
-        this._addressService.updateAddress(this.activeAddress).subscribe(function (response) { return _this._toastr.success(response, _this._validationService.getLocalizedMessages('successTitle')); }, function (error) { return _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle')); });
-    };
+    // onSubmit(id: number): void {
+    //   this.submitted = true;
+    //
+    //   if (this.isNewAddress) {
+    //     this.tryToSaveNewAddress();
+    //   } else {
+    //     if (this.checkForAddressDataDuplication()) {
+    //       return;
+    //     } else {
+    //       this.tryToUpdateAddress(id);
+    //     }
+    //   }
+    // }
+    // private tryToSaveNewAddress(): void {
+    //   this.activeAddress = this.addressForm.value;
+    //   this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
+    //     response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
+    //       this._validationService.getLocalizedMessages('successTitle')),
+    //     error => {
+    //       if (error === -1) {
+    //         this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
+    //           this._validationService.getLocalizedMessages('errorTitle'));
+    //       } else {
+    //         this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+    //       }
+    //     }
+    //   );
+    // }
+    // private tryToUpdateAddress(id: number): void {
+    //   this.activeAddress = this.addressForm.value;
+    //   this.activeAddress.id = id;
+    //   this._addressService.updateAddress(this.activeAddress).subscribe(
+    //     response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
+    //     error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+    // }
     AddressDetailComponent.prototype.checkForAddressDataDuplication = function () {
         // first check values that can differ the most
         if (this.activeAddress.streetName === this.addressForm.value.streetName
@@ -226,10 +229,6 @@ var AddressService = (function () {
     function AddressService(_http) {
         this._http = _http;
         this._getAllAddresses = '/api/clientAddresses/';
-        this._saveNewAddress = '/api/admin/saveNewAddress?id=';
-        this._updateAddress = '/api/admin/updateAddress';
-        this._deleteAddress = '/api/admin/deleteAddress';
-        this._setAsMainAddress = '/api/admin/editMainAddress';
     }
     AddressService.prototype.getAllAddresses = function (id) {
         return this._http.get(this._getAllAddresses + id, this.requestBearer())
@@ -237,31 +236,15 @@ var AddressService = (function () {
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
-    AddressService.prototype.saveNewAddress = function (newAddress, clientId) {
-        return this._http.post(this._saveNewAddress + clientId, newAddress, this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
-    };
-    AddressService.prototype.updateAddress = function (activeAddress) {
-        return this._http.put(this._updateAddress, activeAddress, this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
-    };
-    AddressService.prototype.deleteAddress = function (addressId, clientId) {
-        return this._http.post(this._deleteAddress, JSON.stringify({
-            'addressId': addressId,
-            'clientId': clientId
-        }), this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
-    };
-    AddressService.prototype.setAsMainAddress = function (addressId, clientId) {
-        return this._http.put(this._setAsMainAddress, JSON.stringify({
-            addressId: addressId,
-            clientId: clientId
-        }), this.requestBearer())
-            .map(function (response) { return response.text(); })
-            .catch(this.handleError);
+    AddressService.prototype.getBiggestId = function () {
+        var clients = JSON.parse(localStorage.getItem('addresses'));
+        var biggestId = -1;
+        clients.map(function (currentValue, index, array) {
+            if (biggestId < currentValue.id) {
+                biggestId = currentValue.id;
+            }
+        });
+        return biggestId;
     };
     AddressService.prototype.handleError = function (error) {
         var errorMessage;
@@ -673,8 +656,7 @@ var ClientDetailComponent = (function () {
         this._toastr.setRootViewContainerRef(vcr);
     }
     ClientDetailComponent.prototype.ngOnInit = function () {
-        this.client = this._route.snapshot.data['client'];
-        this.addresses = this._route.snapshot.data['addresses'];
+        this.generateTable();
     };
     ClientDetailComponent.prototype.markAsActive = function (activeRow) {
         if (this.activeAddress === activeRow) {
@@ -698,7 +680,6 @@ var ClientDetailComponent = (function () {
         }
     };
     ClientDetailComponent.prototype.onSetAsMainAddress = function () {
-        var _this = this;
         if (!this.activeAddress) {
             return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
         }
@@ -706,53 +687,50 @@ var ClientDetailComponent = (function () {
             return this.cannotProceed(this._validationService.getLocalizedMessages('alreadyMainAddress'));
         }
         else {
-            this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(function (response) {
-                _this._toastr.success(response, _this._validationService.getLocalizedMessages('successTitle'));
-                _this.client.mainAddress = _this.activeAddress;
-                _this.activeAddress = null;
-            }, function (error) { return _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle')); });
+            this.client.mainAddress = this.activeAddress;
+            this.activeAddress = null;
+            this.tryUpdateClient();
+            this._toastr.success(this._validationService.getLocalizedMessages('mainAddressUpdated'), this._validationService.getLocalizedMessages('successTitle'));
         }
     };
-    ClientDetailComponent.prototype.onRemoveAddress = function () {
-        if (!this.activeAddress) {
-            return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
-        }
-        else if (this.client.mainAddress.id === this.activeAddress.id) {
-            return this.cannotProceed(this._validationService.getLocalizedMessages('cannotDeleteMainAddress'), 'medium');
-        }
-        else {
-            this.removeConfirm();
-        }
-    };
-    ClientDetailComponent.prototype.removeConfirm = function () {
-        var _this = this;
-        bootbox.confirm({
-            title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
-            message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
-            buttons: {
-                cancel: {
-                    label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
-                },
-                confirm: {
-                    label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    _this._addressService.deleteAddress(_this.activeAddress.id, _this.client.id).subscribe(function (response) {
-                        _this._toastr.success(response, _this._validationService.getLocalizedMessages('successTitle'));
-                        _this.addresses = _this.addresses.filter(function (element) { return element !== _this.activeAddress; });
-                        _this.activeAddress = null;
-                        _this._router.navigate(['/clients', _this.client.id, 'details']);
-                    }, function (error) { return _this._toastr.error(error, _this._validationService.getLocalizedMessages('errorTitle')); });
-                    return true;
-                }
-                else {
-                    return;
-                }
-            }
-        });
-    };
+    // onRemoveAddress(): boolean {
+    //   if (!this.activeAddress) {
+    //     return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
+    //   } else if (this.client.mainAddress.id === this.activeAddress.id) {
+    //     return this.cannotProceed(this._validationService.getLocalizedMessages('cannotDeleteMainAddress'),
+    //       'medium');
+    //   } else {
+    //     this.removeConfirm();
+    //   }
+    // }
+    // private removeConfirm(): void {
+    //   bootbox.confirm({
+    //     title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
+    //     message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
+    //     buttons: {
+    //       cancel: {
+    //         label: '<i class="fa fa-times"></i> ' + this._validationService.getLocalizedMessages('cancelAction')
+    //       },
+    //       confirm: {
+    //         label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
+    //       }
+    //     },
+    //     callback: (result) => {
+    //       if (result) {
+    //         this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
+    //           response => {
+    //             this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+    //             this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
+    //             this.activeAddress = null;
+    //             this._router.navigate(['/clients', this.client.id, 'details']);
+    //           }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+    //         return true;
+    //       } else {
+    //         return;
+    //       }
+    //     }
+    //   });
+    // }
     ClientDetailComponent.prototype.cannotProceed = function (message, size) {
         if (size === void 0) { size = 'small'; }
         bootbox.alert({
@@ -761,6 +739,23 @@ var ClientDetailComponent = (function () {
             backdrop: true
         });
         return false;
+    };
+    ClientDetailComponent.prototype.generateTable = function () {
+        this.client = this._route.snapshot.data['client'];
+        var localAddressesJson = localStorage.getItem('addresses');
+        if (localAddressesJson) {
+            this.addresses = JSON.parse(localAddressesJson);
+        }
+        else {
+            this.addresses = this._route.snapshot.data['addresses'];
+        }
+    };
+    ClientDetailComponent.prototype.tryUpdateClient = function () {
+        var _this = this;
+        var clients = JSON.parse(localStorage.getItem('clients'));
+        var wantedClient = clients.find(function (client) { return client.id === _this.client.id; });
+        wantedClient.mainAddress = this.client.mainAddress;
+        localStorage.setItem('clients', JSON.stringify(clients));
     };
     ClientDetailComponent.prototype.onBack = function () {
         this._router.navigate(['/clients']);
@@ -1107,9 +1102,9 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.generateTable = function () {
         var _this = this;
-        var localClients = localStorage.getItem('clients');
-        if (localClients) {
-            this.clients = JSON.parse(localStorage.getItem('clients'));
+        var localClientsJson = localStorage.getItem('clients');
+        if (localClientsJson) {
+            this.clients = JSON.parse(localClientsJson);
             this.checkArrayForClients();
             this.filteredClients = this.clients;
         }
@@ -1570,7 +1565,8 @@ var ValidationAndLocaleMessagesService = (function () {
                 'successTitle': 'Success!',
                 // additional messages that would have been returned by back-end server
                 'clientRemoved': 'Client was successfully deleted.',
-                'clientUpdated': 'Client was successfully updated.'
+                'clientUpdated': 'Client was successfully updated.',
+                'mainAddressUpdated': 'Main address was succesfully updated'
             },
             pl: {
                 'addressExists': 'Adres już istnieje!',
