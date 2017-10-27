@@ -29,7 +29,8 @@
 
         <div class="form-group">
           <div class="col-lg-offset-2 col-lg-2">
-            <button type="submit" class="btn btn-success" i18n="@@login.loginButton">Log in</button>
+            <button type="submit" class="btn btn-success" i18n="@@login.loginButton"
+                    [disabled]="!userForm.valid">Log in</button>
           </div>
         </div>
 
