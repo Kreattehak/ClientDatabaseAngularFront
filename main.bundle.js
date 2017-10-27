@@ -118,34 +118,24 @@ var AddressDetailComponent = (function () {
         this.addressForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.addressForm, _this.formErrors, data); });
         this._validationService.onValueChanged(this.addressForm, this.formErrors);
     };
-    // onSubmit(id: number): void {
-    //   this.submitted = true;
-    //
-    //   if (this.isNewAddress) {
-    //     this.tryToSaveNewAddress();
-    //   } else {
-    //     if (this.checkForAddressDataDuplication()) {
-    //       return;
-    //     } else {
-    //       this.tryToUpdateAddress(id);
-    //     }
-    //   }
-    // }
-    // private tryToSaveNewAddress(): void {
-    //   this.activeAddress = this.addressForm.value;
-    //   this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
-    //     response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
-    //       this._validationService.getLocalizedMessages('successTitle')),
-    //     error => {
-    //       if (error === -1) {
-    //         this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
-    //           this._validationService.getLocalizedMessages('errorTitle'));
-    //       } else {
-    //         this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
-    //       }
-    //     }
-    //   );
-    // }
+    AddressDetailComponent.prototype.onSubmit = function (id) {
+        this.submitted = true;
+        if (this.isNewAddress) {
+            this.tryToSaveNewAddress();
+        }
+        // } else {
+        //   if (this.checkForAddressDataDuplication()) {
+        //     return;
+        //   } else {
+        //     this.tryToUpdateAddress(id);
+        //   }
+        // }
+    };
+    AddressDetailComponent.prototype.tryToSaveNewAddress = function () {
+        this.activeAddress = this.addressForm.value;
+        this._addressService.saveNewAddress(this.activeAddress, this.clientId);
+        this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'), this._validationService.getLocalizedMessages('successTitle'));
+    };
     // private tryToUpdateAddress(id: number): void {
     //   this.activeAddress = this.addressForm.value;
     //   this.activeAddress.id = id;
@@ -169,14 +159,12 @@ var AddressDetailComponent = (function () {
         if (!this._route.snapshot.paramMap.get('addressId')) {
             this.activeAddress = new __WEBPACK_IMPORTED_MODULE_1__address__["a" /* Address */]();
             this.isNewAddress = true;
-            console.log('gites if');
         }
         else {
             var data = JSON.parse(localStorage.getItem('addresses'))[this.clientId - 1].addresses;
             var addressId_1 = +this._route.snapshot.paramMap.get('addressId');
             this.activeAddress = data.find(function (element) { return element.id === addressId_1; });
             this.isNewAddress = false;
-            console.log('gites else ' + this.activeAddress);
         }
         this.activeClient = this._route.snapshot.data['client'];
     };
@@ -234,6 +222,7 @@ var AddressService = (function () {
     function AddressService(_http) {
         this._http = _http;
         this._getAllAddresses = '/api/clientAddresses';
+        this.biggestAddressId = -1;
     }
     AddressService.prototype.getAllAddresses = function (id) {
         return this._http.get(this._getAllAddresses + '/' + id, this.requestBearer())
@@ -241,29 +230,61 @@ var AddressService = (function () {
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
-    AddressService.prototype.getAddressesFromAllClients = function () {
-        var _this = this;
+    AddressService.prototype.getAllClientsAddresses = function () {
         return this._http.get(this._getAllAddresses, this.requestBearer())
             .map(function (response) { return response.json(); })
-            .do(function (data) {
-            _this.addressesFromAllClients = data;
-            localStorage.setItem('addresses', JSON.stringify(data));
-        })
+            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
-    // getBiggestId(): number {
-    //   const clients = JSON.parse(localStorage.getItem('addresses'));
-    //   let biggestId = -1;
-    //   clients.map(function (currentValue) {
-    //     if (biggestId < currentValue.id) {
-    //       biggestId = currentValue.id;
-    //     }
-    //   });
-    //   return biggestId;
+    // updateAddress(editedAddress: Address): void {
+    //   const addresses: Address[] = JSON.parse(localStorage.getItem('clients'));
+    //   const wantedAddress = this.addressesFromAllClients.find(address => address.id === editedClient.id);
+    //   wantedClient.firstName = editedClient.firstName;
+    //   wantedClient.lastName = editedClient.lastName;
+    //   wantedClient.mainAddress = editedClient.mainAddress;
+    //
+    //   localStorage.setItem('clients', JSON.stringify(clients));
     // }
+    AddressService.prototype.saveNewAddress = function (newAddress, clientId) {
+        newAddress.id = this.getBiggestId();
+        console.log(clientId);
+        this.addressesFromAllClients[clientId - 1].addresses.push(newAddress);
+        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+    };
+    AddressService.prototype.getBiggestId = function () {
+        if (this.biggestAddressId !== -1) {
+            return ++this.biggestAddressId;
+        }
+        var biggestAddressId = -1;
+        this.addressesFromAllClients
+            .map(function (clientWithAddress) { return clientWithAddress.addresses; })
+            .reduce(function (previousValue, currentValue) {
+            currentValue.forEach(function (address) {
+                if (biggestAddressId < address.id) {
+                    biggestAddressId = address.id;
+                }
+            });
+            return biggestAddressId;
+        }, biggestAddressId);
+        this.biggestAddressId = biggestAddressId;
+        return ++this.biggestAddressId;
+    };
     AddressService.prototype.updateAddressArray = function (clientId, updatedAddresses) {
         this.addressesFromAllClients[clientId - 1].addresses = updatedAddresses;
         localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+    };
+    AddressService.prototype.setUpAddresses = function () {
+        var _this = this;
+        var data = localStorage.getItem('addresses');
+        if (data) {
+            this.addressesFromAllClients = JSON.parse(data);
+        }
+        else {
+            this.getAllClientsAddresses().subscribe(function (response) {
+                _this.addressesFromAllClients = response;
+                localStorage.setItem('addresses', JSON.stringify(response));
+            });
+        }
     };
     AddressService.prototype.handleError = function (error) {
         var errorMessage;
@@ -764,18 +785,16 @@ var ClientDetailComponent = (function () {
         return false;
     };
     ClientDetailComponent.prototype.generateTable = function () {
-        var _this = this;
         this.client = this._route.snapshot.data['client'];
         var localAddressesJson = localStorage.getItem('addresses');
         if (localAddressesJson) {
             this.addresses = JSON.parse(localAddressesJson)[this.client.id - 1].addresses;
+            this._addressService.setUpAddresses();
         }
         else {
+            console.log('setUpAddresses');
             this.addresses = this._route.snapshot.data['addresses'];
-            this._addressService.getAddressesFromAllClients().subscribe(function (allAddresses) {
-            }, function (error) {
-                _this._toastr.error(_this._validationService.getLocalizedMessages('serverOffline'), _this._validationService.getLocalizedMessages('errorTitle'));
-            });
+            this._addressService.setUpAddresses();
         }
     };
     ClientDetailComponent.prototype.onBack = function () {
