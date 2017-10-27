@@ -103,18 +103,7 @@ var AddressDetailComponent = (function () {
     }
     AddressDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.clientId = +this._route.snapshot.paramMap.get('id');
-        if (!this._route.snapshot.data['addresses']) {
-            this.activeAddress = new __WEBPACK_IMPORTED_MODULE_1__address__["a" /* Address */]();
-            this.isNewAddress = true;
-        }
-        else {
-            var data = this._route.snapshot.data['addresses'];
-            var addressId_1 = +this._route.snapshot.paramMap.get('addressId');
-            this.activeAddress = data.find(function (element) { return element.id === addressId_1; });
-            this.isNewAddress = false;
-        }
-        this.activeClient = this._route.snapshot.data['client'];
+        this.generateForm();
         var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('');
         var streetName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.streetName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
         var cityName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.cityName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
@@ -174,6 +163,22 @@ var AddressDetailComponent = (function () {
             return true;
         }
         return false;
+    };
+    AddressDetailComponent.prototype.generateForm = function () {
+        this.clientId = +this._route.snapshot.paramMap.get('id');
+        if (!this._route.snapshot.paramMap.get('addressId')) {
+            this.activeAddress = new __WEBPACK_IMPORTED_MODULE_1__address__["a" /* Address */]();
+            this.isNewAddress = true;
+            console.log('gites if');
+        }
+        else {
+            var data = JSON.parse(localStorage.getItem('addresses'))[this.clientId - 1].addresses;
+            var addressId_1 = +this._route.snapshot.paramMap.get('addressId');
+            this.activeAddress = data.find(function (element) { return element.id === addressId_1; });
+            this.isNewAddress = false;
+            console.log('gites else ' + this.activeAddress);
+        }
+        this.activeClient = this._route.snapshot.data['client'];
     };
     AddressDetailComponent.prototype.onBack = function () {
         this._router.navigate(['/clients', this.clientId, 'details']);
@@ -1071,6 +1076,10 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.removeConfirm = function () {
         var _this = this;
+        if (!JSON.parse(localStorage.getItem('currentUser'))) {
+            this._router.navigate(['/login']);
+            return;
+        }
         bootbox.confirm({
             title: this._validationService.getLocalizedMessages('removeClientConfirmTitle'),
             message: this._validationService.getLocalizedMessages('removeClientConfirmMessage'),
