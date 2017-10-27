@@ -123,26 +123,26 @@ var AddressDetailComponent = (function () {
         if (this.isNewAddress) {
             this.tryToSaveNewAddress();
         }
-        // } else {
-        //   if (this.checkForAddressDataDuplication()) {
-        //     return;
-        //   } else {
-        //     this.tryToUpdateAddress(id);
-        //   }
-        // }
+        else {
+            if (this.checkForAddressDataDuplication()) {
+                return;
+            }
+            else {
+                this.tryToUpdateAddress(id);
+            }
+        }
     };
     AddressDetailComponent.prototype.tryToSaveNewAddress = function () {
         this.activeAddress = this.addressForm.value;
         this._addressService.saveNewAddress(this.activeAddress, this.clientId);
         this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'), this._validationService.getLocalizedMessages('successTitle'));
     };
-    // private tryToUpdateAddress(id: number): void {
-    //   this.activeAddress = this.addressForm.value;
-    //   this.activeAddress.id = id;
-    //   this._addressService.updateAddress(this.activeAddress).subscribe(
-    //     response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
-    //     error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
-    // }
+    AddressDetailComponent.prototype.tryToUpdateAddress = function (id) {
+        this.activeAddress = this.addressForm.value;
+        this.activeAddress.id = id;
+        this._addressService.updateAddress(this.activeAddress, this.clientId);
+        this._toastr.success(this._validationService.getLocalizedMessages('addressUpdated'), this._validationService.getLocalizedMessages('successTitle'));
+    };
     AddressDetailComponent.prototype.checkForAddressDataDuplication = function () {
         // first check values that can differ the most
         if (this.activeAddress.streetName === this.addressForm.value.streetName
@@ -236,18 +236,16 @@ var AddressService = (function () {
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
-    // updateAddress(editedAddress: Address): void {
-    //   const addresses: Address[] = JSON.parse(localStorage.getItem('clients'));
-    //   const wantedAddress = this.addressesFromAllClients.find(address => address.id === editedClient.id);
-    //   wantedClient.firstName = editedClient.firstName;
-    //   wantedClient.lastName = editedClient.lastName;
-    //   wantedClient.mainAddress = editedClient.mainAddress;
-    //
-    //   localStorage.setItem('clients', JSON.stringify(clients));
-    // }
+    AddressService.prototype.updateAddress = function (editedAddress, clientId) {
+        var addresses = this.addressesFromAllClients[clientId - 1].addresses;
+        var wantedAddress = addresses.find(function (address) { return address.id === editedAddress.id; });
+        wantedAddress.cityName = editedAddress.cityName;
+        wantedAddress.streetName = editedAddress.streetName;
+        wantedAddress.zipCode = editedAddress.zipCode;
+        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+    };
     AddressService.prototype.saveNewAddress = function (newAddress, clientId) {
         newAddress.id = this.getBiggestId();
-        console.log(clientId);
         this.addressesFromAllClients[clientId - 1].addresses.push(newAddress);
         localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
     };
@@ -792,7 +790,6 @@ var ClientDetailComponent = (function () {
             this._addressService.setUpAddresses();
         }
         else {
-            console.log('setUpAddresses');
             this.addresses = this._route.snapshot.data['addresses'];
             this._addressService.setUpAddresses();
         }
@@ -1610,6 +1607,7 @@ var ValidationAndLocaleMessagesService = (function () {
                 'clientRemoved': 'Client was successfully deleted.',
                 'addressRemoved': 'Address was successfully deleted.',
                 'clientUpdated': 'Client was successfully updated.',
+                'addressUpdated': 'Address was successfully updated.',
                 'mainAddressUpdated': 'Main address was succesfully updated'
             },
             pl: {
