@@ -262,8 +262,13 @@ var AddressService = (function () {
         localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
     };
     AddressService.prototype.saveNewAddress = function (newAddress, clientId) {
+        var client = this._clientService.getClient(clientId);
         newAddress.id = this.getBiggestId();
         this.getAllClientsAddressesFromMemory(clientId).push(newAddress);
+        if (!client.mainAddress) {
+            client.mainAddress = newAddress;
+            this._clientService.updateClient(client);
+        }
         localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
     };
     AddressService.prototype.getBiggestId = function () {
