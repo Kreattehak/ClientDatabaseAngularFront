@@ -26,7 +26,7 @@ export class AddressDetailComponent implements OnInit {
     'zipCode': ''
   };
 
-  constructor(private _addressService: AddressService, public _validationService: ValidationAndLocaleMessagesService,
+  constructor(private _addressService: AddressService, private _validationService: ValidationAndLocaleMessagesService,
               private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
               private vcr: ViewContainerRef) {
     this._toastr.setRootViewContainerRef(vcr);

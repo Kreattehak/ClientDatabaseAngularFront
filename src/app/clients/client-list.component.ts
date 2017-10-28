@@ -41,7 +41,6 @@ export class ClientListComponent implements OnInit {
   private performFilter(filter: string): Client[] {
     filter = filter.toLocaleLowerCase();
     const filterBy: string[] = filter.split(/\s/);
-    console.log(filterBy);
     let filteredClients: Client[] = [];
 
     if (filterBy.length === 2) {

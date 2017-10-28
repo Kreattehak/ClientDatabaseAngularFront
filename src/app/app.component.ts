@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   private isAboutAuthorDisplayed: boolean;
   private userName: string;
 
-  constructor(private _router: Router, public _authenticationService: AuthenticationService) { }
+  constructor(private _router: Router, private _authenticationService: AuthenticationService) { }
 
   showAboutAuthor(): void {
     if (!this.isAboutAuthorDisplayed) {
