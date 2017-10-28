@@ -200,6 +200,7 @@ var _a, _b, _c, _d, _e, _f;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__clients_client_service__ = __webpack_require__("../../../../../src/app/clients/client.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddressService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -217,9 +218,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var AddressService = (function () {
-    function AddressService(_http) {
+    function AddressService(_http, _clientService) {
         this._http = _http;
+        this._clientService = _clientService;
         this._getAllAddresses = '/api/clientAddresses';
         this.biggestAddressId = -1;
     }
@@ -247,10 +250,15 @@ var AddressService = (function () {
             .find(function (address) { return address.id === addressId; });
     };
     AddressService.prototype.updateAddress = function (editedAddress, clientId) {
+        var client = this._clientService.getClient(clientId);
         var wantedAddress = this.getAddressFromMemory(editedAddress.id, clientId);
         wantedAddress.cityName = editedAddress.cityName;
         wantedAddress.streetName = editedAddress.streetName;
         wantedAddress.zipCode = editedAddress.zipCode;
+        if (client.mainAddress.id === wantedAddress.id) {
+            client.mainAddress = wantedAddress;
+            this._clientService.updateClient(client);
+        }
         localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
     };
     AddressService.prototype.saveNewAddress = function (newAddress, clientId) {
@@ -316,10 +324,10 @@ var AddressService = (function () {
 }());
 AddressService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__clients_client_service__["a" /* ClientService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__clients_client_service__["a" /* ClientService */]) === "function" && _b || Object])
 ], AddressService);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=address.service.js.map
 
 /***/ }),
@@ -629,6 +637,10 @@ AppModule = __decorate([
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__client_service__ = __webpack_require__("../../../../../src/app/clients/client.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__ = __webpack_require__("../../../../rxjs/add/observable/of.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientDetailResolver; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -641,12 +653,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
 var ClientDetailResolver = (function () {
     function ClientDetailResolver(_clientService) {
         this._clientService = _clientService;
     }
     ClientDetailResolver.prototype.resolve = function (route) {
-        return this._clientService.getClient(+route.paramMap.get('id'));
+        return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(this._clientService.getClient(+route.paramMap.get('id')));
     };
     return ClientDetailResolver;
 }());
@@ -1205,8 +1219,6 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__ = __webpack_require__("../../../../rxjs/add/observable/of.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_rxjs_add_observable_of__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1217,7 +1229,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -1237,8 +1248,7 @@ var ClientService = (function () {
     };
     ClientService.prototype.getClient = function (clientId) {
         var clients = JSON.parse(localStorage.getItem('clients'));
-        var wantedClient = clients.find(function (client) { return client.id === clientId; });
-        return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(wantedClient);
+        return clients.find(function (client) { return client.id === clientId; });
     };
     ClientService.prototype.updateClient = function (editedClient) {
         var clients = JSON.parse(localStorage.getItem('clients'));
