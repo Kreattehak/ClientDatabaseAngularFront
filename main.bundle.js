@@ -1683,7 +1683,9 @@ var InMemoryService = (function () {
         var wantedClient = this.clients.find(function (client) { return client.id === editedClient.id; });
         wantedClient.firstName = editedClient.firstName;
         wantedClient.lastName = editedClient.lastName;
-        wantedClient.mainAddress = editedClient.mainAddress;
+        if (editedClient.mainAddress) {
+            wantedClient.mainAddress = editedClient.mainAddress;
+        }
         localStorage.setItem('clients', JSON.stringify(this.clients));
     };
     InMemoryService.prototype.saveNewClient = function (newClient) {
