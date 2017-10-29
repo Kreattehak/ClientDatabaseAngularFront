@@ -18,7 +18,10 @@ webpackEmptyContext.id = "../../../../../src async recursive";
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__address_service__ = __webpack_require__("../../../../../src/app/addresses/address.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__address_service__ = __webpack_require__("../../../../../src/app/addresses/address.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddressDetailResolver; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -31,21 +34,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+
 var AddressDetailResolver = (function () {
-    function AddressDetailResolver(_addressService) {
+    function AddressDetailResolver(_addressService, _inMemoryService) {
         this._addressService = _addressService;
+        this._inMemoryService = _inMemoryService;
     }
     AddressDetailResolver.prototype.resolve = function (route) {
-        return this._addressService.getAllAddresses(+route.paramMap.get('id'));
+        var doesLocalStorageHaveData = this._inMemoryService.setUpAddresses();
+        if (doesLocalStorageHaveData) {
+            return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].of(this._inMemoryService.getAllClientsAddressesFromMemory(+route.paramMap.get('id')));
+        }
+        else {
+            return this._addressService.getAllAddresses(+route.paramMap.get('id'));
+        }
     };
     return AddressDetailResolver;
 }());
 AddressDetailResolver = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__address_service__["a" /* AddressService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__address_service__["a" /* AddressService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__address_service__["a" /* AddressService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__address_service__["a" /* AddressService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _b || Object])
 ], AddressDetailResolver);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=address-detail-resolver.service.js.map
 
 /***/ }),
@@ -574,9 +586,9 @@ AppModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of__ = __webpack_require__("../../../../rxjs/add/observable/of.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_observable_of__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__ = __webpack_require__("../../../../rxjs/add/observable/of.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_observable_of__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientDetailResolver; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -602,7 +614,7 @@ var ClientDetailResolver = (function () {
 }());
 ClientDetailResolver = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _a || Object])
 ], ClientDetailResolver);
 
 var _a;
@@ -740,14 +752,7 @@ var ClientDetailComponent = (function () {
     };
     ClientDetailComponent.prototype.generateTable = function () {
         this.client = this._inMemoryService.getClient(+this._route.snapshot.paramMap.get('id'));
-        this._inMemoryService.setUpAddresses();
-        var localAddressesJson = localStorage.getItem('addresses');
-        if (localAddressesJson) {
-            this.addresses = this._inMemoryService.getAllClientsAddressesFromMemory(this.client.id);
-        }
-        else {
-            this.addresses = this._route.snapshot.data['addresses'];
-        }
+        this.addresses = this._route.snapshot.data['addresses'];
     };
     ClientDetailComponent.prototype.onBack = function () {
         this._router.navigate(['/clients']);
@@ -836,6 +841,7 @@ var ClientFormComponent = (function () {
         });
         this.clientForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.clientForm, _this.formErrors, data); });
         this._validationService.onValueChanged(this.clientForm, this.formErrors); // (re)set validation messages now
+        this._inMemoryService.checkIfAddressDataIsSetUp();
     };
     ClientFormComponent.prototype.onSubmit = function (id) {
         this.submitted = true;
@@ -853,7 +859,6 @@ var ClientFormComponent = (function () {
     };
     ClientFormComponent.prototype.tryToSaveNewClient = function () {
         this.activeClient = this.clientForm.value;
-        var clients = this._inMemoryService.getAllClientsFromMemory();
         this.activeClient.id = this._inMemoryService.getBiggestClientId();
         if (this.activeClient.id === -1) {
             this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), this._validationService.getLocalizedMessages('errorTitle'));
@@ -1680,20 +1685,20 @@ var InMemoryService = (function () {
         return this.clients.find(function (client) { return client.id === clientId; });
     };
     InMemoryService.prototype.updateClient = function (editedClient) {
-        var wantedClient = this.clients.find(function (client) { return client.id === editedClient.id; });
+        var wantedClient = this.getClient(editedClient.id);
         wantedClient.firstName = editedClient.firstName;
         wantedClient.lastName = editedClient.lastName;
         if (editedClient.mainAddress) {
             wantedClient.mainAddress = editedClient.mainAddress;
         }
-        localStorage.setItem('clients', JSON.stringify(this.clients));
+        this.saveClientsInMemory();
     };
     InMemoryService.prototype.saveNewClient = function (newClient) {
         newClient.dateOfRegistration = '1508104800000';
         newClient.mainAddress = null;
         this.clients.push(newClient);
-        localStorage.setItem('clients', JSON.stringify(this.clients));
         this.saveNewClientWithAddresses(newClient);
+        this.saveClientsInMemory();
     };
     InMemoryService.prototype.getBiggestClientId = function () {
         if (this.biggestClientId !== -1) {
@@ -1717,7 +1722,7 @@ var InMemoryService = (function () {
         else {
             this._clientService.getAllClients().subscribe(function (response) {
                 _this.clients = response;
-                localStorage.setItem('clients', JSON.stringify(response));
+                _this.saveClientsInMemory();
             });
         }
     };
@@ -1742,7 +1747,7 @@ var InMemoryService = (function () {
             client.mainAddress = wantedAddress;
             this.updateClient(client);
         }
-        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+        this.saveAddressesInMemory();
     };
     InMemoryService.prototype.saveNewAddress = function (newAddress, clientId) {
         var client = this.getClient(clientId);
@@ -1752,18 +1757,16 @@ var InMemoryService = (function () {
             client.mainAddress = newAddress;
             this.updateClient(client);
         }
-        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+        this.saveAddressesInMemory();
     };
     InMemoryService.prototype.saveNewClientWithAddresses = function (newClient) {
-        var addresses = [
-            newClient.mainAddress
-        ];
+        var addresses = [];
         var newObject = {
             id: newClient.id,
             addresses: addresses
         };
         this.addressesFromAllClients.push(newObject);
-        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+        this.saveAddressesInMemory();
     };
     InMemoryService.prototype.getBiggestAddressId = function () {
         if (this.biggestAddressId !== -1) {
@@ -1785,19 +1788,32 @@ var InMemoryService = (function () {
     };
     InMemoryService.prototype.updateAddressArray = function (clientId, updatedAddresses) {
         this.getClientFromMemory(clientId).addresses = updatedAddresses;
-        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+        this.saveAddressesInMemory();
     };
     InMemoryService.prototype.setUpAddresses = function () {
         var _this = this;
         var data = localStorage.getItem('addresses');
         if (data) {
             this.addressesFromAllClients = JSON.parse(data);
+            return true;
         }
         else {
             this._addressService.getAllClientsAddresses().subscribe(function (response) {
                 _this.addressesFromAllClients = response;
-                localStorage.setItem('addresses', JSON.stringify(response));
+                _this.saveAddressesInMemory();
             });
+            return false;
+        }
+    };
+    InMemoryService.prototype.saveAddressesInMemory = function () {
+        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+    };
+    InMemoryService.prototype.saveClientsInMemory = function () {
+        localStorage.setItem('clients', JSON.stringify(this.clients));
+    };
+    InMemoryService.prototype.checkIfAddressDataIsSetUp = function () {
+        if (!this.addressesFromAllClients) {
+            this.setUpAddresses();
         }
     };
     return InMemoryService;
