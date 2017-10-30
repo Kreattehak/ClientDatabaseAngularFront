@@ -20,8 +20,7 @@ webpackEmptyContext.id = "../../../../../src async recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__address_service__ = __webpack_require__("../../../../../src/app/addresses/address.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddressDetailResolver; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -35,29 +34,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AddressDetailResolver = (function () {
-    function AddressDetailResolver(_addressService, _inMemoryService) {
-        this._addressService = _addressService;
+    function AddressDetailResolver(_inMemoryService) {
         this._inMemoryService = _inMemoryService;
     }
     AddressDetailResolver.prototype.resolve = function (route) {
-        var doesLocalStorageHaveData = this._inMemoryService.setUpAddresses();
-        if (doesLocalStorageHaveData) {
-            return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].of(this._inMemoryService.getAllClientsAddressesFromMemory(+route.paramMap.get('id')));
-        }
-        else {
-            return this._addressService.getAllAddresses(+route.paramMap.get('id'));
-        }
+        return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].of(this._inMemoryService.getAllClientsAddressesFromMemory(+route.paramMap.get('id')));
     };
     return AddressDetailResolver;
 }());
 AddressDetailResolver = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__address_service__["a" /* AddressService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__address_service__["a" /* AddressService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _a || Object])
 ], AddressDetailResolver);
 
-var _a, _b;
+var _a;
 //# sourceMappingURL=address-detail-resolver.service.js.map
 
 /***/ }),
@@ -841,7 +832,6 @@ var ClientFormComponent = (function () {
         });
         this.clientForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.clientForm, _this.formErrors, data); });
         this._validationService.onValueChanged(this.clientForm, this.formErrors); // (re)set validation messages now
-        this._inMemoryService.checkIfAddressDataIsSetUp();
     };
     ClientFormComponent.prototype.onSubmit = function (id) {
         this.submitted = true;
@@ -984,6 +974,7 @@ var ClientListComponent = (function () {
         this._validationService = _validationService;
         this._toastr = _toastr;
         this.vcr = vcr;
+        this.clients = [];
         this.errorMessage = this._validationService.getLocalizedMessages('dataBeingResolved');
         this._toastr.setRootViewContainerRef(vcr);
     }
@@ -1070,12 +1061,9 @@ var ClientListComponent = (function () {
             },
             callback: function (result) {
                 if (result) {
-                    var data = _this.clients.filter(function (client) { return client !== _this.activeClient; });
-                    _this.clients = data;
-                    _this.filteredClients = data;
+                    _this._inMemoryService.removeClient(_this.activeClient);
                     _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                     _this.activeClient = null;
-                    localStorage.setItem('clients', JSON.stringify(_this.clients));
                     return true;
                 }
                 else {
@@ -1095,23 +1083,15 @@ var ClientListComponent = (function () {
     };
     ClientListComponent.prototype.generateTable = function () {
         var _this = this;
-        this._inMemoryService.setUpClients();
-        var localClientsJson = localStorage.getItem('clients');
-        if (localClientsJson) {
-            this.clients = this._inMemoryService.getAllClientsFromMemory();
-            this.filteredClients = this.clients;
-            this.checkArrayForClients();
-        }
-        else {
-            this._clientService.getAllClients().subscribe(function (clients) {
-                _this.clients = clients;
-                _this.filteredClients = _this.clients;
-                _this.checkArrayForClients();
-            }, function (error) {
-                _this.errorMessage = _this._validationService.getLocalizedMessages('serverOffline');
-                _this._toastr.error(_this.errorMessage, _this._validationService.getLocalizedMessages('errorTitle'));
-            });
-        }
+        this._inMemoryService.setUpAddresses();
+        this._inMemoryService.setUpClients(this.clients).subscribe(function (response) {
+            response.forEach(function (client) { return _this.clients.push(client); });
+            _this.filteredClients = _this.clients;
+            _this.checkArrayForClients();
+        }, function (error) {
+            _this.errorMessage = _this._validationService.getLocalizedMessages('serverOffline');
+            _this._toastr.error(_this.errorMessage, _this._validationService.getLocalizedMessages('errorTitle'));
+        });
     };
     ClientListComponent.prototype.checkArrayForClients = function () {
         if (this.clients.length === 0) {
@@ -1658,6 +1638,9 @@ AboutAuthorComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__clients_client_service__ = __webpack_require__("../../../../../src/app/clients/client.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__addresses_address_service__ = __webpack_require__("../../../../../src/app/addresses/address.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__login_authentication_service__ = __webpack_require__("../../../../../src/app/login/authentication.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InMemoryService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1671,16 +1654,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var InMemoryService = (function () {
-    function InMemoryService(_clientService, _addressService) {
+    function InMemoryService(_clientService, _addressService, _authenticationService) {
         this._clientService = _clientService;
         this._addressService = _addressService;
+        this._authenticationService = _authenticationService;
         this.biggestClientId = -1;
         this.biggestAddressId = -1;
     }
-    InMemoryService.prototype.getAllClientsFromMemory = function () {
-        return this.clients;
-    };
     InMemoryService.prototype.getClient = function (clientId) {
         return this.clients.find(function (client) { return client.id === clientId; });
     };
@@ -1700,6 +1683,15 @@ var InMemoryService = (function () {
         this.saveNewClientWithAddresses(newClient);
         this.saveClientsInMemory();
     };
+    InMemoryService.prototype.removeClient = function (clientToBeRemoved) {
+        console.log(this.clients);
+        var index = this.clients.indexOf(clientToBeRemoved);
+        this.clients.splice(index, 1);
+        if (clientToBeRemoved.mainAddress) {
+            this.removeClientAndAddress(clientToBeRemoved.id);
+        }
+        this.saveClientsInMemory();
+    };
     InMemoryService.prototype.getBiggestClientId = function () {
         if (this.biggestClientId !== -1) {
             return ++this.biggestClientId;
@@ -1713,21 +1705,18 @@ var InMemoryService = (function () {
         this.biggestClientId = biggestClientId;
         return ++this.biggestClientId;
     };
-    InMemoryService.prototype.setUpClients = function () {
-        var _this = this;
+    InMemoryService.prototype.setUpClients = function (clientsArrayReference) {
+        this.clients = clientsArrayReference;
         var data = localStorage.getItem('clients');
         if (data) {
-            this.clients = JSON.parse(data);
+            return __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__["Observable"].of(JSON.parse(data));
         }
         else {
-            this._clientService.getAllClients().subscribe(function (response) {
-                _this.clients = response;
-                _this.saveClientsInMemory();
-            });
+            return this._clientService.getAllClients();
         }
     };
     InMemoryService.prototype.getClientFromMemory = function (clientId) {
-        return this.addressesFromAllClients
+        return this.clientsAndTheirAddresses
             .find(function (clientWithAddresses) { return clientWithAddresses.id === clientId; });
     };
     InMemoryService.prototype.getAllClientsAddressesFromMemory = function (clientId) {
@@ -1765,15 +1754,18 @@ var InMemoryService = (function () {
             id: newClient.id,
             addresses: addresses
         };
-        this.addressesFromAllClients.push(newObject);
+        this.clientsAndTheirAddresses.push(newObject);
         this.saveAddressesInMemory();
+    };
+    InMemoryService.prototype.removeClientAndAddress = function (clientId) {
+        this.clientsAndTheirAddresses.filter(function (clientAndAddress) { return clientAndAddress.id !== clientId; });
     };
     InMemoryService.prototype.getBiggestAddressId = function () {
         if (this.biggestAddressId !== -1) {
             return ++this.biggestAddressId;
         }
         var biggestAddressId = -1;
-        this.addressesFromAllClients
+        this.clientsAndTheirAddresses
             .map(function (clientWithAddresses) { return clientWithAddresses.addresses; })
             .reduce(function (previousValue, currentValue) {
             currentValue.forEach(function (address) {
@@ -1792,38 +1784,33 @@ var InMemoryService = (function () {
     };
     InMemoryService.prototype.setUpAddresses = function () {
         var _this = this;
-        var data = localStorage.getItem('addresses');
-        if (data) {
-            this.addressesFromAllClients = JSON.parse(data);
-            return true;
-        }
-        else {
-            this._addressService.getAllClientsAddresses().subscribe(function (response) {
-                _this.addressesFromAllClients = response;
-                _this.saveAddressesInMemory();
-            });
-            return false;
+        if (this._authenticationService.isLoggedIn()) {
+            var data = localStorage.getItem('addresses');
+            if (data) {
+                this.clientsAndTheirAddresses = JSON.parse(data);
+            }
+            else {
+                this._addressService.getAllClientsAddresses().subscribe(function (response) {
+                    _this.clientsAndTheirAddresses = response;
+                    _this.saveAddressesInMemory();
+                });
+            }
         }
     };
     InMemoryService.prototype.saveAddressesInMemory = function () {
-        localStorage.setItem('addresses', JSON.stringify(this.addressesFromAllClients));
+        localStorage.setItem('addresses', JSON.stringify(this.clientsAndTheirAddresses));
     };
     InMemoryService.prototype.saveClientsInMemory = function () {
         localStorage.setItem('clients', JSON.stringify(this.clients));
-    };
-    InMemoryService.prototype.checkIfAddressDataIsSetUp = function () {
-        if (!this.addressesFromAllClients) {
-            this.setUpAddresses();
-        }
     };
     return InMemoryService;
 }());
 InMemoryService = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__clients_client_service__["a" /* ClientService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__clients_client_service__["a" /* ClientService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__addresses_address_service__["a" /* AddressService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__addresses_address_service__["a" /* AddressService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__clients_client_service__["a" /* ClientService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__clients_client_service__["a" /* ClientService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__addresses_address_service__["a" /* AddressService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__addresses_address_service__["a" /* AddressService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__login_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__login_authentication_service__["a" /* AuthenticationService */]) === "function" && _c || Object])
 ], InMemoryService);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=in-memory.service.js.map
 
 /***/ }),
