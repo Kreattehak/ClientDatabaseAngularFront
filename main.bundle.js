@@ -159,16 +159,16 @@ var AddressDetailComponent = (function () {
     };
     AddressDetailComponent.prototype.generateForm = function () {
         this.clientId = +this._route.snapshot.paramMap.get('id');
-        if (!this._route.snapshot.paramMap.get('addressId')) {
+        var addressId = +this._route.snapshot.paramMap.get('addressId');
+        if (!addressId) {
             this.activeAddress = new __WEBPACK_IMPORTED_MODULE_1__address__["a" /* Address */]();
             this.isNewAddress = true;
         }
         else {
-            var addressId = +this._route.snapshot.paramMap.get('addressId');
             this.activeAddress = this._inMemoryService.getAddressFromMemory(addressId, this.clientId);
             this.isNewAddress = false;
         }
-        this.activeClient = this._route.snapshot.data['client'];
+        this.activeClient = this._inMemoryService.getClient(this.clientId);
     };
     AddressDetailComponent.prototype.onBack = function () {
         this._router.navigate(['/clients', this.clientId, 'details']);
@@ -295,11 +295,9 @@ var Address = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__clients_client_detail_component__ = __webpack_require__("../../../../../src/app/clients/client-detail.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_about_author_component__ = __webpack_require__("../../../../../src/app/utils/about-author.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_path_not_found_component__ = __webpack_require__("../../../../../src/app/utils/path-not-found.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_resolver_service__ = __webpack_require__("../../../../../src/app/addresses/address-detail-resolver.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__clients_client_detail_resolver_service__ = __webpack_require__("../../../../../src/app/clients/client-detail-resolver.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__addresses_address_detail_component__ = __webpack_require__("../../../../../src/app/addresses/address-detail.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__ = __webpack_require__("../../../../../src/app/login/can-activate-authguard.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_component__ = __webpack_require__("../../../../../src/app/addresses/address-detail.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__ = __webpack_require__("../../../../../src/app/login/can-activate-authguard.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_login_component__ = __webpack_require__("../../../../../src/app/login/login.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -307,8 +305,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
 
 
 
@@ -331,38 +327,29 @@ AppRoutingModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["CommonModule"],
             __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* RouterModule */].forRoot([
                 { path: 'clients', component: __WEBPACK_IMPORTED_MODULE_3__clients_client_list_component__["a" /* ClientListComponent */] },
-                { path: 'clients/new', component: __WEBPACK_IMPORTED_MODULE_4__clients_client_form_component__["a" /* ClientFormComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]] },
+                { path: 'clients/new', component: __WEBPACK_IMPORTED_MODULE_4__clients_client_form_component__["a" /* ClientFormComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]] },
                 {
                     path: 'clients/:id/details',
                     component: __WEBPACK_IMPORTED_MODULE_5__clients_client_detail_component__["a" /* ClientDetailComponent */],
-                    resolve: {
-                        client: __WEBPACK_IMPORTED_MODULE_9__clients_client_detail_resolver_service__["a" /* ClientDetailResolver */],
-                        addresses: __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_resolver_service__["a" /* AddressDetailResolver */]
-                    },
-                    canActivate: [__WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
+                    canActivate: [__WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
                 },
                 {
                     path: 'clients/:id',
                     component: __WEBPACK_IMPORTED_MODULE_4__clients_client_form_component__["a" /* ClientFormComponent */],
-                    resolve: { client: __WEBPACK_IMPORTED_MODULE_9__clients_client_detail_resolver_service__["a" /* ClientDetailResolver */] },
-                    canActivate: [__WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
+                    canActivate: [__WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
                 },
                 {
                     path: 'clients/:id/address/:addressId',
-                    component: __WEBPACK_IMPORTED_MODULE_10__addresses_address_detail_component__["a" /* AddressDetailComponent */],
-                    resolve: {
-                        addresses: __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_resolver_service__["a" /* AddressDetailResolver */],
-                        client: __WEBPACK_IMPORTED_MODULE_9__clients_client_detail_resolver_service__["a" /* ClientDetailResolver */]
-                    },
-                    canActivate: [__WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
+                    component: __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_component__["a" /* AddressDetailComponent */],
+                    canActivate: [__WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
                 },
                 {
                     path: 'clients/:id/newAddress',
-                    component: __WEBPACK_IMPORTED_MODULE_10__addresses_address_detail_component__["a" /* AddressDetailComponent */],
-                    canActivate: [__WEBPACK_IMPORTED_MODULE_11__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
+                    component: __WEBPACK_IMPORTED_MODULE_8__addresses_address_detail_component__["a" /* AddressDetailComponent */],
+                    canActivate: [__WEBPACK_IMPORTED_MODULE_9__login_can_activate_authguard__["a" /* CanActivateAuthGuard */]]
                 },
                 { path: 'aboutUs', component: __WEBPACK_IMPORTED_MODULE_6__utils_about_author_component__["a" /* AboutAuthorComponent */], outlet: 'messages' },
-                { path: 'login', component: __WEBPACK_IMPORTED_MODULE_12__login_login_component__["a" /* LoginComponent */] },
+                { path: 'login', component: __WEBPACK_IMPORTED_MODULE_10__login_login_component__["a" /* LoginComponent */] },
                 { path: '', redirectTo: 'clients', pathMatch: 'full' },
                 { path: '**', component: __WEBPACK_IMPORTED_MODULE_7__utils_path_not_found_component__["a" /* PathNotFoundComponent */] },
             ]),
@@ -813,12 +800,13 @@ var ClientFormComponent = (function () {
     }
     ClientFormComponent.prototype.ngOnInit = function () {
         var _this = this;
-        if (!this._route.snapshot.data['client']) {
+        var clientId = +this._route.snapshot.paramMap.get('id');
+        if (!clientId) {
             this.activeClient = new __WEBPACK_IMPORTED_MODULE_1__client__["a" /* Client */]();
             this.isNewClient = true;
         }
         else {
-            this.activeClient = this._route.snapshot.data['client'];
+            this.activeClient = this._inMemoryService.getClient(clientId);
             this.isNewClient = false;
         }
         var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]();
@@ -849,6 +837,7 @@ var ClientFormComponent = (function () {
     ClientFormComponent.prototype.tryToSaveNewClient = function () {
         this.activeClient = this.clientForm.value;
         this.activeClient.id = this._inMemoryService.getBiggestClientId();
+        // TODO: REWORK
         if (this.activeClient.id === -1) {
             this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), this._validationService.getLocalizedMessages('errorTitle'));
         }
