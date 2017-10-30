@@ -44,7 +44,7 @@ export class AddressService {
 
   deleteAddress(addressId: number, clientId: number): Observable<string> {
     return this._http.post(this._deleteAddress, JSON.stringify({
-      'addressId' : addressId,
+      'addressId': addressId,
       'clientId': clientId
     }), this.requestBearer())
       .map((response: Response) => response.text())
@@ -66,9 +66,8 @@ export class AddressService {
       errorMessage = error.json().errorMessage;
     } catch (e) {
       errorMessage = error.text();
-    } finally {
-      return Observable.throw(errorMessage || 'Server error');
     }
+    return Observable.throw(errorMessage || 'Server error');
   }
 
   private requestBearer(): RequestOptions {
@@ -76,7 +75,7 @@ export class AddressService {
       headers: new Headers({
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + this._authenticationService.getToken(),
-        'Logged-User' : this._authenticationService.getUserName()
+        'Logged-User': this._authenticationService.getUserName()
       })
     });
   }

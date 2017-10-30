@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Client} from './client';
 import {ClientService} from './client.service';
 import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
-declare var bootbox: any;
+declare const bootbox: any;
 
 @Component({
   templateUrl: 'client-list.component.html'
@@ -20,8 +20,7 @@ export class ClientListComponent implements OnInit {
 
   constructor(private _clientService: ClientService, private _router: Router,
               private _validationService: ValidationAndLocaleMessagesService,
-              private _toastr: ToastsManager, private vcr: ViewContainerRef) {
-    this._toastr.setRootViewContainerRef(vcr);
+              private _toastr: ToastsManager) {
   }
 
   ngOnInit() {

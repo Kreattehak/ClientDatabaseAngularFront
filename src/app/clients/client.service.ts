@@ -59,9 +59,8 @@ export class ClientService {
       errorMessage = error.json().errorMessage;
     } catch (e) {
       errorMessage = error.text();
-    } finally {
-      return Observable.throw(errorMessage || 'Server error');
     }
+    return Observable.throw(errorMessage || 'Server error');
   }
 
   private requestBearer(): RequestOptions {

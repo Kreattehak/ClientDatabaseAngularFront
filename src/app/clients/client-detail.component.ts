@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AddressService} from '../addresses/address.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Client} from './client';
@@ -6,7 +6,7 @@ import {Address} from '../addresses/address';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
-declare var bootbox: any;
+declare const bootbox: any;
 
 @Component({
   templateUrl: './client-detail.component.html',
@@ -19,8 +19,7 @@ export class ClientDetailComponent implements OnInit {
 
   constructor(private _addressService: AddressService, private _route: ActivatedRoute,
               private _validationService: ValidationAndLocaleMessagesService,
-              private _router: Router, private _toastr: ToastsManager, private vcr: ViewContainerRef) {
-    this._toastr.setRootViewContainerRef(vcr);
+              private _router: Router, private _toastr: ToastsManager) {
   }
 
   ngOnInit() {

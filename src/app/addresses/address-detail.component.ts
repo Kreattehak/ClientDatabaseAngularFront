@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Address} from './address';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -26,10 +26,9 @@ export class AddressDetailComponent implements OnInit {
     'zipCode': ''
   };
 
-  constructor(private _addressService: AddressService, private _validationService: ValidationAndLocaleMessagesService,
-              private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager,
-              private vcr: ViewContainerRef) {
-    this._toastr.setRootViewContainerRef(vcr);
+  constructor(private _addressService: AddressService, private _toastr: ToastsManager,
+              private _validationService: ValidationAndLocaleMessagesService,
+              private _route: ActivatedRoute, private _router: Router) {
   }
 
   ngOnInit() {

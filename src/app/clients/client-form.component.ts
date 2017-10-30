@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Client} from './client';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -23,9 +23,9 @@ export class ClientFormComponent implements OnInit {
     'lastName': ''
   };
 
-  constructor(private _clientService: ClientService, private _validationService: ValidationAndLocaleMessagesService,
-              private _route: ActivatedRoute, private _router: Router, private _toastr: ToastsManager, private vcr: ViewContainerRef) {
-    this._toastr.setRootViewContainerRef(vcr);
+  constructor(private _clientService: ClientService, private _toastr: ToastsManager,
+              private _validationService: ValidationAndLocaleMessagesService,
+              private _route: ActivatedRoute, private _router: Router) {
   }
 
   ngOnInit() {

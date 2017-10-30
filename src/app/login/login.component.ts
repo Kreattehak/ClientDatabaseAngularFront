@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewContainerRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
@@ -22,9 +22,8 @@ export class LoginComponent implements OnInit {
   public logoutMessage: string;
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
-              private _validationService: ValidationAndLocaleMessagesService, private _toastr: ToastsManager,
-              private vcr: ViewContainerRef, private _route: ActivatedRoute) {
-    this._toastr.setRootViewContainerRef(vcr);
+              private _validationService: ValidationAndLocaleMessagesService,
+              private _toastr: ToastsManager, private _route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -55,7 +54,9 @@ export class LoginComponent implements OnInit {
       .subscribe(response => {
           if (response === true) {
             // login successful
-            this._router.navigate(['/clients']);
+            this._toastr.success(this._validationService.getLocalizedMessages('loginSuccessful'),
+              this._validationService.getLocalizedMessages('successTitle')).then(
+              () => this._router.navigate(['/clients']));
           }
         },
         error => {
