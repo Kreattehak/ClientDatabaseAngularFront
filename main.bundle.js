@@ -719,11 +719,9 @@ var ClientDetailComponent = (function () {
             },
             callback: function (result) {
                 if (result) {
-                    var data = _this.addresses.filter(function (address) { return address !== _this.activeAddress; });
-                    _this.addresses = data;
+                    _this._inMemoryService.removeAddress(_this.client.id, _this.activeAddress);
                     _this._toastr.success(_this._validationService.getLocalizedMessages('addressRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                     _this.activeAddress = null;
-                    _this._inMemoryService.updateAddressArray(_this.client.id, _this.addresses);
                     return true;
                 }
                 else {
@@ -742,8 +740,9 @@ var ClientDetailComponent = (function () {
         return false;
     };
     ClientDetailComponent.prototype.generateTable = function () {
-        this.client = this._inMemoryService.getClient(+this._route.snapshot.paramMap.get('id'));
-        this.addresses = this._route.snapshot.data['addresses'];
+        var clientId = +this._route.snapshot.paramMap.get('id');
+        this.client = this._inMemoryService.getClient(clientId);
+        this.addresses = this._inMemoryService.getAllClientsAddressesFromMemory(clientId);
     };
     ClientDetailComponent.prototype.onBack = function () {
         this._router.navigate(['/clients']);
@@ -949,7 +948,6 @@ module.exports = "<div class=\"container\" *ngIf=\"filteredClients && filteredCl
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ng2_toastr___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ng2_toastr__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_validation_and_locale_messages_service__ = __webpack_require__("../../../../../src/app/shared/validation-and-locale-messages.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_in_memory_service__ = __webpack_require__("../../../../../src/app/utils/in-memory.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__client_service__ = __webpack_require__("../../../../../src/app/clients/client.service.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -965,12 +963,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ClientListComponent = (function () {
-    function ClientListComponent(_inMemoryService, _router, _clientService, _validationService, _toastr, vcr) {
+    function ClientListComponent(_inMemoryService, _router, _validationService, _toastr, vcr) {
         this._inMemoryService = _inMemoryService;
         this._router = _router;
-        this._clientService = _clientService;
         this._validationService = _validationService;
         this._toastr = _toastr;
         this.vcr = vcr;
@@ -1115,10 +1111,10 @@ ClientListComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         template: __webpack_require__("../../../../../src/app/clients/client-list.component.html")
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__client_service__["a" /* ClientService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__client_service__["a" /* ClientService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__shared_validation_and_locale_messages_service__["a" /* ValidationAndLocaleMessagesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__shared_validation_and_locale_messages_service__["a" /* ValidationAndLocaleMessagesService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2_ng2_toastr__["ToastsManager"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ng2_toastr__["ToastsManager"]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"]) === "function" && _f || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__utils_in_memory_service__["a" /* InMemoryService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__utils_in_memory_service__["a" /* InMemoryService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__shared_validation_and_locale_messages_service__["a" /* ValidationAndLocaleMessagesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__shared_validation_and_locale_messages_service__["a" /* ValidationAndLocaleMessagesService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_2_ng2_toastr__["ToastsManager"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2_ng2_toastr__["ToastsManager"]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewContainerRef"]) === "function" && _e || Object])
 ], ClientListComponent);
 
-var _a, _b, _c, _d, _e, _f;
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=client-list.component.js.map
 
 /***/ }),
@@ -1684,7 +1680,6 @@ var InMemoryService = (function () {
         this.saveClientsInMemory();
     };
     InMemoryService.prototype.removeClient = function (clientToBeRemoved) {
-        console.log(this.clients);
         var index = this.clients.indexOf(clientToBeRemoved);
         this.clients.splice(index, 1);
         if (clientToBeRemoved.mainAddress) {
@@ -1757,6 +1752,12 @@ var InMemoryService = (function () {
         this.clientsAndTheirAddresses.push(newObject);
         this.saveAddressesInMemory();
     };
+    InMemoryService.prototype.removeAddress = function (clientId, addressToBeRemoved) {
+        var addresses = this.getAllClientsAddressesFromMemory(clientId);
+        var index = addresses.indexOf(addressToBeRemoved);
+        addresses.splice(index, 1);
+        this.saveAddressesInMemory();
+    };
     InMemoryService.prototype.removeClientAndAddress = function (clientId) {
         this.clientsAndTheirAddresses.filter(function (clientAndAddress) { return clientAndAddress.id !== clientId; });
     };
@@ -1778,10 +1779,6 @@ var InMemoryService = (function () {
         this.biggestAddressId = biggestAddressId;
         return ++this.biggestAddressId;
     };
-    InMemoryService.prototype.updateAddressArray = function (clientId, updatedAddresses) {
-        this.getClientFromMemory(clientId).addresses = updatedAddresses;
-        this.saveAddressesInMemory();
-    };
     InMemoryService.prototype.setUpAddresses = function () {
         var _this = this;
         if (this._authenticationService.isLoggedIn()) {
@@ -1792,7 +1789,6 @@ var InMemoryService = (function () {
             else {
                 this._addressService.getAllClientsAddresses().subscribe(function (response) {
                     _this.clientsAndTheirAddresses = response;
-                    _this.saveAddressesInMemory();
                 });
             }
         }
