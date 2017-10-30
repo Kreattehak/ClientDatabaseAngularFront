@@ -83,7 +83,8 @@ export class AddressDetailComponent implements OnInit {
     this.activeAddress = this.addressForm.value;
     this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
       response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
-        this._validationService.getLocalizedMessages('successTitle')),
+        this._validationService.getLocalizedMessages('successTitle')).then(
+        () => this.onBack()),
       error => {
         if (error === -1) {
           this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
@@ -99,7 +100,9 @@ export class AddressDetailComponent implements OnInit {
     this.activeAddress = this.addressForm.value;
     this.activeAddress.id = id;
     this._addressService.updateAddress(this.activeAddress).subscribe(
-      response => this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle')),
+      response => this._toastr.success(response,
+        this._validationService.getLocalizedMessages('successTitle')).then(
+        () => this.onBack()),
       error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
   }
 

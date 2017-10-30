@@ -78,7 +78,8 @@ export class ClientFormComponent implements OnInit {
           this._router.navigate(['/clients', response, 'newAddress']);
         } else {
           this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
-            this._validationService.getLocalizedMessages('successTitle'));
+            this._validationService.getLocalizedMessages('successTitle')).then(
+            () => this.onBack());
         }
       }, error => {
         if (error === -1) {
@@ -96,7 +97,8 @@ export class ClientFormComponent implements OnInit {
     this.activeClient.id = id;
     this._clientService.updateClient(this.activeClient).subscribe(
       response => this._toastr.success(response,
-        this._validationService.getLocalizedMessages('successTitle')),
+        this._validationService.getLocalizedMessages('successTitle')).then(
+        () => this.onBack()),
       error => this._toastr.error(error,
         this._validationService.getLocalizedMessages('errorTitle')));
   }
@@ -112,7 +114,7 @@ export class ClientFormComponent implements OnInit {
     return false;
   }
 
-  goBack(): void {
+  onBack(): void {
     this._router.navigate(['/clients']);
   }
 }
