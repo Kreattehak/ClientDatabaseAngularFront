@@ -1,9 +1,9 @@
 <div class="container">
   <section class="row" *ngIf="errorMessage">
-    <div class="alert alert-info col-lg-6">{{errorMessage}}</div>
+    <div class="alert alert-info col-lg-6">{{ errorMessage }}</div>
   </section>
   <section class="row" *ngIf="logoutMessage">
-    <div class="alert alert-info col-lg-6">{{logoutMessage}}</div>
+    <div class="alert alert-info col-lg-6">{{ logoutMessage }}</div>
   </section>
   <div class="row">
     <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">

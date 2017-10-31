@@ -6,8 +6,8 @@
         Add new client
       </legend>
       <ng-template #oldClientLegend>
-        <legend i18n="@@clientForm.legendEditClient">Client to be edited: {{activeClient?.firstName}}
-          {{activeClient?.lastName}}
+        <legend i18n="@@clientForm.legendEditClient">Client to be edited: {{ activeClient?.firstName }}
+          {{ activeClient?.lastName }}
         </legend>
       </ng-template>
 
@@ -19,7 +19,7 @@
                  i18n-placeholder="@@idPlaceholder"/>
           <ng-template #idMessage>
             <input class="form-control" id="id" type="text"
-                   placeholder="{{activeClient.id}}" formControlName="id" readonly="true"/>
+                   placeholder="{{ activeClient.id }}" formControlName="id" readonly="true"/>
           </ng-template>
         </div>
       </div>

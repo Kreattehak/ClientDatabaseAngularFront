@@ -3,11 +3,11 @@
     <fieldset>
 
       <legend *ngIf="isNewAddress; else oldAddressLegend" i18n="@@addressForm.legendAddAddress">
-        Add new address for client {{activeClient?.firstName}} {{activeClient?.lastName}}
+        Add new address for client {{ activeClient?.firstName }} {{ activeClient?.lastName }}
       </legend>
       <ng-template #oldAddressLegend>
         <legend i18n="@@addressForm.legendEditAddress">Address to be edited:
-          {{activeAddress.streetName}}, {{activeAddress.cityName}}, {{activeAddress.zipCode}}
+          {{ activeAddress.streetName }}, {{ activeAddress.cityName }}, {{ activeAddress.zipCode }}
         </legend>
       </ng-template>
 
@@ -19,7 +19,7 @@
                  i18n-placeholder="@@idPlaceholder"/>
           <ng-template #idMessage>
             <input class="form-control" id="id" type="text"
-                   placeholder="{{activeAddress.id}}" formControlName="id" readonly="true"/>
+                   placeholder="{{ activeAddress.id }}" formControlName="id" readonly="true"/>
           </ng-template>
         </div>
       </div>

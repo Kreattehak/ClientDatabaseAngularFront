@@ -1,9 +1,9 @@
 <div class="container" *ngIf="addresses.length; else clientWithoutAddress">
   <div class="jumbotron">
-    <h2>{{client.firstName + ' ' + client.lastName}}</h2>
-    <p i18n="@@clientDetail.dateOfRegistrationParagraph">Date of registration: {{client.dateOfRegistration | date:'dd.MM.y'}}</p>
-    <p i18n="@@clientDetail.mainAddressParagraph">Main address: {{client.mainAddress.cityName + ', ' + client.mainAddress.streetName + ', '
-      + client.mainAddress.zipCode}}</p>
+    <h2>{{ client.firstName + ' ' + client.lastName }}</h2>
+    <p i18n="@@clientDetail.dateOfRegistrationParagraph">Date of registration: {{ client.dateOfRegistration | date:'dd.MM.y' }}</p>
+    <p i18n="@@clientDetail.mainAddressParagraph">Main address: {{ client.mainAddress.cityName + ', ' + client.mainAddress.streetName + ', '
+      + client.mainAddress.zipCode }}</p>
   </div>
   <table class="table" id="clientDetails">
     <thead>

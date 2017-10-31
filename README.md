@@ -6,6 +6,23 @@ It's a front-end app which consumes RESTful Web Service from `ClientDatabase` pr
 
 For the best user experience please use this app with that project.
 
+## Live Preview
+
+<p><a href="https://kreattehak.github.io/ClientDatabaseAngularFront/" target="_blank">
+Click to visit the project website.</a></p>
+
+### Live preview compared to original project
+
+```
+There are only two http get calls - one to get all clients and another one to get client addresses.
+This preview use InMemoryWebApi, with delay set to 150ms.
+No JWT authentication, no token validation and expiration, any data entered cause login.
+Only english language.
+No data resolvers.
+Address/Client validation from backend is not available, i.e.you can add another address with the same data.
+All changes made by user are stored in browser local storage.
+```
+
 ## Quick setup
 
 ```

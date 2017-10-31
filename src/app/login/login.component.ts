@@ -8,8 +8,7 @@ import {ToastsManager} from 'ng2-toastr';
 declare const bootbox: any;
 
 @Component({
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
 

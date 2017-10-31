@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
   showAboutAuthor(): void {
     if (!this.isAboutAuthorDisplayed) {
-      this._router.navigate([{outlets: {messages: ['aboutUs']}}]);
+      this._router.navigate([{outlets: {messages: ['aboutAuthor']}}]);
       this.isAboutAuthorDisplayed = !this.isAboutAuthorDisplayed;
     } else {
       this._router.navigate([{outlets: {messages: null}}]);

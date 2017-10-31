@@ -47,7 +47,7 @@ import {LoginComponent} from './login/login.component';
         component: AddressDetailComponent,
         canActivate: [CanActivateAuthGuard]
       },
-      {path: 'aboutUs', component: AboutAuthorComponent, outlet: 'messages'},
+      {path: 'aboutAuthor', component: AboutAuthorComponent, outlet: 'messages'},
       {path: 'login', component: LoginComponent},
       {path: '', redirectTo: 'clients', pathMatch: 'full'},
       {path: '**', component: PathNotFoundComponent},
