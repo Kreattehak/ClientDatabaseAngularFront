@@ -380,7 +380,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\"\n              data-target=\"#bs-nav-hide\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutProject()\" [ngStyle]=\"{'cursor':'pointer'}\">About Author</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login']\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
+module.exports = "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\"\n              data-target=\"#bs-nav-hide\" aria-expanded=\"false\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"/ClientDatabaseAngularFront/\">\n        <span class=\"glyphicon glyphicon-picture\" aria-hidden=\"true\"></span> ClientDatabase</a>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"bs-nav-hide\">\n      <ul class=\"nav navbar-nav\">\n        <li><a (click)=\"showAboutProject()\" [ngStyle]=\"{'cursor':'pointer'}\">About Project</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\"\n             aria-expanded=\"false\">Admin Panel <span class=\"caret\"></span></a>\n          <ul class=\"dropdown-menu\">\n            <li><a [routerLink]=\"['/clients/new']\">Add Client</a>\n            </li>\n            <li role=\"separator\" class=\"divider\"></li>\n            <li><a [routerLink]=\"['/login']\">Logout</a>\n            </li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n\n<router-outlet name='messages'></router-outlet>\n<router-outlet></router-outlet>\n\n\n"
 
 /***/ }),
 
@@ -649,7 +649,7 @@ var ClientDetailComponent = (function () {
                 return true;
             }
             else {
-                return false;
+                return;
             }
         };
     }
@@ -976,10 +976,11 @@ var ClientListComponent = (function () {
                 _this._inMemoryService.removeClient(_this.activeClient);
                 _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                 _this.activeClient = null;
+                _this.checkArrayForClients();
                 return true;
             }
             else {
-                return false;
+                return;
             }
         };
     }
@@ -1598,13 +1599,15 @@ var InMemoryService = (function () {
     InMemoryService.prototype.removeClient = function (clientToBeRemoved) {
         var index = this.clients.indexOf(clientToBeRemoved);
         this.clients.splice(index, 1);
-        if (clientToBeRemoved.mainAddress) {
-            this.removeClientAndAddress(clientToBeRemoved.id);
-        }
+        this.removeClientAndAddress(clientToBeRemoved.id);
         this.saveClientsInMemory();
     };
     InMemoryService.prototype.getBiggestClientId = function () {
-        if (this.biggestClientId !== -1) {
+        if (this.clients.length === 0) {
+            this.biggestClientId = 0;
+            return ++this.biggestClientId;
+        }
+        else if (this.biggestClientId !== -1) {
             return ++this.biggestClientId;
         }
         var biggestClientId = -1;
@@ -1675,10 +1678,15 @@ var InMemoryService = (function () {
         this.saveAddressesInMemory();
     };
     InMemoryService.prototype.removeClientAndAddress = function (clientId) {
-        this.clientsAndTheirAddresses.filter(function (clientAndAddress) { return clientAndAddress.id !== clientId; });
+        this.clientsAndTheirAddresses = this.clientsAndTheirAddresses.filter(function (clientAndAddress) { return clientAndAddress.id !== clientId; });
+        this.saveAddressesInMemory();
     };
     InMemoryService.prototype.getBiggestAddressId = function () {
-        if (this.biggestAddressId !== -1) {
+        if (this.clientsAndTheirAddresses.length === 0) {
+            this.biggestAddressId = 0;
+            return ++this.biggestAddressId;
+        }
+        else if (this.biggestAddressId !== -1) {
             return ++this.biggestAddressId;
         }
         var biggestAddressId = -1;
