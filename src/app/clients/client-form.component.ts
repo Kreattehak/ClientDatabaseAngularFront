@@ -29,25 +29,9 @@ export class ClientFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this._route.snapshot.data['client']) {
-      this.activeClient = new Client();
-      this.isNewClient = true;
-    } else {
-      this.activeClient = this._route.snapshot.data['client'];
-      this.isNewClient = false;
-    }
+    this.getFormData();
 
-    const id = new FormControl();
-    const firstName = new FormControl(this.activeClient.firstName,
-      [Validators.required, Validators.minLength(3)]);
-    const lastName = new FormControl(this.activeClient.lastName,
-      [Validators.required, Validators.minLength(3)]);
-
-    this.clientForm = new FormGroup({
-      id: id,
-      firstName: firstName,
-      lastName: lastName
-    });
+    this.setUpForm();
 
     this.clientForm.valueChanges.subscribe(
       data => this._validationService.onValueChanged(this.clientForm, this.formErrors, data));
@@ -68,6 +52,10 @@ export class ClientFormComponent implements OnInit {
         this.tryToUpdateClient(id);
       }
     }
+  }
+
+  onBack(): void {
+    this._router.navigate(['/clients']);
   }
 
   private tryToSaveNewClient(): void {
@@ -114,8 +102,28 @@ export class ClientFormComponent implements OnInit {
     return false;
   }
 
-  onBack(): void {
-    this._router.navigate(['/clients']);
+  private getFormData(): void {
+    if (!this._route.snapshot.data['client']) {
+      this.activeClient = new Client();
+      this.isNewClient = true;
+    } else {
+      this.activeClient = this._route.snapshot.data['client'];
+      this.isNewClient = false;
+    }
+  }
+
+  private setUpForm(): void {
+    const id = new FormControl();
+    const firstName = new FormControl(this.activeClient.firstName,
+      [Validators.required, Validators.minLength(3)]);
+    const lastName = new FormControl(this.activeClient.lastName,
+      [Validators.required, Validators.minLength(3)]);
+
+    this.clientForm = new FormGroup({
+      id: id,
+      firstName: firstName,
+      lastName: lastName
+    });
   }
 }
 

@@ -43,15 +43,9 @@ export class ClientListComponent implements OnInit {
     let filteredClients: Client[] = [];
 
     if (filterBy.length === 2) {
-      filteredClients = this.clients.filter((client: Client) => {
-        return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
-          && client.lastName.toLocaleLowerCase().indexOf(filterBy[1]) !== -1;
-      });
+      filteredClients = this.filterFirstAndLastNameSeparately(filterBy);
     } else if (filterBy.length === 1) {
-      filteredClients = this.clients.filter((client: Client) => {
-        return client.firstName.toLocaleLowerCase().indexOf(filter) !== -1
-          || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
-      });
+      filteredClients = this.filterFirstAndLastNameSimultaneously(filter);
     }
     if (filteredClients.length === 0) {
       this.errorMessage = this._validationService.getLocalizedMessages('noMatchForFilter');
@@ -79,12 +73,35 @@ export class ClientListComponent implements OnInit {
     }
   }
 
+  onEditClient(): boolean {
+    if (!this.isFieldSelected()) {
+      return false;
+    } else {
+      this._router.navigate(['/clients', this.activeClient.id]);
+      return true;
+    }
+  }
+
   onRemove(): boolean {
     if (!this.isFieldSelected()) {
       return false;
     } else {
       this.removeConfirm();
     }
+  }
+
+  private filterFirstAndLastNameSeparately(filterBy: string[]): Client[] {
+    return this.clients.filter((client: Client) => {
+      return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
+        && client.lastName.toLocaleLowerCase().indexOf(filterBy[1]) !== -1;
+    });
+  }
+
+  private filterFirstAndLastNameSimultaneously(filter: string): Client[] {
+    return this.clients.filter((client: Client) => {
+      return client.firstName.toLocaleLowerCase().indexOf(filter) !== -1
+        || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
+    });
   }
 
   private removeConfirm(): void {
@@ -103,33 +120,26 @@ export class ClientListComponent implements OnInit {
           label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
         }
       },
-      callback: (result) => {
-        if (result) {
-          this._clientService.deleteClient(this.activeClient).subscribe(
-            response => {
-              const data = this.clients.filter(client => client !== this.activeClient);
-              this.clients = data;
-              this.filteredClients = data;
-              this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-              this.activeClient = null;
-            }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
-          );
-          return true;
-        } else {
-          return;
-        }
-      }
+      callback: this.removeClient
     });
   }
 
-  onEditClient(): boolean {
-    if (!this.isFieldSelected()) {
-      return false;
-    } else {
-      this._router.navigate(['/clients', this.activeClient.id]);
+  private removeClient = (result) => {
+    if (result) {
+      this._clientService.deleteClient(this.activeClient).subscribe(
+        response => {
+          const data = this.clients.filter(client => client !== this.activeClient);
+          this.clients = data;
+          this.filteredClients = data;
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+          this.activeClient = null;
+        }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
+      );
       return true;
+    } else {
+      return false;
     }
-  }
+  };
 
   private generateTable(): void {
     // this.clients = this._route.snapshot.data['clients'];

@@ -32,35 +32,12 @@ export class AddressDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.clientId = +this._route.snapshot.paramMap.get('id');
-    if (!this._route.snapshot.data['addresses']) {
-      this.activeAddress = new Address();
-      this.isNewAddress = true;
-    } else {
-      const data = this._route.snapshot.data['addresses'];
-      const addressId = +this._route.snapshot.paramMap.get('addressId');
-      this.activeAddress = data.find((element) => element.id === addressId);
-      this.isNewAddress = false;
-    }
-    this.activeClient = this._route.snapshot.data['client'];
+    this.getFormData();
 
-    const id = new FormControl('');
-    const streetName = new FormControl(this.activeAddress.streetName,
-      [Validators.required, Validators.minLength(3)]);
-    const cityName = new FormControl(this.activeAddress.cityName,
-      [Validators.required, Validators.minLength(3)]);
-    const zipCode = new FormControl(this.activeAddress.zipCode,
-      [Validators.required, Validators.minLength(6), Validators.maxLength(6),
-        Validators.pattern(/\d{2}-\d{3}/ig)]);
+    this.setUpForm();
 
-    this.addressForm = new FormGroup({
-      id: id,
-      streetName: streetName,
-      cityName: cityName,
-      zipCode: zipCode
-    });
-
-    this.addressForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.addressForm, this.formErrors, data));
+    this.addressForm.valueChanges.subscribe(
+      data => this._validationService.onValueChanged(this.addressForm, this.formErrors, data));
 
     this._validationService.onValueChanged(this.addressForm, this.formErrors);
   }
@@ -77,6 +54,10 @@ export class AddressDetailComponent implements OnInit {
         this.tryToUpdateAddress(id);
       }
     }
+  }
+
+  onBack(): void {
+    this._router.navigate(['/clients', this.clientId, 'details']);
   }
 
   private tryToSaveNewAddress(): void {
@@ -119,7 +100,35 @@ export class AddressDetailComponent implements OnInit {
     return false;
   }
 
-  onBack(): void {
-    this._router.navigate(['/clients', this.clientId, 'details']);
+  private getFormData(): void {
+    this.clientId = +this._route.snapshot.paramMap.get('id');
+    if (!this._route.snapshot.data['addresses']) {
+      this.activeAddress = new Address();
+      this.isNewAddress = true;
+    } else {
+      const data = this._route.snapshot.data['addresses'];
+      const addressId = +this._route.snapshot.paramMap.get('addressId');
+      this.activeAddress = data.find((element) => element.id === addressId);
+      this.isNewAddress = false;
+    }
+    this.activeClient = this._route.snapshot.data['client'];
+  }
+
+  private setUpForm(): void {
+    const id = new FormControl('');
+    const streetName = new FormControl(this.activeAddress.streetName,
+      [Validators.required, Validators.minLength(3)]);
+    const cityName = new FormControl(this.activeAddress.cityName,
+      [Validators.required, Validators.minLength(3)]);
+    const zipCode = new FormControl(this.activeAddress.zipCode,
+      [Validators.required, Validators.minLength(6), Validators.maxLength(6),
+        Validators.pattern(/\d{2}-\d{3}/ig)]);
+
+    this.addressForm = new FormGroup({
+      id: id,
+      streetName: streetName,
+      cityName: cityName,
+      zipCode: zipCode
+    });
   }
 }

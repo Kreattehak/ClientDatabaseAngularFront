@@ -55,13 +55,7 @@ export class ClientDetailComponent implements OnInit {
     } else if (this.activeAddress.id === this.client.mainAddress.id) {
       return this.cannotProceed(this._validationService.getLocalizedMessages('alreadyMainAddress'));
     } else {
-      this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
-        response => {
-          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-          this.client.mainAddress = this.activeAddress;
-          this.activeAddress = null;
-        },
-        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+      this.setAsMainAddress();
     }
   }
 
@@ -76,6 +70,20 @@ export class ClientDetailComponent implements OnInit {
     }
   }
 
+  onBack(): void {
+    this._router.navigate(['/clients']);
+  }
+
+  private setAsMainAddress(): void {
+    this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
+      response => {
+        this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+        this.client.mainAddress = this.activeAddress;
+        this.activeAddress = null;
+      },
+      error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+  }
+
   private removeConfirm(): void {
     bootbox.confirm({
       title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
@@ -88,22 +96,24 @@ export class ClientDetailComponent implements OnInit {
           label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
         }
       },
-      callback: (result) => {
-        if (result) {
-          this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
-            response => {
-              this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-              this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
-              this.activeAddress = null;
-              this._router.navigate(['/clients', this.client.id, 'details']);
-            }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
-          return true;
-        } else {
-          return;
-        }
-      }
+      callback: this.removeAddress
     });
   }
+
+  private removeAddress = (result) => {
+    if (result) {
+      this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
+        response => {
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+          this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
+          this.activeAddress = null;
+          this._router.navigate(['/clients', this.client.id, 'details']);
+        }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   private cannotProceed(message: string, size: string = 'small'): boolean {
     bootbox.alert({
@@ -112,9 +122,5 @@ export class ClientDetailComponent implements OnInit {
       backdrop: true
     });
     return false;
-  }
-
-  onBack(): void {
-    this._router.navigate(['/clients']);
   }
 }
