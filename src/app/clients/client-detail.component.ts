@@ -111,7 +111,7 @@ export class ClientDetailComponent implements OnInit {
         }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
       return true;
     } else {
-      return false;
+      return;
     }
   };
 

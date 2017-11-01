@@ -137,7 +137,7 @@ export class ClientListComponent implements OnInit {
       );
       return true;
     } else {
-      return false;
+      return;
     }
   };
 
