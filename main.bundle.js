@@ -104,18 +104,8 @@ var AddressDetailComponent = (function () {
     }
     AddressDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.generateForm();
-        var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('');
-        var streetName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.streetName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
-        var cityName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.cityName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
-        var zipCode = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.zipCode, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(6), __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].maxLength(6),
-            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].pattern(/\d{2}-\d{3}/ig)]);
-        this.addressForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
-            id: id,
-            streetName: streetName,
-            cityName: cityName,
-            zipCode: zipCode
-        });
+        this.getFormData();
+        this.setUpForm();
         this.addressForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.addressForm, _this.formErrors, data); });
         this._validationService.onValueChanged(this.addressForm, this.formErrors);
     };
@@ -132,6 +122,9 @@ var AddressDetailComponent = (function () {
                 this.tryToUpdateAddress(id);
             }
         }
+    };
+    AddressDetailComponent.prototype.onBack = function () {
+        this._router.navigate(['/clients', this.clientId, 'details']);
     };
     AddressDetailComponent.prototype.tryToSaveNewAddress = function () {
         var _this = this;
@@ -157,7 +150,7 @@ var AddressDetailComponent = (function () {
         }
         return false;
     };
-    AddressDetailComponent.prototype.generateForm = function () {
+    AddressDetailComponent.prototype.getFormData = function () {
         this.clientId = +this._route.snapshot.paramMap.get('id');
         var addressId = +this._route.snapshot.paramMap.get('addressId');
         if (!addressId) {
@@ -170,8 +163,18 @@ var AddressDetailComponent = (function () {
         }
         this.activeClient = this._inMemoryService.getClient(this.clientId);
     };
-    AddressDetailComponent.prototype.onBack = function () {
-        this._router.navigate(['/clients', this.clientId, 'details']);
+    AddressDetailComponent.prototype.setUpForm = function () {
+        var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]('');
+        var streetName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.streetName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
+        var cityName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.cityName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
+        var zipCode = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeAddress.zipCode, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(6), __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].maxLength(6),
+            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].pattern(/\d{2}-\d{3}/ig)]);
+        this.addressForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
+            id: id,
+            streetName: streetName,
+            cityName: cityName,
+            zipCode: zipCode
+        });
     };
     return AddressDetailComponent;
 }());
@@ -632,11 +635,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var ClientDetailComponent = (function () {
     function ClientDetailComponent(_inMemoryService, _route, _validationService, _router, _toastr) {
+        var _this = this;
         this._inMemoryService = _inMemoryService;
         this._route = _route;
         this._validationService = _validationService;
         this._router = _router;
         this._toastr = _toastr;
+        this.removeAddress = function (result) {
+            if (result) {
+                _this._inMemoryService.removeAddress(_this.client.id, _this.activeAddress);
+                _this._toastr.success(_this._validationService.getLocalizedMessages('addressRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
+                _this.activeAddress = null;
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
     }
     ClientDetailComponent.prototype.ngOnInit = function () {
         this.generateTable();
@@ -670,10 +685,7 @@ var ClientDetailComponent = (function () {
             return this.cannotProceed(this._validationService.getLocalizedMessages('alreadyMainAddress'));
         }
         else {
-            this.client.mainAddress = this.activeAddress;
-            this.activeAddress = null;
-            this._inMemoryService.updateClient(this.client);
-            this._toastr.success(this._validationService.getLocalizedMessages('mainAddressUpdated'), this._validationService.getLocalizedMessages('successTitle'));
+            this.setAsMainAddress();
         }
     };
     ClientDetailComponent.prototype.onRemoveAddress = function () {
@@ -687,8 +699,16 @@ var ClientDetailComponent = (function () {
             this.removeConfirm();
         }
     };
+    ClientDetailComponent.prototype.onBack = function () {
+        this._router.navigate(['/clients']);
+    };
+    ClientDetailComponent.prototype.setAsMainAddress = function () {
+        this.client.mainAddress = this.activeAddress;
+        this.activeAddress = null;
+        this._inMemoryService.updateClient(this.client);
+        this._toastr.success(this._validationService.getLocalizedMessages('mainAddressUpdated'), this._validationService.getLocalizedMessages('successTitle'));
+    };
     ClientDetailComponent.prototype.removeConfirm = function () {
-        var _this = this;
         bootbox.confirm({
             title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
             message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
@@ -700,17 +720,7 @@ var ClientDetailComponent = (function () {
                     label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
                 }
             },
-            callback: function (result) {
-                if (result) {
-                    _this._inMemoryService.removeAddress(_this.client.id, _this.activeAddress);
-                    _this._toastr.success(_this._validationService.getLocalizedMessages('addressRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
-                    _this.activeAddress = null;
-                    return true;
-                }
-                else {
-                    return;
-                }
-            }
+            callback: this.removeAddress
         });
     };
     ClientDetailComponent.prototype.cannotProceed = function (message, size) {
@@ -726,9 +736,6 @@ var ClientDetailComponent = (function () {
         var clientId = +this._route.snapshot.paramMap.get('id');
         this.client = this._inMemoryService.getClient(clientId);
         this.addresses = this._inMemoryService.getAllClientsAddressesFromMemory(clientId);
-    };
-    ClientDetailComponent.prototype.onBack = function () {
-        this._router.navigate(['/clients']);
     };
     return ClientDetailComponent;
 }());
@@ -794,25 +801,11 @@ var ClientFormComponent = (function () {
     }
     ClientFormComponent.prototype.ngOnInit = function () {
         var _this = this;
-        var clientId = +this._route.snapshot.paramMap.get('id');
-        if (!clientId) {
-            this.activeClient = new __WEBPACK_IMPORTED_MODULE_1__client__["a" /* Client */]();
-            this.isNewClient = true;
-        }
-        else {
-            this.activeClient = this._inMemoryService.getClient(clientId);
-            this.isNewClient = false;
-        }
-        var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]();
-        var firstName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeClient.firstName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
-        var lastName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeClient.lastName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
-        this.clientForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
-            id: id,
-            firstName: firstName,
-            lastName: lastName
-        });
+        this.getUpFormData();
+        this.setUpForm();
         this.clientForm.valueChanges.subscribe(function (data) { return _this._validationService.onValueChanged(_this.clientForm, _this.formErrors, data); });
-        this._validationService.onValueChanged(this.clientForm, this.formErrors); // (re)set validation messages now
+        // (re)set validation messages now
+        this._validationService.onValueChanged(this.clientForm, this.formErrors);
     };
     ClientFormComponent.prototype.onSubmit = function (id) {
         this.submitted = true;
@@ -827,6 +820,9 @@ var ClientFormComponent = (function () {
                 this.tryToUpdateClient(id);
             }
         }
+    };
+    ClientFormComponent.prototype.onBack = function () {
+        this._router.navigate(['/clients']);
     };
     ClientFormComponent.prototype.tryToSaveNewClient = function () {
         var _this = this;
@@ -862,8 +858,26 @@ var ClientFormComponent = (function () {
         }
         return false;
     };
-    ClientFormComponent.prototype.onBack = function () {
-        this._router.navigate(['/clients']);
+    ClientFormComponent.prototype.getUpFormData = function () {
+        var clientId = +this._route.snapshot.paramMap.get('id');
+        if (!clientId) {
+            this.activeClient = new __WEBPACK_IMPORTED_MODULE_1__client__["a" /* Client */]();
+            this.isNewClient = true;
+        }
+        else {
+            this.activeClient = this._inMemoryService.getClient(clientId);
+            this.isNewClient = false;
+        }
+    };
+    ClientFormComponent.prototype.setUpForm = function () {
+        var id = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */]();
+        var firstName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeClient.firstName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
+        var lastName = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](this.activeClient.lastName, [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(3)]);
+        this.clientForm = new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormGroup */]({
+            id: id,
+            firstName: firstName,
+            lastName: lastName
+        });
     };
     return ClientFormComponent;
 }());
@@ -950,12 +964,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var ClientListComponent = (function () {
     function ClientListComponent(_inMemoryService, _router, _validationService, _toastr) {
+        var _this = this;
         this._inMemoryService = _inMemoryService;
         this._router = _router;
         this._validationService = _validationService;
         this._toastr = _toastr;
         this.clients = [];
         this.errorMessage = this._validationService.getLocalizedMessages('dataBeingResolved');
+        this.removeClient = function (result) {
+            if (result) {
+                _this._inMemoryService.removeClient(_this.activeClient);
+                _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
+                _this.activeClient = null;
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
     }
     ClientListComponent.prototype.ngOnInit = function () {
         this.generateTable();
@@ -976,16 +1002,10 @@ var ClientListComponent = (function () {
         var filterBy = filter.split(/\s/);
         var filteredClients = [];
         if (filterBy.length === 2) {
-            filteredClients = this.clients.filter(function (client) {
-                return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
-                    && client.lastName.toLocaleLowerCase().indexOf(filterBy[1]) !== -1;
-            });
+            filteredClients = this.filterFirstAndLastNameSeparately(filterBy);
         }
         else if (filterBy.length === 1) {
-            filteredClients = this.clients.filter(function (client) {
-                return client.firstName.toLocaleLowerCase().indexOf(filter) !== -1
-                    || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
-            });
+            filteredClients = this.filterFirstAndLastNameSimultaneously(filter);
         }
         if (filteredClients.length === 0) {
             this.errorMessage = this._validationService.getLocalizedMessages('noMatchForFilter');
@@ -1013,6 +1033,15 @@ var ClientListComponent = (function () {
             return true;
         }
     };
+    ClientListComponent.prototype.onEditClient = function () {
+        if (!this.isFieldSelected()) {
+            return false;
+        }
+        else {
+            this._router.navigate(['/clients', this.activeClient.id]);
+            return true;
+        }
+    };
     ClientListComponent.prototype.onRemove = function () {
         if (!this.isFieldSelected()) {
             return false;
@@ -1021,8 +1050,19 @@ var ClientListComponent = (function () {
             this.removeConfirm();
         }
     };
+    ClientListComponent.prototype.filterFirstAndLastNameSeparately = function (filterBy) {
+        return this.clients.filter(function (client) {
+            return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
+                && client.lastName.toLocaleLowerCase().indexOf(filterBy[1]) !== -1;
+        });
+    };
+    ClientListComponent.prototype.filterFirstAndLastNameSimultaneously = function (filter) {
+        return this.clients.filter(function (client) {
+            return client.firstName.toLocaleLowerCase().indexOf(filter) !== -1
+                || client.lastName.toLocaleLowerCase().indexOf(filter) !== -1;
+        });
+    };
     ClientListComponent.prototype.removeConfirm = function () {
-        var _this = this;
         if (!JSON.parse(localStorage.getItem('currentUser'))) {
             this._router.navigate(['/login']);
             return;
@@ -1038,27 +1078,8 @@ var ClientListComponent = (function () {
                     label: '<i class="fa fa-check"></i> ' + this._validationService.getLocalizedMessages('confirmAction')
                 }
             },
-            callback: function (result) {
-                if (result) {
-                    _this._inMemoryService.removeClient(_this.activeClient);
-                    _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
-                    _this.activeClient = null;
-                    return true;
-                }
-                else {
-                    return;
-                }
-            }
+            callback: this.removeClient
         });
-    };
-    ClientListComponent.prototype.onEditClient = function () {
-        if (!this.isFieldSelected()) {
-            return false;
-        }
-        else {
-            this._router.navigate(['/clients', this.activeClient.id]);
-            return true;
-        }
     };
     ClientListComponent.prototype.generateTable = function () {
         var _this = this;
@@ -1110,14 +1131,12 @@ var _a, _b, _c, _d;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__ = __webpack_require__("../../../../rxjs/add/operator/do.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ClientService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1128,7 +1147,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -1154,13 +1172,6 @@ var ClientService = (function () {
             errorMessage = error.text();
         }
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(errorMessage || 'Server error');
-    };
-    ClientService.prototype.requestBearer = function () {
-        return new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* RequestOptions */]({
-            headers: new __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Headers */]({
-                'Content-Type': 'application/json'
-            })
-        });
     };
     return ClientService;
 }());
@@ -1450,7 +1461,7 @@ var ValidationAndLocaleMessagesService = (function () {
                 'addressRemoved': 'Address was successfully deleted.',
                 'clientUpdated': 'Client was successfully updated.',
                 'addressUpdated': 'Address was successfully updated.',
-                'mainAddressUpdated': 'Main address was succesfully updated'
+                'mainAddressUpdated': 'Main address was successfully updated.'
             }
         };
     }
