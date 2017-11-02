@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
 
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
@@ -26,7 +25,6 @@ export class AddressService {
   getAllAddresses(id: number): Observable<Address[]> {
     return this._http.get(this._getAllAddresses + id, this.requestBearer())
       .map((response: Response) => response.json() as Address[])
-      .do(data => console.log('All: ' + JSON.stringify(data)))
       .catch(this.handleError);
   }
 

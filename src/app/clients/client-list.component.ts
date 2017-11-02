@@ -131,8 +131,9 @@ export class ClientListComponent implements OnInit {
           const data = this.clients.filter(client => client !== this.activeClient);
           this.clients = data;
           this.filteredClients = data;
-          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
           this.activeClient = null;
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+          this.checkArrayForClients();
         }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
       );
       return true;
@@ -142,19 +143,21 @@ export class ClientListComponent implements OnInit {
   };
 
   private generateTable(): void {
-    // this.clients = this._route.snapshot.data['clients'];
-    // this.filteredClients = this.clients;
     this._clientService.getAllClients().subscribe(
       clients => {
-        if (clients.length === 0) {
-          this.errorMessage = this._validationService.getLocalizedMessages('emptyDatabase');
-        }
         this.clients = clients;
         this.filteredClients = this.clients;
+        this.checkArrayForClients();
       }, error => {
         this.errorMessage = this._validationService.getLocalizedMessages('serverOffline');
         this._toastr.error(this.errorMessage, this._validationService.getLocalizedMessages('errorTitle'));
       });
+  }
+
+  private checkArrayForClients(): void {
+    if (this.clients.length === 0) {
+      this.errorMessage = this._validationService.getLocalizedMessages('emptyDatabase');
+    }
   }
 
   private isFieldSelected(): boolean {

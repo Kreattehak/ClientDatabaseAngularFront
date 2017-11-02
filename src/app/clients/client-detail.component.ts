@@ -77,9 +77,9 @@ export class ClientDetailComponent implements OnInit {
   private setAsMainAddress(): void {
     this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
       response => {
-        this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
         this.client.mainAddress = this.activeAddress;
         this.activeAddress = null;
+        this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
       },
       error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
   }
@@ -104,9 +104,9 @@ export class ClientDetailComponent implements OnInit {
     if (result) {
       this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
         response => {
-          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
           this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
           this.activeAddress = null;
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
           this._router.navigate(['/clients', this.client.id, 'details']);
         }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
       return true;

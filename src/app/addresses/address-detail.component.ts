@@ -92,9 +92,9 @@ export class AddressDetailComponent implements OnInit {
     if (this.activeAddress.streetName === this.addressForm.value.streetName
       && this.activeAddress.zipCode === this.addressForm.value.zipCode
       && this.activeAddress.cityName === this.addressForm.value.cityName) {
+      this.submitted = false;
       this._toastr.error(this._validationService.getLocalizedMessages('addressExists'),
         this._validationService.getLocalizedMessages('errorTitle'));
-      this.submitted = false;
       return true;
     }
     return false;
