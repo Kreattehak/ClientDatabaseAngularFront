@@ -144,8 +144,8 @@ var AddressDetailComponent = (function () {
         if (this.activeAddress.streetName === this.addressForm.value.streetName
             && this.activeAddress.zipCode === this.addressForm.value.zipCode
             && this.activeAddress.cityName === this.addressForm.value.cityName) {
-            this._toastr.error(this._validationService.getLocalizedMessages('addressExists'), this._validationService.getLocalizedMessages('errorTitle'));
             this.submitted = false;
+            this._toastr.error(this._validationService.getLocalizedMessages('addressExists'), this._validationService.getLocalizedMessages('errorTitle'));
             return true;
         }
         return false;
@@ -198,14 +198,12 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__ = __webpack_require__("../../../../rxjs/add/operator/do.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_add_observable_throw__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw__ = __webpack_require__("../../../../rxjs/add/observable/throw.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_throw__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AddressService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -222,7 +220,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AddressService = (function () {
     function AddressService(_http) {
         this._http = _http;
@@ -231,7 +228,6 @@ var AddressService = (function () {
     AddressService.prototype.getAllClientsAddresses = function () {
         return this._http.get(this._getAllAddresses, this.requestBearer())
             .map(function (response) { return response.json(); })
-            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     AddressService.prototype.handleError = function (error) {
@@ -828,13 +824,7 @@ var ClientFormComponent = (function () {
         var _this = this;
         this.activeClient = this.clientForm.value;
         this.activeClient.id = this._inMemoryService.getBiggestClientId();
-        // TODO: REWORK
-        if (this.activeClient.id === -1) {
-            this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'), this._validationService.getLocalizedMessages('errorTitle'));
-        }
-        else {
-            this._inMemoryService.saveNewClient(this.activeClient);
-        }
+        this._inMemoryService.saveNewClient(this.activeClient);
         if (this.shouldRedirectToAddressForm) {
             this._router.navigate(['/clients', this.activeClient.id, 'newAddress']);
         }
@@ -974,8 +964,8 @@ var ClientListComponent = (function () {
         this.removeClient = function (result) {
             if (result) {
                 _this._inMemoryService.removeClient(_this.activeClient);
-                _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                 _this.activeClient = null;
+                _this._toastr.success(_this._validationService.getLocalizedMessages('clientRemoved'), _this._validationService.getLocalizedMessages('successTitle'));
                 _this.checkArrayForClients();
                 return true;
             }
@@ -1682,8 +1672,10 @@ var InMemoryService = (function () {
         this.saveAddressesInMemory();
     };
     InMemoryService.prototype.getBiggestAddressId = function () {
-        if (this.clientsAndTheirAddresses.length === 0) {
+        if (this.clientsAndTheirAddresses.length === 1
+            && this.clientsAndTheirAddresses[0].addresses.length === 0) {
             this.biggestAddressId = 0;
+            console.log(this.biggestAddressId);
             return ++this.biggestAddressId;
         }
         else if (this.biggestAddressId !== -1) {
