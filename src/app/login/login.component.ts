@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 import {AuthenticationService} from './authentication.service';
 import {ToastsManager} from 'ng2-toastr';
+import {Subject} from 'rxjs/Subject';
 
 declare const bootbox: any;
 
 @Component({
   templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
   public userForm: FormGroup;
   public formErrors = {
@@ -19,6 +20,8 @@ export class LoginComponent implements OnInit {
   };
   public errorMessage: string;
   public logoutMessage: string;
+
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
               private _validationService: ValidationAndLocaleMessagesService,
@@ -43,13 +46,17 @@ export class LoginComponent implements OnInit {
       password: password
     });
 
-    this.userForm.valueChanges.subscribe(data => this._validationService.onValueChanged(this.userForm, this.formErrors, data));
+    this.userForm.valueChanges
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(data => this._validationService.onValueChanged(
+        this.userForm, this.formErrors, data));
 
     this._validationService.onValueChanged(this.userForm, this.formErrors);
   }
 
   login(): void {
     this._authenticationService.login(this.userForm.value.username, this.userForm.value.password)
+      .takeUntil(this.ngUnsubscribe)
       .subscribe(response => {
           if (response === true) {
             // login successful
@@ -61,6 +68,11 @@ export class LoginComponent implements OnInit {
         error => {
           this.loginFailed(error);
         });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   private loginFailed(message: Response): void {

@@ -1,22 +1,25 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Client} from './client';
 import {ClientService} from './client.service';
 import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {Subject} from 'rxjs/Subject';
 
 declare const bootbox: any;
 
 @Component({
   templateUrl: 'client-list.component.html'
 })
-export class ClientListComponent implements OnInit {
+export class ClientListComponent implements OnInit, OnDestroy {
 
-  private clients: Client[];
   public filteredClients: Client[];
   public activeClient: Client;
-  private _filter: string;
   public errorMessage = this._validationService.getLocalizedMessages('dataBeingResolved');
+
+  private _filter: string;
+  private clients: Client[];
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _clientService: ClientService, private _router: Router,
               private _validationService: ValidationAndLocaleMessagesService,
@@ -90,6 +93,11 @@ export class ClientListComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   private filterFirstAndLastNameSeparately(filterBy: string[]): Client[] {
     return this.clients.filter((client: Client) => {
       return client.firstName.toLocaleLowerCase().indexOf(filterBy[0]) !== -1
@@ -126,16 +134,18 @@ export class ClientListComponent implements OnInit {
 
   private removeClient = (result) => {
     if (result) {
-      this._clientService.deleteClient(this.activeClient).subscribe(
-        response => {
-          const data = this.clients.filter(client => client !== this.activeClient);
-          this.clients = data;
-          this.filteredClients = data;
-          this.activeClient = null;
-          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-          this.checkArrayForClients();
-        }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
-      );
+      this._clientService.deleteClient(this.activeClient)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
+          response => {
+            const data = this.clients.filter(client => client !== this.activeClient);
+            this.clients = data;
+            this.filteredClients = data;
+            this.activeClient = null;
+            this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+            this.checkArrayForClients();
+          }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
+        );
       return true;
     } else {
       return;
@@ -143,7 +153,9 @@ export class ClientListComponent implements OnInit {
   };
 
   private generateTable(): void {
-    this._clientService.getAllClients().subscribe(
+    this._clientService.getAllClients()
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
       clients => {
         this.clients = clients;
         this.filteredClients = this.clients;

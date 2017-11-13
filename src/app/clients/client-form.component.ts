@@ -1,27 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Client} from './client';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ClientService} from './client.service';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
   templateUrl: './client-form.component.html',
 })
-export class ClientFormComponent implements OnInit {
+export class ClientFormComponent implements OnInit, OnDestroy {
 
   public activeClient: Client;
   public isNewClient: boolean;
   public shouldRedirectToAddressForm: boolean;
-
   public clientForm: FormGroup;
   public submitted: boolean;
-
   public formErrors = {
     'firstName': '',
     'lastName': ''
   };
+
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _clientService: ClientService, private _toastr: ToastsManager,
               private _validationService: ValidationAndLocaleMessagesService,
@@ -33,8 +34,10 @@ export class ClientFormComponent implements OnInit {
 
     this.setUpForm();
 
-    this.clientForm.valueChanges.subscribe(
-      data => this._validationService.onValueChanged(this.clientForm, this.formErrors, data));
+    this.clientForm.valueChanges
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(data => this._validationService.onValueChanged(
+        this.clientForm, this.formErrors, data));
 
     // (re)set validation messages now
     this._validationService.onValueChanged(this.clientForm, this.formErrors);
@@ -58,9 +61,16 @@ export class ClientFormComponent implements OnInit {
     this._router.navigate(['/clients']);
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   private tryToSaveNewClient(): void {
     this.activeClient = this.clientForm.value;
-    this._clientService.saveNewClient(this.activeClient).subscribe(
+    this._clientService.saveNewClient(this.activeClient)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
       response => {
         if (this.shouldRedirectToAddressForm) {
           this._router.navigate(['/clients', response, 'newAddress']);
@@ -83,12 +93,14 @@ export class ClientFormComponent implements OnInit {
   private tryToUpdateClient(id: number): void {
     this.activeClient = this.clientForm.value;
     this.activeClient.id = id;
-    this._clientService.updateClient(this.activeClient).subscribe(
-      response => this._toastr.success(response,
-        this._validationService.getLocalizedMessages('successTitle')).then(
-        () => this.onBack()),
-      error => this._toastr.error(error,
-        this._validationService.getLocalizedMessages('errorTitle')));
+    this._clientService.updateClient(this.activeClient)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        response => this._toastr.success(response,
+          this._validationService.getLocalizedMessages('successTitle')).then(
+          () => this.onBack()),
+        error => this._toastr.error(error,
+          this._validationService.getLocalizedMessages('errorTitle')));
   }
 
   private checkForClientDataDuplication(): boolean {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Address} from './address';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -6,25 +6,26 @@ import {ToastsManager} from 'ng2-toastr';
 import {AddressService} from './address.service';
 import {Client} from '../clients/client';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {Subject} from 'rxjs/Subject';
 
 @Component({
   templateUrl: './address-detail.component.html',
 })
-export class AddressDetailComponent implements OnInit {
+export class AddressDetailComponent implements OnInit, OnDestroy {
 
   public activeAddress: Address;
   public activeClient: Client;
-  private clientId: number;
   public isNewAddress: boolean;
-
   public addressForm: FormGroup;
   public submitted: boolean;
-
   public formErrors = {
     'cityName': '',
     'streetName': '',
     'zipCode': ''
   };
+
+  private clientId: number;
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _addressService: AddressService, private _toastr: ToastsManager,
               private _validationService: ValidationAndLocaleMessagesService,
@@ -36,8 +37,10 @@ export class AddressDetailComponent implements OnInit {
 
     this.setUpForm();
 
-    this.addressForm.valueChanges.subscribe(
-      data => this._validationService.onValueChanged(this.addressForm, this.formErrors, data));
+    this.addressForm.valueChanges
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(data => this._validationService.onValueChanged(
+        this.addressForm, this.formErrors, data));
 
     this._validationService.onValueChanged(this.addressForm, this.formErrors);
   }
@@ -60,31 +63,40 @@ export class AddressDetailComponent implements OnInit {
     this._router.navigate(['/clients', this.clientId, 'details']);
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   private tryToSaveNewAddress(): void {
     this.activeAddress = this.addressForm.value;
-    this._addressService.saveNewAddress(this.activeAddress, this.clientId).subscribe(
-      response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
-        this._validationService.getLocalizedMessages('successTitle')).then(
-        () => this.onBack()),
-      error => {
-        if (error === -1) {
-          this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
-            this._validationService.getLocalizedMessages('errorTitle'));
-        } else {
-          this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+    this._addressService.saveNewAddress(this.activeAddress, this.clientId)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        response => this._toastr.success(this._validationService.getLocalizedMessages('addressAdded'),
+          this._validationService.getLocalizedMessages('successTitle')).then(
+          () => this.onBack()),
+        error => {
+          if (error === -1) {
+            this._toastr.error(this._validationService.getLocalizedMessages('addressNotAdded'),
+              this._validationService.getLocalizedMessages('errorTitle'));
+          } else {
+            this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+          }
         }
-      }
-    );
+      );
   }
 
   private tryToUpdateAddress(id: number): void {
     this.activeAddress = this.addressForm.value;
     this.activeAddress.id = id;
-    this._addressService.updateAddress(this.activeAddress).subscribe(
-      response => this._toastr.success(response,
-        this._validationService.getLocalizedMessages('successTitle')).then(
-        () => this.onBack()),
-      error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+    this._addressService.updateAddress(this.activeAddress)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        response => this._toastr.success(response,
+          this._validationService.getLocalizedMessages('successTitle')).then(
+          () => this.onBack()),
+        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
   }
 
   private checkForAddressDataDuplication(): boolean {

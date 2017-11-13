@@ -1,21 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AddressService} from '../addresses/address.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Client} from './client';
 import {Address} from '../addresses/address';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {Subject} from 'rxjs/Subject';
 
 declare const bootbox: any;
 
 @Component({
   templateUrl: './client-detail.component.html',
 })
-export class ClientDetailComponent implements OnInit {
+export class ClientDetailComponent implements OnInit, OnDestroy {
 
   public client: Client;
   public addresses: Address[];
   public activeAddress: Address;
+
+  private ngUnsubscribe: Subject<string> = new Subject();
 
   constructor(private _addressService: AddressService, private _route: ActivatedRoute,
               private _validationService: ValidationAndLocaleMessagesService,
@@ -74,14 +77,21 @@ export class ClientDetailComponent implements OnInit {
     this._router.navigate(['/clients']);
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
   private setAsMainAddress(): void {
-    this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id).subscribe(
-      response => {
-        this.client.mainAddress = this.activeAddress;
-        this.activeAddress = null;
-        this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-      },
-      error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+    this._addressService.setAsMainAddress(this.activeAddress.id, this.client.id)
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe(
+        response => {
+          this.client.mainAddress = this.activeAddress;
+          this.activeAddress = null;
+          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+        },
+        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
   }
 
   private removeConfirm(): void {
@@ -102,13 +112,15 @@ export class ClientDetailComponent implements OnInit {
 
   private removeAddress = (result) => {
     if (result) {
-      this._addressService.deleteAddress(this.activeAddress.id, this.client.id).subscribe(
-        response => {
-          this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
-          this.activeAddress = null;
-          this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-          this._router.navigate(['/clients', this.client.id, 'details']);
-        }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+      this._addressService.deleteAddress(this.activeAddress.id, this.client.id)
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(
+          response => {
+            this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
+            this.activeAddress = null;
+            this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
+            this._router.navigate(['/clients', this.client.id, 'details']);
+          }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
       return true;
     } else {
       return;
