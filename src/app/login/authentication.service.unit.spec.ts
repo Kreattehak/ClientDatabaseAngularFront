@@ -59,4 +59,3 @@ describe('AuthenticationService', () => {
     expect(isLoggedIn).toBeFalsy();
   });
 });
-
