@@ -15,7 +15,8 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes(
+          [{path: 'aboutAuthor', component: AboutAuthorComponent, outlet: 'messages'}]),
         HttpModule,
         ToastModule.forRoot(),
       ],
@@ -90,5 +91,4 @@ describe('AppComponent', () => {
     tick(20);
     expect(done).toBeTruthy();
   }));
-
 });
