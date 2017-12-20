@@ -5,8 +5,8 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AuthenticationService} from './login/authentication.service';
 import {HttpModule} from '@angular/http';
 import {ToastModule} from 'ng2-toastr';
-import {APP_BASE_HREF} from '@angular/common';
 import {Router} from '@angular/router';
+import {AboutAuthorComponent} from './utils/about-author.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -20,7 +20,8 @@ describe('AppComponent', () => {
         ToastModule.forRoot(),
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        AboutAuthorComponent
       ],
       providers: [
         AuthenticationService,
@@ -65,9 +66,7 @@ describe('AppComponent', () => {
 
     component.showAboutAuthor();
 
-    const url = spy.calls.first().args[0];
-
-    expect(JSON.stringify(url)).toContain('aboutAuthor');
+    expect(spy).toHaveBeenCalledWith([{outlets: {messages: ['aboutAuthor']}}]);
     expect(component.isAboutAuthorDisplayed).toBeTruthy();
   }));
 
@@ -78,11 +77,8 @@ describe('AppComponent', () => {
 
     component.showAboutAuthor();
 
-    const url = spy.calls.first().args[0];
-
-    expect(JSON.stringify(url)).toContain('null');
+    expect(spy).toHaveBeenCalledWith([{outlets: {messages: null}}]);
     expect(component.isAboutAuthorDisplayed).toBeFalsy();
-
   }));
 
   it('fakeAsync works', fakeAsync(() => {
