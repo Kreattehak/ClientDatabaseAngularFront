@@ -14,7 +14,6 @@ export class AuthenticationService {
       'Content-Type': 'application/json',
     })
   });
-
   _authUrl = '/api/auth';
 
   private _jwtHelper: JwtHelper;
