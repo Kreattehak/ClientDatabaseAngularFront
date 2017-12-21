@@ -10,8 +10,8 @@ import {ToastsManager} from 'ng2-toastr';
 })
 export class AppComponent implements OnInit {
 
-  private isAboutAuthorDisplayed: boolean;
-  private userName: string;
+  public isAboutAuthorDisplayed: boolean;
+  public userName: string;
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
               private _toastr: ToastsManager, private vcr: ViewContainerRef) {

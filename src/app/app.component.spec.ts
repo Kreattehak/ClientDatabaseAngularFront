@@ -1,18 +1,19 @@
-import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 
 import {AppComponent} from './app.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AuthenticationService} from './login/authentication.service';
 import {HttpModule} from '@angular/http';
 import {ToastModule} from 'ng2-toastr';
-import {Router} from '@angular/router';
+import {Router, RouterLinkWithHref, RouterOutlet} from '@angular/router';
 import {AboutAuthorComponent} from './utils/about-author.component';
+import {By} from '@angular/platform-browser';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule.withRoutes(
@@ -30,7 +31,7 @@ describe('AppComponent', () => {
     });
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-  }));
+  });
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
@@ -82,13 +83,26 @@ describe('AppComponent', () => {
     expect(component.isAboutAuthorDisplayed).toBeFalsy();
   }));
 
-  it('fakeAsync works', fakeAsync(() => {
-    const promise = new Promise((resolve) => {
-      setTimeout(resolve, 10);
-    });
-    let done = false;
-    promise.then(() => done = true);
-    tick(20);
-    expect(done).toBeTruthy();
-  }));
+  it('should have a router outlet', () => {
+    const d = fixture.debugElement.query(By.directive(RouterOutlet));
+
+    expect(d).not.toBeNull();
+  });
+
+  it('should have a second router outlet', () => {
+    const d = fixture.debugElement.query(By.css('[name="messages"]'));
+
+    expect(d).not.toBeNull();
+  });
+
+  it('should have links to new client and to logout', () => {
+    fixture.detectChanges();
+    const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
+
+    const newClientLink = links.findIndex(de => de.properties['href'] === '/clients/new');
+    const logoutLink = links.findIndex(de => de.properties['href'] === '/login;logout=true');
+
+    expect(newClientLink).toBeGreaterThan(-1);
+    expect(logoutLink).toBeGreaterThan(-1);
+  });
 });
