@@ -134,7 +134,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
       [Validators.required, Validators.minLength(3)]);
     const zipCode = new FormControl(this.activeAddress.zipCode,
       [Validators.required, Validators.minLength(6), Validators.maxLength(6),
-        Validators.pattern(/\d{2}-\d{3}/ig)]);
+        Validators.pattern(/\d{2}-\d{3}/i)]);
 
     this.addressForm = new FormGroup({
       id: id,
