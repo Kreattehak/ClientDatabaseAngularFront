@@ -43,7 +43,7 @@ export class AuthenticationService {
           localStorage.setItem('currentUser', JSON.stringify({username: username, token: token}));
           return true;
         } else {
-          Observable.throw(response.text());
+          return response.text();
         }
       }).catch((error: Response) => Observable.throw(error.text()));
   }

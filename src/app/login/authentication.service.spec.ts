@@ -10,7 +10,7 @@ class MockError extends Response implements Error {
   message: any;
 }
 
-describe('AuthenticationService', () => {
+describe('AuthenticationServiceIntegrationTests', () => {
   const fakeData = {
     username: 'fakeUser',
     token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzb21ldXNlciIsIm' +
@@ -61,10 +61,26 @@ describe('AuthenticationService', () => {
       (c: MockConnection) => c.mockError(baseError)
     );
 
-    authService.login().subscribe(data => {
+    authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
       // do nothing
     }, error => {
       expect(error).toContain(bodyMessage);
+    });
+  }));
+
+  it('should throw error, when token is not present', inject([AuthenticationService, MockBackend], (authService, mockBackend) => {
+    const bodyMessage = 'Something went wrong';
+    const response = new ResponseOptions({
+      body: JSON.stringify(bodyMessage)
+    });
+
+    const baseResponse = new Response(response);
+    mockBackend.connections.subscribe(
+      (c: MockConnection) => c.mockRespond(baseResponse)
+    );
+
+    authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
+      expect(response.body).toBe(JSON.stringify(bodyMessage));
     });
   }));
 });

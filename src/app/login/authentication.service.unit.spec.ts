@@ -3,7 +3,7 @@ import {Http} from '@angular/http';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 
-describe('AuthenticationService', () => {
+describe('AuthenticationServiceUnitTests', () => {
   // token below doesn't have expiration date
   const fakeData = {
     username: 'fakeUser',
