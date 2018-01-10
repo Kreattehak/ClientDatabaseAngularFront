@@ -134,15 +134,15 @@ export class ValidationAndLocaleMessagesService {
     document.cookie = 'myLocaleCookie=' + this.localeId;
   }
 
-  public getLocalizedValidationMessages(field: any) {
+  public getLocalizedValidationMessages(field: any): { [key: string]: string } {
     return this.validationMessages[this.localeId][field];
   }
 
-  public getLocalizedMessages(field: string) {
+  public getLocalizedMessages(field: string): string {
     return this.applicationMessages[this.localeId][field];
   }
 
-  public onValueChanged(form: FormGroup, formErrors: {}, data ?: any) {
+  public onValueChanged(form: FormGroup, formErrors: {}, data ?: any): void {
     if (!form) {
       return;
     }
