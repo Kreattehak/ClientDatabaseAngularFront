@@ -7,16 +7,31 @@ import {ValidationAndLocaleMessagesService} from '../shared/validation-and-local
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AuthenticationService} from '../login/authentication.service';
-import {Router} from '@angular/router';
-import {ActivatedRouteStub} from '../../test/router.stub';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRouteStub} from '../../test/route.stub';
 import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
 import {AddressServiceStub} from '../../test/address.service.stub';
 import {ToastsManagerStub} from '../../test/toasts-manager.stub';
+import {Address} from './address';
 
-const activatedRoute = new ActivatedRouteStub();
+const activatedRouteStub = new ActivatedRouteStub();
 const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
 const addressServiceStub = new AddressServiceStub();
 const toastsManagerStub = new ToastsManagerStub();
+
+const addressData = {
+  id: 1,
+  streetName: 'street',
+  cityName: 'city',
+  zipCode: '44-444'
+};
+const clientData = {
+  id: 1,
+  firstName: 'Fake',
+  lastName: 'User',
+  dateOfRegistration: '11-05-1974',
+  mainAddress: addressData
+};
 
 describe('AddressDetailComponent', () => {
   let component: AddressDetailComponent;
@@ -34,18 +49,22 @@ describe('AddressDetailComponent', () => {
         AddressDetailComponent,
       ],
       providers: [
+        AuthenticationService,
         {provide: AddressService, useValue: addressServiceStub},
         {provide: ValidationAndLocaleMessagesService, useValue: validationServiceStub},
         {provide: ToastsManager, useValue: toastsManagerStub},
-        AuthenticationService,
-        // {provide: ActivatedRoute, useValue: {snapshot: {params: {id: 1}}, paramMap: Observable.of({get: () => 1})}}
+        {provide: ActivatedRoute, useValue: activatedRouteStub}
       ]
     });
     fixture = TestBed.createComponent(AddressDetailComponent);
     component = fixture.componentInstance;
   });
 
-  it('should create the ap1p', () => {
+  afterEach(() => {
+    activatedRouteStub.resetData();
+  });
+
+  it('should create the app', () => {
     expect(component).toBeTruthy();
   });
 
@@ -60,6 +79,28 @@ describe('AddressDetailComponent', () => {
     expect(Object.keys(component.addressForm.controls)).toEqual([
       'id', 'streetName', 'cityName', 'zipCode'
     ]);
+  });
+
+  it('should populate form with fetched data', () => {
+    activatedRouteStub.testParamMap = {id: 1, addressId: 1};
+    activatedRouteStub.testData = {
+      addresses: new Array<Address>(addressData),
+      client: clientData
+    };
+    fixture.detectChanges();
+
+    expect(component.activeAddress).toBe(addressData);
+    expect(component.activeClient).toBe(clientData);
+  });
+
+  it('should create form for new address', () => {
+    activatedRouteStub.testParamMap = {id: 1};
+    activatedRouteStub.testData = {client: clientData};
+    fixture.detectChanges();
+
+    expect(component.activeAddress).toBeTruthy();
+    expect(component.activeAddress.id).toBe(undefined);
+    expect(component.activeClient).toBe(clientData);
   });
 
   it('should route to given client details', inject([Router], (router: Router) => {
@@ -83,7 +124,7 @@ describe('AddressDetailComponent', () => {
     component.isNewAddress = false;
 
     setActiveAddress();
-    setAddressForm();
+    setAddressFormWithDuplicatedData();
 
     component.onSubmit(1);
 
@@ -93,31 +134,66 @@ describe('AddressDetailComponent', () => {
   it('should try to add new address', () => {
     fixture.detectChanges();
     component.isNewAddress = true;
-    const activeAddress = setActiveAddress();
+    setActiveAddress();
 
-    setAddressForm();
+    const activeAddress = setAddressFormWithDuplicatedData();
     const spy = spyOn(addressServiceStub, 'saveNewAddress').and.callThrough();
 
-    component.onSubmit(0); // it's not clientId
+    component.onSubmit(1); // it's not clientId
 
-    expect(spy).toHaveBeenCalledWith(activeAddress, 0);
+    expect(spy).toHaveBeenCalledWith(activeAddress, Number(null));
   });
 
-  function setAddressForm() {
-    component.addressForm.setValue({
-      id: 1,
-      streetName: 'street',
-      cityName: 'city',
-      zipCode: '44-444'
-    });
+  it('should try to update existing address', () => {
+    fixture.detectChanges();
+    component.isNewAddress = false;
+    setAnotherActiveAddress();
+
+    const activeAddress = setAddressFormWithDuplicatedData();
+    const spy = spyOn(addressServiceStub, 'updateAddress').and.callThrough();
+
+    component.onSubmit(1); // it's not clientId
+
+    expect(spy).toHaveBeenCalledWith(activeAddress);
+  });
+
+  it('should try to update existing address', () => {
+    fixture.detectChanges();
+    component.isNewAddress = false;
+    setAnotherActiveAddress();
+
+    const activeAddress = setAddressFormWithDuplicatedData();
+    const spy = spyOn(addressServiceStub, 'updateAddress').and.callThrough();
+
+    component.onSubmit(999); // it's not clientId
+
+    activeAddress.id = 999;
+    expect(spy).toHaveBeenCalledWith(activeAddress);
+  });
+
+  it('should try to update existing address', () => {
+    activatedRouteStub.testParamMap = {'clientId': '1'};
+    fixture.detectChanges();
+    console.log(component.activeClient);
+  });
+
+  function setAddressFormWithDuplicatedData() {
+    const data = addressData;
+    component.addressForm.setValue(data);
+
+    return data;
   }
 
   function setActiveAddress() {
-    return component.activeAddress = {
+    component.activeAddress = addressData;
+  }
+
+  function setAnotherActiveAddress() {
+    component.activeAddress = {
       id: 1,
-      streetName: 'street',
-      cityName: 'city',
-      zipCode: '44-444'
+      streetName: 'Another Street',
+      cityName: 'Another City',
+      zipCode: '99-999'
     };
   }
 });
