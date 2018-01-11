@@ -1,12 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 import {AuthenticationService} from './authentication.service';
 import {ToastsManager} from 'ng2-toastr';
 import {Subject} from 'rxjs/Subject';
-
-declare const bootbox: any;
+import {BOOTBOX_TOKEN} from '../utils/bootbox';
 
 @Component({
   templateUrl: './login.component.html'
@@ -25,7 +24,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(private _router: Router, private _authenticationService: AuthenticationService,
               private _validationService: ValidationAndLocaleMessagesService,
-              private _toastr: ToastsManager, private _route: ActivatedRoute) {
+              private _toastr: ToastsManager, private _route: ActivatedRoute,
+              @Inject(BOOTBOX_TOKEN) private bootbox: any) {
   }
 
   ngOnInit() {
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private loginFailed(message: Response): void {
-    bootbox.alert({
+    this.bootbox.alert({
       message: message,
       size: 'medium',
       backdrop: true
