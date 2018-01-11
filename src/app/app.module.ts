@@ -21,6 +21,7 @@ import {CanActivateAuthGuard} from './login/can-activate-authguard';
 import {AuthenticationService} from './login/authentication.service';
 import {ClientListResolver} from './clients/client-list-resolver';
 import {ValidationAndLocaleMessagesService} from './shared/validation-and-locale-messages.service';
+import {BOOTBOX_TOKEN, bootboxFactory} from './utils/bootbox';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {ValidationAndLocaleMessagesService} from './shared/validation-and-locale
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'en'},
+    {provide: BOOTBOX_TOKEN, useFactory: bootboxFactory},
     ClientService,
     ClientDetailResolver,
     ClientListResolver,
