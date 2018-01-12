@@ -16,6 +16,14 @@ export class AuthenticationServiceStub {
     this.logoutMethodCallsCounter++;
   }
 
+  getToken(): string {
+    return 'fakeToken';
+  }
+
+  getUserName(): string {
+    return 'fakeUserName';
+  }
+
   resetData(): void {
     this.errorOccurred = false;
     this.logoutMethodCallsCounter = 0;
