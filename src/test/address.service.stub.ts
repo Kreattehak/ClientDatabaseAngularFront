@@ -25,4 +25,11 @@ export class AddressServiceStub {
       return Observable.of('Everything went fine!');
     }
   }
+
+  // Used in AddressDetailResolverTests
+  getAllAddresses(id: number): Observable<Address[]> {
+    const address = new Address();
+    address.id = id;
+    return Observable.of([address, new Address()]);
+  }
 }
