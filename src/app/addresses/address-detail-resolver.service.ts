@@ -13,5 +13,4 @@ export class AddressDetailResolver implements Resolve<Address[]> {
   resolve(route: ActivatedRouteSnapshot): Observable<Address[]> {
     return this._addressService.getAllAddresses(+route.paramMap.get('id'));
   }
-
 }
