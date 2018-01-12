@@ -15,12 +15,11 @@
       <td>{{ client.firstName }}</td>
       <td>{{ client.lastName }}</td>
       <td>{{ client.dateOfRegistration | date:'dd.MM.y' }}</td>
-      <td>{{ client.mainAddress?.cityName}}</td>
+      <td>{{ client?.mainAddress?.cityName }}</td>
     </tr>
     </tbody>
   </table>
 </div>
-<h1></h1>
 <div class="container">
   <div class="row">
     <div class="form-group">
@@ -37,7 +36,6 @@
     </div>
   </div>
 </div>
-<h1></h1>
 <ng-template #emptyTable>
   <div class="container">
     <div class="jumbotron">
