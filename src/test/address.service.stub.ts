@@ -32,4 +32,9 @@ export class AddressServiceStub {
     address.id = id;
     return Observable.of([address, new Address()]);
   }
+
+  resetData(): void {
+    this.errorOccurred = false;
+    this.errorResponseOccurred = false;
+  }
 }
