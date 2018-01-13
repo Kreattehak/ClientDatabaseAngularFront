@@ -1,14 +1,10 @@
 import {AuthenticationService} from './authentication.service';
-import {BaseRequestOptions, Http, Response, ResponseOptions} from '@angular/http';
+import {BaseRequestOptions, Http} from '@angular/http';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 import {inject, TestBed} from '@angular/core/testing';
-import {MockBackend, MockConnection} from '@angular/http/testing';
-
-class MockError extends Response implements Error {
-  name: any;
-  message: any;
-}
+import {MockBackend} from '@angular/http/testing';
+import {TestUtils} from '../../test/test-utils';
 
 describe('AuthenticationServiceIntegrationTests', () => {
   const fakeData = {
@@ -35,52 +31,36 @@ describe('AuthenticationServiceIntegrationTests', () => {
     }));
   });
 
-  it('should map login response to truthy boolean', inject([AuthenticationService, MockBackend], (authService, mockBackend) => {
-    const response = new ResponseOptions({
-      body: JSON.stringify(fakeData)
-    });
-    const baseResponse = new Response(response);
-    mockBackend.connections.subscribe(
-      (c: MockConnection) => c.mockRespond(baseResponse)
-    );
+  it('should map login response to truthy boolean', inject([AuthenticationService, MockBackend],
+    (authService, mockBackend) => {
+      TestUtils.createResponse(mockBackend, fakeData);
 
-    authService.login(fakeData.username, 'password').subscribe(data => {
-      expect(localStorage.getItem('currentUser')).toBe(JSON.stringify(fakeData));
-      expect(data).toBeTruthy();
-    });
-  }));
+      authService.login(fakeData.username, 'password').subscribe(data => {
+        expect(localStorage.getItem('currentUser')).toBe(JSON.stringify(fakeData));
+        expect(data).toBeTruthy();
+      });
+    }));
 
-  it('should map login response to falsy boolean', inject([AuthenticationService, MockBackend], (authService, mockBackend) => {
-    const bodyMessage = 'Unauthorized';
-    const response = new ResponseOptions({
-      status: 401,
-      body: bodyMessage
-    });
-    const baseError = new MockError(response);
-    mockBackend.connections.subscribe(
-      (c: MockConnection) => c.mockError(baseError)
-    );
+  it('should map login response to falsy boolean', inject([AuthenticationService, MockBackend],
+    (authService, mockBackend) => {
+      const bodyMessage = 'Unauthorized';
+      TestUtils.createError(mockBackend, bodyMessage);
 
-    authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
-      // do nothing
-    }, error => {
-      expect(error).toContain(bodyMessage);
-    });
-  }));
+      authService.login(fakeData.username, 'wrongPassword').subscribe(
+        () => {
+        },
+        error => {
+          expect(error).toContain(bodyMessage);
+        });
+    }));
 
-  it('should throw error, when token is not present', inject([AuthenticationService, MockBackend], (authService, mockBackend) => {
-    const bodyMessage = 'Something went wrong';
-    const response = new ResponseOptions({
-      body: JSON.stringify(bodyMessage)
-    });
+  it('should throw error, when token is not present', inject([AuthenticationService, MockBackend],
+    (authService, mockBackend) => {
+      const bodyMessage = 'Something went wrong';
+      TestUtils.createResponse(mockBackend, bodyMessage);
 
-    const baseResponse = new Response(response);
-    mockBackend.connections.subscribe(
-      (c: MockConnection) => c.mockRespond(baseResponse)
-    );
-
-    authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
-      expect(response.body).toBe(JSON.stringify(bodyMessage));
-    });
-  }));
+      authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
+        expect(data).toBe(JSON.stringify(bodyMessage));
+      });
+    }));
 });
