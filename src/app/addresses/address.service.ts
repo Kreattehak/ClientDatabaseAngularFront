@@ -30,7 +30,7 @@ export class AddressService {
 
   saveNewAddress(newAddress: Address, clientId: number): Observable<number> {
     return this._http.post(this._saveNewAddress + clientId, newAddress, this.requestBearer())
-      .map((response: Response) => response.text())
+      .map((response: Response) => Number(response.text()))
       .catch(this.handleError);
   }
 

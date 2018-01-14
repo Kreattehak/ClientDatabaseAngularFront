@@ -48,7 +48,7 @@ export class ClientService {
 
   saveNewClient(newClient: Client): Observable<number> {
     return this._http.post(this._saveNewClient, newClient, this.requestBearer())
-      .map((response: Response) => response.text())
+      .map((response: Response) => Number(response.text()))
       .catch(this.handleError);
   }
 
