@@ -1,6 +1,7 @@
 import {MockBackend, MockConnection} from '@angular/http/testing';
 import {Response, ResponseOptions} from '@angular/http';
 import {MockError} from './mock-error';
+import {FormGroup} from '@angular/forms';
 
 export const ADDRESS_DATA = {
   id: 1,
@@ -14,6 +15,11 @@ export const CLIENT_DATA = {
   lastName: 'User',
   dateOfRegistration: '11-05-1974',
   mainAddress: ADDRESS_DATA
+};
+export const CLIENT_FORM_DATA = {
+  id: 1,
+  firstName: 'Fake',
+  lastName: 'User'
 };
 
 export class TestUtils {
@@ -37,6 +43,13 @@ export class TestUtils {
     mockBackend.connections.subscribe(
       (c: MockConnection) => c.mockError(baseError)
     );
+  }
+
+  static setFormWithDuplicatedData(duplicatedData: {}, form: FormGroup): any {
+    const data = {...duplicatedData}; // prevent test model object to change
+    form.setValue(data);
+
+    return data;
   }
 }
 

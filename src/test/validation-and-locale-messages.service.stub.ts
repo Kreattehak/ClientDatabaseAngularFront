@@ -9,4 +9,8 @@ export class ValidationAndLocaleMessagesServiceStub {
 
   onValueChanged(form: FormGroup, formErrors: {}, data ?: any): void {
   }
+
+  setCookie(): void {
+
+  }
 }
