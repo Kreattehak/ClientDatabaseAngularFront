@@ -12,28 +12,15 @@ import {ActivatedRouteStub} from '../../test/route.stub';
 import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
 import {AddressServiceStub} from '../../test/address.service.stub';
 import {ToastsManagerStub} from '../../test/toasts-manager.stub';
-import {Address} from './address';
 import {RouterStub} from '../../test/router.stub';
+import {ADDRESS_DATA, CLIENT_DATA, TestUtils} from '../../test/test-utils';
+import {Address} from './address';
 
 const activatedRouteStub = new ActivatedRouteStub();
 const routerStub = new RouterStub();
 const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
 const addressServiceStub = new AddressServiceStub();
 const toastsManagerStub = new ToastsManagerStub();
-
-export const ADDRESS_DATA = {
-  id: 1,
-  streetName: 'street',
-  cityName: 'city',
-  zipCode: '44-444'
-};
-export const CLIENT_DATA = {
-  id: 1,
-  firstName: 'Fake',
-  lastName: 'User',
-  dateOfRegistration: '11-05-1974',
-  mainAddress: ADDRESS_DATA
-};
 
 describe('AddressDetailComponent', () => {
   let component: AddressDetailComponent;
@@ -66,7 +53,7 @@ describe('AddressDetailComponent', () => {
   afterEach(() => {
     activatedRouteStub.resetData();
     toastsManagerStub.message = '';
-    addressServiceStub.errorOccurred = false;
+    addressServiceStub.resetData();
   });
 
   it('should create the app', () => {
@@ -96,7 +83,7 @@ describe('AddressDetailComponent', () => {
   it('should populate form with fetched data', () => {
     activatedRouteStub.testParamMap = {id: 1, addressId: 1};
     activatedRouteStub.testData = {
-      addresses: new Array<Address>(ADDRESS_DATA),
+      addresses: [ADDRESS_DATA],
       client: CLIENT_DATA
     };
     fixture.detectChanges();
@@ -115,7 +102,7 @@ describe('AddressDetailComponent', () => {
     expect(component.activeClient).toBe(CLIENT_DATA);
   });
 
-  it('should route to given client details', inject([Router], (router: Router) => {
+  it('should route back to ClientDetailComponent', inject([Router], (router: Router) => {
     const spy = spyOn(router, 'navigate');
 
     component.onBack();
@@ -203,13 +190,6 @@ describe('AddressDetailComponent', () => {
     expect(toastsManagerStub.message).toContain('wrong');
   });
 
-  function setAddressFormWithDuplicatedData() {
-    const data = {...ADDRESS_DATA}; // prevent test model object to change
-    component.addressForm.setValue(data);
-
-    return data;
-  }
-
   function setActiveAddress() {
     component.activeAddress = ADDRESS_DATA;
   }
@@ -221,5 +201,9 @@ describe('AddressDetailComponent', () => {
       cityName: 'Another City',
       zipCode: '99-999'
     };
+  }
+
+  function setAddressFormWithDuplicatedData() {
+    return <Address>TestUtils.setFormWithDuplicatedData(ADDRESS_DATA, component.addressForm);
   }
 });
