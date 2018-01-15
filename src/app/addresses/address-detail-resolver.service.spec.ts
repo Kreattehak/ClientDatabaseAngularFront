@@ -7,7 +7,7 @@ import {Address} from './address';
 
 const addressServiceStub = new AddressServiceStub();
 
-describe('AddressDetailResolverServiceTests', () => {
+describe('AddressDetailResolverTests', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule(({

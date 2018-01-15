@@ -9,5 +9,4 @@ export class PathNotFoundComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

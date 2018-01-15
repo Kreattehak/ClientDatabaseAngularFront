@@ -23,7 +23,6 @@ export const CLIENT_FORM_DATA = {
 };
 
 export class TestUtils {
-
   static createResponse(mockBackend: MockBackend, data: any): void {
     const response = new ResponseOptions({
       body: JSON.stringify(data)
