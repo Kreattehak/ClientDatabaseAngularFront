@@ -1,12 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Client} from './client';
 import {ClientService} from './client.service';
 import {Router} from '@angular/router';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 import {Subject} from 'rxjs/Subject';
-
-declare const bootbox: any;
+import {BOOTBOX_TOKEN} from '../utils/bootbox';
 
 @Component({
   templateUrl: 'client-list.component.html'
@@ -23,7 +22,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   constructor(private _clientService: ClientService, private _router: Router,
               private _validationService: ValidationAndLocaleMessagesService,
-              private _toastr: ToastsManager) {
+              private _toastr: ToastsManager, @Inject(BOOTBOX_TOKEN) private bootbox: any) {
   }
 
   ngOnInit() {
@@ -117,7 +116,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
       this._router.navigate(['/login']);
       return;
     }
-    bootbox.confirm({
+    this.bootbox.confirm({
       title: this._validationService.getLocalizedMessages('removeClientConfirmTitle'),
       message: this._validationService.getLocalizedMessages('removeClientConfirmMessage'),
       buttons: {
@@ -156,14 +155,14 @@ export class ClientListComponent implements OnInit, OnDestroy {
     this._clientService.getAllClients()
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
-      clients => {
-        this.clients = clients;
-        this.filteredClients = this.clients;
-        this.checkArrayForClients();
-      }, error => {
-        this.errorMessage = this._validationService.getLocalizedMessages('serverOffline');
-        this._toastr.error(this.errorMessage, this._validationService.getLocalizedMessages('errorTitle'));
-      });
+        clients => {
+          this.clients = clients;
+          this.filteredClients = this.clients;
+          this.checkArrayForClients();
+        }, error => {
+          this.errorMessage = this._validationService.getLocalizedMessages('serverOffline');
+          this._toastr.error(this.errorMessage, this._validationService.getLocalizedMessages('errorTitle'));
+        });
   }
 
   private checkArrayForClients(): void {
@@ -174,7 +173,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
 
   private isFieldSelected(): boolean {
     if (!this.activeClient) {
-      bootbox.alert({
+      this.bootbox.alert({
         message: this._validationService.getLocalizedMessages('rowNotSelected'),
         size: 'small',
         backdrop: true
