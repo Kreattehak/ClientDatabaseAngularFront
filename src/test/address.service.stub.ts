@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Address} from '../app/addresses/address';
+import {TestData} from './test-data';
 
 @Injectable()
 export class AddressServiceStub {
-  public errorOccurred: boolean;
-  public errorResponseOccurred: boolean;
+  public errorOccurred = false;
+  public errorResponseOccurred = false;
+  public returnedAddress: Address;
 
   saveNewAddress(newAddress: Address, clientId: number): Observable<number> {
     if (this.errorResponseOccurred) {
@@ -26,15 +28,31 @@ export class AddressServiceStub {
     }
   }
 
-  // Used in AddressDetailResolverTests
   getAllAddresses(id: number): Observable<Address[]> {
-    const address = new Address();
-    address.id = id;
-    return Observable.of([address, new Address()]);
+    const address = TestData.ADDRESS_DATA;
+    this.returnedAddress = address;
+    return Observable.of([address]);
+  }
+
+  setAsMainAddress(addressId: number, clientId: number): Observable<string> {
+    if (this.errorOccurred) {
+      return Observable.throw('Something went wrong!');
+    } else {
+      return Observable.of('Everything went fine!');
+    }
+  }
+
+  deleteAddress(addressId: number, clientId: number): Observable<string> {
+    if (this.errorOccurred) {
+      return Observable.throw('Something went wrong!');
+    } else {
+      return Observable.of('Everything went fine!');
+    }
   }
 
   resetData(): void {
     this.errorOccurred = false;
     this.errorResponseOccurred = false;
+    this.returnedAddress = null;
   }
 }
