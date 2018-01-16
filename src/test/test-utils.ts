@@ -3,25 +3,6 @@ import {Response, ResponseOptions} from '@angular/http';
 import {MockError} from './mock-error';
 import {FormGroup} from '@angular/forms';
 
-export const ADDRESS_DATA = {
-  id: 1,
-  streetName: 'street',
-  cityName: 'city',
-  zipCode: '44-444'
-};
-export const CLIENT_DATA = {
-  id: 1,
-  firstName: 'Fake',
-  lastName: 'User',
-  dateOfRegistration: '11-05-1974',
-  mainAddress: ADDRESS_DATA
-};
-export const CLIENT_FORM_DATA = {
-  id: 1,
-  firstName: 'Fake',
-  lastName: 'User'
-};
-
 export class TestUtils {
   static createResponse(mockBackend: MockBackend, data: any): void {
     const response = new ResponseOptions({
