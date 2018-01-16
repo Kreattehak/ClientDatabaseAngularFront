@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs/Observable';
 
 export class AuthenticationServiceStub {
-  public errorOccurred: boolean;
+  public errorOccurred = false;
   public logoutMethodCallsCounter: number;
 
   login(username: string, password: string): Observable<boolean> {
