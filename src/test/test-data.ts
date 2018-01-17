@@ -19,6 +19,15 @@ export class TestData {
     dateOfRegistration: '11-05-1974',
     mainAddress: null
   };
+  static _LOGIN_FORM_ERRORS = {
+    username: 'usernameError',
+    password: 'passwordError'
+  };
+  static _ADDRESS_FORM_ERRORS = {
+    streetName: 'streetNameError',
+    cityName: 'cityNameError',
+    zipCode: 'zipCodeError'
+  };
 
   static get CLIENT_DATA() {
     return {
@@ -33,5 +42,13 @@ export class TestData {
 
   static get CLIENT_FORM_DATA() {
     return {...TestData._CLIENT_FORM_DATA};
+  }
+
+  static get LOGIN_FORM_ERRORS() {
+    return {...TestData._LOGIN_FORM_ERRORS};
+  }
+
+  static get ADDRESS_FORM_ERRORS() {
+    return {...TestData._ADDRESS_FORM_ERRORS};
   }
 }
