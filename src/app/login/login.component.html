@@ -1,9 +1,9 @@
 <div class="container">
   <section class="row" *ngIf="errorMessage">
-    <div class="alert alert-info col-lg-6">{{ errorMessage }}</div>
+    <div id="login-unsuccessful-message" class="alert alert-info col-lg-6">{{ errorMessage }}</div>
   </section>
   <section class="row" *ngIf="logoutMessage">
-    <div class="alert alert-info col-lg-6">{{ logoutMessage }}</div>
+    <div id="logout-message" class="alert alert-info col-lg-6">{{ logoutMessage }}</div>
   </section>
   <div class="row">
     <form [formGroup]="userForm" class="form-horizontal" novalidate (ngSubmit)="login()">
@@ -30,14 +30,16 @@
         <div class="form-group">
           <div class="col-lg-offset-2 col-lg-2">
             <button type="submit" class="btn btn-success" i18n="@@login.loginButton"
-                    [disabled]="!userForm.valid">Log in</button>
+                    [disabled]="!userForm.valid">Log in
+            </button>
           </div>
         </div>
 
       </fieldset>
     </form>
 
-    <div *ngIf="formErrors.username || formErrors.password" class="alert alert-danger">
+    <div *ngIf="formErrors.username || formErrors.password"
+         id="form-error-messages" class="alert alert-danger">
       <p>{{ formErrors.username }}</p>
       <p>{{ formErrors.password }}</p>
     </div>

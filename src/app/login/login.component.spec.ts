@@ -14,9 +14,10 @@ import {AddressServiceStub} from '../../test/address.service.stub';
 import {RouterStub} from '../../test/router.stub';
 import {ToastsManagerStub} from '../../test/toasts-manager.stub';
 import {HttpModule} from '@angular/http';
-import {AuthenticationServiceStub} from '../../test/authentication.service.stube';
+import {AuthenticationServiceStub} from '../../test/authentication.service.stub';
 import {BOOTBOX_TOKEN} from '../utils/bootbox';
 import {BootboxStub} from '../../test/bootbox.stub';
+import {TestData} from '../../test/test-data';
 
 const authenticationServiceStub = new AuthenticationServiceStub();
 const activatedRouteStub = new ActivatedRouteStub();
@@ -128,6 +129,45 @@ describe('LoginComponent', () => {
     component.login();
 
     expect(bootboxStub.message).toContain('wrong');
+  });
+
+  it('should display error messages after login was unsuccessful', () => {
+    const expectedMessage = 'loginUnsuccessful';
+    component.errorMessage = expectedMessage;
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('#login-unsuccessful-message').textContent).toContain(expectedMessage);
+  });
+
+  it('should display message after user logout', () => {
+    const expectedMessage = 'logout';
+    component.logoutMessage = expectedMessage;
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('#logout-message').textContent).toContain(expectedMessage);
+  });
+
+  it('should disable submit button when input is invalid', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(<HTMLButtonElement>(compiled.querySelectorAll('.btn.btn-success')).disabled).toBeFalsy();
+  });
+
+  it('should display form error messages in paragraphs', () => {
+    const errors = TestData.LOGIN_FORM_ERRORS;
+    component.formErrors = errors;
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const errorMessageParagraphs = compiled.querySelectorAll('#form-error-messages p');
+    expect(errorMessageParagraphs[0].textContent).toContain(errors.username);
+    expect(errorMessageParagraphs[1].textContent).toContain(errors.password);
   });
 
   function changeFieldValues() {
