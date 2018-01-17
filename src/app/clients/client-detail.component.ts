@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {AddressService} from '../addresses/address.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Client} from './client';
@@ -6,8 +6,7 @@ import {Address} from '../addresses/address';
 import {ToastsManager} from 'ng2-toastr';
 import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 import {Subject} from 'rxjs/Subject';
-
-declare const bootbox: any;
+import {BOOTBOX_TOKEN} from '../utils/bootbox';
 
 @Component({
   templateUrl: './client-detail.component.html',
@@ -22,7 +21,8 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
 
   constructor(private _addressService: AddressService, private _route: ActivatedRoute,
               private _validationService: ValidationAndLocaleMessagesService,
-              private _router: Router, private _toastr: ToastsManager) {
+              private _router: Router, private _toastr: ToastsManager,
+              @Inject(BOOTBOX_TOKEN) private bootbox: any) {
   }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  onEditAddresses(): boolean {
+  onEditAddress(): boolean {
     if (!this.activeAddress) {
       return this.cannotProceed(this._validationService.getLocalizedMessages('rowNotSelected'));
     } else {
@@ -91,11 +91,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
           this.activeAddress = null;
           this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
         },
-        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+        error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
+      );
   }
 
   private removeConfirm(): void {
-    bootbox.confirm({
+    this.bootbox.confirm({
       title: this._validationService.getLocalizedMessages('removeAddressConfirmTitle'),
       message: this._validationService.getLocalizedMessages('removeAddressConfirmMessage'),
       buttons: {
@@ -119,8 +120,8 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
             this.addresses = this.addresses.filter((element) => element !== this.activeAddress);
             this.activeAddress = null;
             this._toastr.success(response, this._validationService.getLocalizedMessages('successTitle'));
-            this._router.navigate(['/clients', this.client.id, 'details']);
-          }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle')));
+          }, error => this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'))
+        );
       return true;
     } else {
       return;
@@ -128,7 +129,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   };
 
   private cannotProceed(message: string, size: string = 'small'): boolean {
-    bootbox.alert({
+    this.bootbox.alert({
       message: message,
       size: size,
       backdrop: true
