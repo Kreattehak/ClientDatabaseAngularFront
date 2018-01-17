@@ -13,8 +13,9 @@ import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-
 import {AddressServiceStub} from '../../test/address.service.stub';
 import {ToastsManagerStub} from '../../test/toasts-manager.stub';
 import {RouterStub} from '../../test/router.stub';
-import {ADDRESS_DATA, CLIENT_DATA, TestUtils} from '../../test/test-utils';
 import {Address} from './address';
+import {TestData} from '../../test/test-data';
+import {TestUtils} from '../../test/test-utils';
 
 const activatedRouteStub = new ActivatedRouteStub();
 const routerStub = new RouterStub();
@@ -82,24 +83,27 @@ describe('AddressDetailComponent', () => {
 
   it('should populate form with fetched data', () => {
     activatedRouteStub.testParamMap = {id: 1, addressId: 1};
+    const address = TestData.ADDRESS_DATA;
+    const client = TestData.CLIENT_DATA;
     activatedRouteStub.testData = {
-      addresses: [ADDRESS_DATA],
-      client: CLIENT_DATA
+      addresses: [address],
+      client: client
     };
     fixture.detectChanges();
 
-    expect(component.activeAddress).toBe(ADDRESS_DATA);
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    expect(component.activeAddress).toBe(address);
+    expect(component.activeClient).toBe(client);
   });
 
   it('should create form for new address', () => {
     activatedRouteStub.testParamMap = {id: 1};
-    activatedRouteStub.testData = {client: CLIENT_DATA};
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {client: client};
     fixture.detectChanges();
 
     expect(component.activeAddress).toBeTruthy();
     expect(component.activeAddress.id).toBe(undefined);
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    expect(component.activeClient).toBe(client);
   });
 
   it('should route back to ClientDetailComponent', inject([Router], (router: Router) => {
@@ -190,8 +194,57 @@ describe('AddressDetailComponent', () => {
     expect(toastsManagerStub.message).toContain('wrong');
   });
 
+  it('should display legend for new address', () => {
+    activatedRouteStub.testParamMap = {id: 1};
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      client: client
+    };
+    fixture.detectChanges();
+
+    const legendText = fixture.debugElement.nativeElement.querySelector('legend').textContent;
+    expect(legendText).toContain(client.firstName);
+    expect(legendText).toContain(client.lastName);
+  });
+
+  it('should display legend for editing address', () => {
+    activatedRouteStub.testParamMap = {id: 1, addressId: 1};
+    const address = TestData.ADDRESS_DATA;
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      addresses: [address],
+      client: client
+    };
+    fixture.detectChanges();
+
+    const legendText = fixture.debugElement.nativeElement.querySelector('legend').textContent;
+    expect(legendText).toContain(address.streetName);
+    expect(legendText).toContain(address.cityName);
+    expect(legendText).toContain(address.zipCode);
+  });
+
+  it('should display form error messages in paragraphs', () => {
+    const errors = TestData.ADDRESS_FORM_ERRORS;
+    component.formErrors = errors;
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const errorMessageParagraphs = compiled.querySelectorAll('#form-error-messages p');
+    expect(errorMessageParagraphs[0].textContent).toContain(errors.streetName);
+    expect(errorMessageParagraphs[1].textContent).toContain(errors.cityName);
+    expect(errorMessageParagraphs[2].textContent).toContain(errors.zipCode);
+  });
+
+  it('should disable submit button when input is invalid', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(<HTMLButtonElement>(compiled.querySelectorAll('.btn.btn-success')).disabled).toBeFalsy();
+  });
+
   function setActiveAddress() {
-    component.activeAddress = ADDRESS_DATA;
+    component.activeAddress = TestData.ADDRESS_DATA;
   }
 
   function setAnotherActiveAddress() {
@@ -204,6 +257,6 @@ describe('AddressDetailComponent', () => {
   }
 
   function setAddressFormWithDuplicatedData() {
-    return <Address>TestUtils.setFormWithDuplicatedData(ADDRESS_DATA, component.addressForm);
+    return <Address>TestUtils.setFormWithDuplicatedData(TestData.ADDRESS_DATA, component.addressForm);
   }
 });

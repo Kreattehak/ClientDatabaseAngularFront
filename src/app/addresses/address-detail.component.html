@@ -69,7 +69,7 @@
   </form>
 
   <div *ngIf="formErrors.cityName || formErrors.streetName || formErrors.zipCode && addressForm.touched"
-       class="alert alert-danger">
+       id="form-error-messages" class="alert alert-danger">
     <p>{{ formErrors.streetName }}</p>
     <p>{{ formErrors.cityName }}</p>
     <p>{{ formErrors.zipCode }}</p>
