@@ -1,11 +1,12 @@
 import {inject, TestBed} from '@angular/core/testing';
-import {AuthenticationServiceStub} from '../../test/authentication.service.stube';
+import {AuthenticationServiceStub} from '../../test/authentication.service.stub';
 import {AuthenticationService} from '../login/authentication.service';
 import {MockBackend} from '@angular/http/testing';
 import {BaseRequestOptions, Http} from '@angular/http';
 import {ClientService} from './client.service';
 import {Client} from './client';
-import {CLIENT_DATA, TestUtils} from '../../test/test-utils';
+import {TestUtils} from '../../test/test-utils';
+import {TestData} from '../../test/test-data';
 
 const authenticationServiceStub = new AuthenticationServiceStub();
 
@@ -31,7 +32,7 @@ describe('ClientServiceTests', () => {
 
   it('should get all clients', inject([ClientService, MockBackend],
     (clientService, mockBackend) => {
-      TestUtils.createResponse(mockBackend, [CLIENT_DATA]);
+      TestUtils.createResponse(mockBackend, [TestData.CLIENT_DATA]);
       const expectedResult = 1;
 
       clientService.getAllClients(1).subscribe((clients: Client[]) => {
@@ -45,7 +46,7 @@ describe('ClientServiceTests', () => {
       const expectedResponse = 'Client deleted';
       TestUtils.createResponse(mockBackend, expectedResponse);
 
-      clientService.deleteClient(CLIENT_DATA).subscribe((response: string) => {
+      clientService.deleteClient(TestData.CLIENT_DATA).subscribe((response: string) => {
         expect(response).toContain(expectedResponse);
       });
     }));
@@ -55,26 +56,26 @@ describe('ClientServiceTests', () => {
       const expectedResponse = 'Client updated';
       TestUtils.createResponse(mockBackend, expectedResponse);
 
-      clientService.updateClient(CLIENT_DATA).subscribe((response: string) => {
+      clientService.updateClient(TestData.CLIENT_DATA).subscribe((response: string) => {
         expect(response).toContain(expectedResponse);
       });
     }));
 
   it('should get client', inject([ClientService, MockBackend],
     (clientService, mockBackend) => {
-      TestUtils.createResponse(mockBackend, CLIENT_DATA);
+      TestUtils.createResponse(mockBackend, TestData.CLIENT_DATA);
 
       clientService.getClient(1).subscribe((client: Client) => {
-        expect(client.id).toBe(CLIENT_DATA.id);
+        expect(client.id).toBe(TestData.CLIENT_DATA.id);
       });
     }));
 
   it('should save new client', inject([ClientService, MockBackend],
     (clientService, mockBackend) => {
-      const expectedResponse = Number(CLIENT_DATA.id);
+      const expectedResponse = Number(TestData.CLIENT_DATA.id);
       TestUtils.createResponse(mockBackend, expectedResponse);
 
-      clientService.saveNewClient(CLIENT_DATA).subscribe((newClientId: number) => {
+      clientService.saveNewClient(TestData.CLIENT_DATA).subscribe((newClientId: number) => {
         expect(newClientId).toBe(expectedResponse);
       });
     }));
@@ -85,8 +86,7 @@ describe('ClientServiceTests', () => {
       TestUtils.createError(mockBackend, bodyMessage);
 
       clientService.getClient(1).subscribe(
-        (client: Client) => {
-        },
+        null,
         (error: string) => {
           expect(error).toContain(bodyMessage);
         });
