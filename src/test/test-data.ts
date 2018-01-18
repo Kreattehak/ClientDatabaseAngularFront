@@ -19,6 +19,10 @@ export class TestData {
     dateOfRegistration: '11-05-1974',
     mainAddress: null
   };
+  static _CLIENT_FORM_ERRORS = {
+    firstName: 'usernameError',
+    lastName: 'passwordError'
+  };
   static _LOGIN_FORM_ERRORS = {
     username: 'usernameError',
     password: 'passwordError'
@@ -42,6 +46,10 @@ export class TestData {
 
   static get CLIENT_FORM_DATA() {
     return {...TestData._CLIENT_FORM_DATA};
+  }
+
+  static get CLIENT_FORM_ERRORS() {
+    return {...TestData._CLIENT_FORM_ERRORS};
   }
 
   static get LOGIN_FORM_ERRORS() {
