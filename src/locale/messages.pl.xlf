@@ -214,9 +214,9 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="editAddressesButton" datatype="html">
-        <source>Edit Client&apos;s Addresses</source>
-        <target>Edytuj adresy klienta</target>
+      <trans-unit id="editAddressButton" datatype="html">
+        <source>Edit Address</source>
+        <target>Edytuj adres</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app\clients\client-detail.component.ts</context>
           <context context-type="linenumber">33</context>
