@@ -47,8 +47,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
       TestUtils.createError(mockBackend, bodyMessage);
 
       authService.login(fakeData.username, 'wrongPassword').subscribe(
-        () => {
-        },
+        null,
         error => {
           expect(error).toContain(bodyMessage);
         });
