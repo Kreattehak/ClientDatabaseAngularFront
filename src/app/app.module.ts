@@ -5,7 +5,6 @@ import {ClientDetailComponent} from './clients/client-detail.component';
 import {ClientListComponent} from './clients/client-list.component';
 import {AboutAuthorComponent} from './utils/about-author.component';
 import {PathNotFoundComponent} from './utils/path-not-found.component';
-import {AddressDetailComponent} from './addresses/address-detail.component';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastModule} from 'ng2-toastr';
@@ -22,6 +21,10 @@ import {AuthenticationService} from './login/authentication.service';
 import {ClientListResolver} from './clients/client-list-resolver';
 import {ValidationAndLocaleMessagesService} from './shared/validation-and-locale-messages.service';
 import {BOOTBOX_TOKEN, bootboxFactory} from './utils/bootbox';
+import {AddressFormComponent} from './addresses/address-form.component';
+
+import './shared/rxjs-operators';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +34,7 @@ import {BOOTBOX_TOKEN, bootboxFactory} from './utils/bootbox';
     ClientFormComponent,
     PathNotFoundComponent,
     AboutAuthorComponent,
-    AddressDetailComponent,
+    AddressFormComponent,
     LoginComponent,
   ],
   imports: [

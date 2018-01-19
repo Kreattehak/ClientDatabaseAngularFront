@@ -4,10 +4,10 @@ import {ClientDetailComponent} from './clients/client-detail.component';
 import {AddressDetailResolver} from './addresses/address-detail-resolver.service';
 import {ClientDetailResolver} from './clients/client-detail-resolver.service';
 import {CanActivateAuthGuard} from './login/can-activate-authguard';
-import {AddressDetailComponent} from './addresses/address-detail.component';
 import {PathNotFoundComponent} from './utils/path-not-found.component';
 import {LoginComponent} from './login/login.component';
 import {AboutAuthorComponent} from './utils/about-author.component';
+import {AddressFormComponent} from './addresses/address-form.component';
 
 export const ROUTES = [
   {path: 'clients', component: ClientListComponent},
@@ -29,7 +29,7 @@ export const ROUTES = [
   },
   {
     path: 'clients/:id/address/:addressId',
-    component: AddressDetailComponent,
+    component: AddressFormComponent,
     resolve: {
       addresses: AddressDetailResolver,
       client: ClientDetailResolver
@@ -38,7 +38,7 @@ export const ROUTES = [
   },
   {
     path: 'clients/:id/newAddress',
-    component: AddressDetailComponent,
+    component: AddressFormComponent,
     canActivate: [CanActivateAuthGuard]
   },
   {path: 'aboutAuthor', component: AboutAuthorComponent, outlet: 'messages'},
