@@ -12,6 +12,7 @@ import {BootboxStub} from '../../test/bootbox.stub';
 import {BOOTBOX_TOKEN} from '../utils/bootbox';
 import {ActivatedRouteStub} from '../../test/route.stub';
 import {TestData} from '../../test/test-data';
+import {DatePipe} from '@angular/common';
 
 const addressServiceStub = new AddressServiceStub();
 const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
@@ -26,9 +27,6 @@ describe('ClientDetailComponentTests', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        // RouterTestingModule.withRoutes([]),
-      ],
       declarations: [
         ClientDetailComponent
       ],
@@ -39,6 +37,7 @@ describe('ClientDetailComponentTests', () => {
         {provide: ActivatedRoute, useValue: activatedRouteStub},
         {provide: Router, useValue: routerStub},
         {provide: BOOTBOX_TOKEN, useValue: bootboxStub},
+        DatePipe
       ]
     });
     fixture = TestBed.createComponent(ClientDetailComponent);
@@ -84,7 +83,7 @@ describe('ClientDetailComponentTests', () => {
     expect(component.activeAddress).toBe(null);
   });
 
-  it('should navigate to AddressDetailComponent after clicking add address button',
+  it('should navigate to AddressFormComponent after clicking add address button',
     inject([Router], (router: Router) => {
       const spy = spyOn(router, 'navigate');
       component.client = TestData.CLIENT_DATA;
@@ -94,7 +93,7 @@ describe('ClientDetailComponentTests', () => {
       expect(spy).toHaveBeenCalledWith(['/clients', component.client.id, 'newAddress']);
     }));
 
-  it('should navigate to AddressDetailComponent after clicking edit address button',
+  it('should navigate to AddressFormComponent after clicking edit address button',
     inject([Router], (router: Router) => {
       const spy = spyOn(router, 'navigate');
       component.client = TestData.CLIENT_DATA;
@@ -106,7 +105,7 @@ describe('ClientDetailComponentTests', () => {
         component.client.id, 'address', component.activeAddress.id]);
     }));
 
-  it('should block navigation to AddressDetailComponent when table row is not selected', () => {
+  it('should block navigation to AddressFormComponent when table row is not selected', () => {
     component.onEditAddress();
 
     expect(bootboxStub.message).toContain('fakeAnswer');
@@ -214,6 +213,56 @@ describe('ClientDetailComponentTests', () => {
     expect(component.addresses.length).toBe(1);
     expect(component.activeAddress).toBe(addressToBeDeleted);
     expect(toastsManagerStub.message).toContain('wrong');
+  });
+
+  it('should display client data', inject([DatePipe], (datePipe: DatePipe) => {
+    const client = TestData.CLIENT_DATA;
+    const address = TestData.ADDRESS_DATA;
+    activatedRouteStub.testData = {
+      client: client,
+      addresses: [address]
+    };
+    fixture.detectChanges();
+
+    const header = fixture.debugElement.nativeElement.querySelector('h2').textContent;
+    const paragraphs = fixture.debugElement.nativeElement.querySelectorAll('.jumbotron p');
+
+    expect(header).toContain(client.firstName);
+    expect(header).toContain(client.lastName);
+
+    expect(paragraphs[0].textContent).toContain(datePipe.transform(client.dateOfRegistration, 'dd.MM.y'));
+    expect(paragraphs[1].textContent).toContain(client.mainAddress.cityName);
+
+    expect(paragraphs[1].textContent).toContain(client.mainAddress.streetName);
+    expect(paragraphs[1].textContent).toContain(client.mainAddress.zipCode);
+  }));
+
+  it('should display addresses in a table', () => {
+    const client = TestData.CLIENT_DATA;
+    const address = TestData.ADDRESS_DATA;
+    activatedRouteStub.testData = {
+      client: client,
+      addresses: [address]
+    };
+    fixture.detectChanges();
+
+    const table = fixture.debugElement.nativeElement.querySelector('tbody tr').textContent;
+
+    expect(table).toContain(address.id);
+    expect(table).toContain(address.cityName);
+    expect(table).toContain(address.streetName);
+    expect(table).toContain(address.zipCode);
+  });
+
+  it('should display message when client has no no addresses', () => {
+    activatedRouteStub.testData = {
+      client: TestData.CLIENT_DATA,
+      addresses: []
+    };
+    fixture.detectChanges();
+
+    const paragraph = fixture.debugElement.nativeElement.querySelector('.jumbotron p').textContent;
+    expect(paragraph).toContain('any addresses');
   });
 });
 
