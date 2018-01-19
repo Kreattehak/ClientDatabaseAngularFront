@@ -1,6 +1,4 @@
 import {AuthenticationService} from './authentication.service';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
 import {LoginComponent} from './login.component';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
@@ -34,7 +32,6 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        // RouterTestingModule.withRoutes([]),
         ReactiveFormsModule,
         HttpModule
       ],
@@ -151,11 +148,12 @@ describe('LoginComponent', () => {
     expect(compiled.querySelector('#logout-message').textContent).toContain(expectedMessage);
   });
 
-  it('should disable submit button when input is invalid', () => {
+  it('should disable submit button when input is invalid, e.g. after template init', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(<HTMLButtonElement>(compiled.querySelectorAll('.btn.btn-success')).disabled).toBeFalsy();
+
+    expect(<HTMLButtonElement>(compiled.querySelector('.btn.btn-success')).outerHTML).toContain('disabled');
   });
 
   it('should display form error messages in paragraphs', () => {

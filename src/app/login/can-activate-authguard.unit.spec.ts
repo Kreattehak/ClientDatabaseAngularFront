@@ -1,6 +1,4 @@
 import {AuthenticationService} from './authentication.service';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
 import {CanActivateAuthGuard} from './can-activate-authguard';
 import {Router} from '@angular/router';
 import {RouterStub} from '../../test/router.stub';

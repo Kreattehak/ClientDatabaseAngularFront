@@ -1,10 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
 import {JwtHelper} from 'angular2-jwt';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class AuthenticationService {
@@ -32,7 +29,7 @@ export class AuthenticationService {
     return this._jwtHelper.isTokenExpired(token);
   }
 
-  login(username: string, password: string): Observable<boolean> {
+  login(username: string, password: string): Observable<boolean | string> {
     return this._http.post(this._authUrl, JSON.stringify({
       username: username,
       password: password

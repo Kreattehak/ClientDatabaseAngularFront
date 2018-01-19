@@ -1,7 +1,5 @@
 import {AuthenticationService} from './authentication.service';
 import {Http} from '@angular/http';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
 
 describe('AuthenticationServiceUnitTests', () => {
   // token below doesn't have expiration date

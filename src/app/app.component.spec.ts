@@ -9,6 +9,8 @@ import {Router, RouterLinkWithHref, RouterOutlet} from '@angular/router';
 import {AboutAuthorComponent} from './utils/about-author.component';
 import {By} from '@angular/platform-browser';
 
+import './shared/rxjs-operators';
+
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;

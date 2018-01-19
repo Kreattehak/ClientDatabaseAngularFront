@@ -1,7 +1,5 @@
 import {AuthenticationService} from './authentication.service';
 import {BaseRequestOptions, Http} from '@angular/http';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
 import {inject, TestBed} from '@angular/core/testing';
 import {MockBackend} from '@angular/http/testing';
 import {TestUtils} from '../../test/test-utils';
@@ -32,7 +30,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
   });
 
   it('should map login response to truthy boolean', inject([AuthenticationService, MockBackend],
-    (authService, mockBackend) => {
+    (authService: AuthenticationService, mockBackend: MockBackend) => {
       TestUtils.createResponse(mockBackend, fakeData);
 
       authService.login(fakeData.username, 'password').subscribe(data => {
@@ -42,7 +40,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
     }));
 
   it('should map login response to falsy boolean', inject([AuthenticationService, MockBackend],
-    (authService, mockBackend) => {
+    (authService: AuthenticationService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
       TestUtils.createError(mockBackend, bodyMessage);
 
@@ -54,12 +52,11 @@ describe('AuthenticationServiceIntegrationTests', () => {
     }));
 
   it('should throw error, when token is not present', inject([AuthenticationService, MockBackend],
-    (authService, mockBackend) => {
+    (authService: AuthenticationService, mockBackend: MockBackend) => {
       const bodyMessage = 'Something went wrong';
       TestUtils.createResponse(mockBackend, bodyMessage);
 
-      authService.login(fakeData.username, 'wrongPassword').subscribe(data => {
-        expect(data).toBe(JSON.stringify(bodyMessage));
-      });
+      authService.login(fakeData.username, 'wrongPassword').subscribe(
+        (data: string) => expect(data).toContain(bodyMessage));
     }));
 });
