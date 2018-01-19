@@ -15,7 +15,7 @@ export class ActivatedRouteStub {
     return this._testParamMap;
   }
 
-  set testParamMap(params: {}) {
+  set testParamMap(params: any) {
     this._testParamMap = convertToParamMap(params);
     this.paramSubject.next(this._testParamMap);
   }
