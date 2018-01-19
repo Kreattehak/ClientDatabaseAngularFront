@@ -9,9 +9,9 @@ import {ValidationAndLocaleMessagesService} from '../shared/validation-and-local
 import {Subject} from 'rxjs/Subject';
 
 @Component({
-  templateUrl: './address-detail.component.html',
+  templateUrl: './address-form.component.html',
 })
-export class AddressDetailComponent implements OnInit, OnDestroy {
+export class AddressFormComponent implements OnInit, OnDestroy {
 
   public activeAddress: Address;
   public activeClient: Client;

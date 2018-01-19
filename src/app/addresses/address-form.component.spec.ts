@@ -1,5 +1,4 @@
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {AddressDetailComponent} from './address-detail.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ToastsManager} from 'ng2-toastr';
 import {AddressService} from './address.service';
@@ -16,6 +15,7 @@ import {RouterStub} from '../../test/router.stub';
 import {Address} from './address';
 import {TestData} from '../../test/test-data';
 import {TestUtils} from '../../test/test-utils';
+import {AddressFormComponent} from './address-form.component';
 
 const activatedRouteStub = new ActivatedRouteStub();
 const routerStub = new RouterStub();
@@ -23,9 +23,9 @@ const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
 const addressServiceStub = new AddressServiceStub();
 const toastsManagerStub = new ToastsManagerStub();
 
-describe('AddressDetailComponent', () => {
-  let component: AddressDetailComponent;
-  let fixture: ComponentFixture<AddressDetailComponent>;
+describe('AddressFormComponent', () => {
+  let component: AddressFormComponent;
+  let fixture: ComponentFixture<AddressFormComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,7 +36,7 @@ describe('AddressDetailComponent', () => {
         HttpModule,
       ],
       declarations: [
-        AddressDetailComponent,
+        AddressFormComponent,
       ],
       providers: [
         AuthenticationService,
@@ -47,7 +47,7 @@ describe('AddressDetailComponent', () => {
         {provide: Router, useValue: routerStub}
       ]
     });
-    fixture = TestBed.createComponent(AddressDetailComponent);
+    fixture = TestBed.createComponent(AddressFormComponent);
     component = fixture.componentInstance;
   });
 
@@ -236,11 +236,27 @@ describe('AddressDetailComponent', () => {
     expect(errorMessageParagraphs[2].textContent).toContain(errors.zipCode);
   });
 
-  it('should disable submit button when input is invalid', () => {
+  it('should disable submit button when input is invalid, e.g. after template init', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(<HTMLButtonElement>(compiled.querySelectorAll('.btn.btn-success')).disabled).toBeFalsy();
+
+    expect(compiled.querySelector('input[type="submit"]').outerHTML).toContain('disabled');
+  });
+
+  it('should disable submit button after submit', () => {
+    activatedRouteStub.testParamMap = {id: 1, addressId: 1};
+    const address = TestData.ADDRESS_DATA;
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      addresses: [address],
+      client: client
+    };
+    component.submitted = true;
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('input[type="submit"]').outerHTML).toContain('disabled');
   });
 
   function setActiveAddress() {
