@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Client} from '../app/clients/client';
-import {CLIENT_DATA} from './test-utils';
+import {TestData} from './test-data';
 
 @Injectable()
 export class ClientServiceStub {
-  public errorOccurred: boolean;
-  public errorResponseOccurred: boolean;
+  public errorOccurred = false;
+  public errorResponseOccurred = false;
+  public returnedClient: Client;
 
   getClient(clientId: number): Observable<Client> {
     const client = new Client();
@@ -33,6 +34,14 @@ export class ClientServiceStub {
     }
   }
 
+  deleteClient(clientToBeDeleted: Client): Observable<string> {
+    if (this.errorOccurred) {
+      return Observable.throw('Something went wrong!');
+    } else {
+      return Observable.of('Everything went fine!');
+    }
+  }
+
   getAllClients(): Observable<Client[]> {
     if (this.errorResponseOccurred) {
       return Observable.throw('Something went wrong!');
@@ -40,12 +49,14 @@ export class ClientServiceStub {
     if (this.errorOccurred) {
       return Observable.of([]);
     } else {
-      return Observable.of([CLIENT_DATA]);
+      this.returnedClient = TestData.CLIENT_DATA;
+      return Observable.of([this.returnedClient]);
     }
   }
 
   resetData(): void {
     this.errorOccurred = false;
     this.errorResponseOccurred = false;
+    this.returnedClient = null;
   }
 }
