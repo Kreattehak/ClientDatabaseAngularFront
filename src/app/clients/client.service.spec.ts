@@ -31,18 +31,18 @@ describe('ClientServiceTests', () => {
   });
 
   it('should get all clients', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       TestUtils.createResponse(mockBackend, [TestData.CLIENT_DATA]);
       const expectedResult = 1;
 
-      clientService.getAllClients(1).subscribe((clients: Client[]) => {
+      clientService.getAllClients().subscribe((clients: Client[]) => {
         expect(clients.length).toBe(expectedResult);
         expect(clients[0].id).toBe(expectedResult);
       });
     }));
 
   it('should delete given client', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       const expectedResponse = 'Client deleted';
       TestUtils.createResponse(mockBackend, expectedResponse);
 
@@ -52,7 +52,7 @@ describe('ClientServiceTests', () => {
     }));
 
   it('should update existing client', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       const expectedResponse = 'Client updated';
       TestUtils.createResponse(mockBackend, expectedResponse);
 
@@ -62,7 +62,7 @@ describe('ClientServiceTests', () => {
     }));
 
   it('should get client', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       TestUtils.createResponse(mockBackend, TestData.CLIENT_DATA);
 
       clientService.getClient(1).subscribe((client: Client) => {
@@ -71,7 +71,7 @@ describe('ClientServiceTests', () => {
     }));
 
   it('should save new client', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       const expectedResponse = Number(TestData.CLIENT_DATA.id);
       TestUtils.createResponse(mockBackend, expectedResponse);
 
@@ -81,7 +81,7 @@ describe('ClientServiceTests', () => {
     }));
 
   it('should catch error', inject([ClientService, MockBackend],
-    (clientService, mockBackend) => {
+    (clientService: ClientService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
       TestUtils.createError(mockBackend, bodyMessage);
 

@@ -31,7 +31,7 @@ describe('AddressServiceTests', () => {
   });
 
   it('should get all addresses', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const address: Address = TestData.ADDRESS_DATA;
       const data = [address];
       TestUtils.createResponse(mockBackend, data);
@@ -43,7 +43,7 @@ describe('AddressServiceTests', () => {
     }));
 
   it('should save new address', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const address: Address = TestData.ADDRESS_DATA;
       const clientId = 1;
       const expectedResponse = Number(address.id);
@@ -55,7 +55,7 @@ describe('AddressServiceTests', () => {
     }));
 
   it('should update existing address', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const expectedResponse = 'Address updated';
       TestUtils.createResponse(mockBackend, expectedResponse);
 
@@ -65,7 +65,7 @@ describe('AddressServiceTests', () => {
     }));
 
   it('should delete existing address', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const expectedResponse = 'Address deleted';
       const clientId = 1;
       TestUtils.createResponse(mockBackend, expectedResponse);
@@ -76,7 +76,7 @@ describe('AddressServiceTests', () => {
     }));
 
   it('should set address as main address', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const expectedResponse = 'Address changed';
       const clientId = 1;
       TestUtils.createResponse(mockBackend, expectedResponse);
@@ -87,7 +87,7 @@ describe('AddressServiceTests', () => {
     }));
 
   it('should catch error', inject([AddressService, MockBackend],
-    (addressService, mockBackend) => {
+    (addressService: AddressService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
       TestUtils.createError(mockBackend, bodyMessage);
 
