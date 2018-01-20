@@ -3,6 +3,10 @@ import {BaseRequestOptions, Http} from '@angular/http';
 import {inject, TestBed} from '@angular/core/testing';
 import {MockBackend} from '@angular/http/testing';
 import {TestUtils} from '../../test/test-utils';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
+
+const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
 
 describe('AuthenticationServiceIntegrationTests', () => {
   const fakeData = {
@@ -25,6 +29,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
           },
           deps: [MockBackend, BaseRequestOptions],
         },
+        {provide: ValidationAndLocaleMessagesService, useValue: validationServiceStub}
       ]
     }));
   });
@@ -39,7 +44,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
       });
     }));
 
-  it('should map login response to falsy boolean', inject([AuthenticationService, MockBackend],
+  it('should catch error when trying to authenticate', inject([AuthenticationService, MockBackend],
     (authService: AuthenticationService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
       TestUtils.createError(mockBackend, bodyMessage);
@@ -48,6 +53,17 @@ describe('AuthenticationServiceIntegrationTests', () => {
         null,
         error => {
           expect(error).toContain(bodyMessage);
+        });
+    }));
+
+  it('should catch gateway timeout and do not show api auth endpoint', inject([AuthenticationService, MockBackend],
+    (authService: AuthenticationService, mockBackend: MockBackend) => {
+      TestUtils.createError(mockBackend, '', 504);
+
+      authService.login(fakeData.username, 'wrongPassword').subscribe(
+        null,
+        error => {
+          expect(error).toContain('fakeAnswer');
         });
     }));
 
