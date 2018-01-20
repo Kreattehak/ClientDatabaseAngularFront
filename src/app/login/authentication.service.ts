@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
 import {JwtHelper} from 'angular2-jwt';
 import {Observable} from 'rxjs/Observable';
+import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -15,7 +16,7 @@ export class AuthenticationService {
 
   private _jwtHelper: JwtHelper;
 
-  constructor(private _http: Http) {
+  constructor(private _http: Http, private _validationService: ValidationAndLocaleMessagesService) {
     this._jwtHelper = new JwtHelper();
   }
 
@@ -42,7 +43,14 @@ export class AuthenticationService {
         } else {
           return response.text();
         }
-      }).catch((error: Response) => Observable.throw(error.text()));
+      }).catch((error: Response) => {
+          if (error.status === 504) {
+            return Observable.throw(this._validationService.getLocalizedMessages('serverOffline'));
+          } else {
+            return Observable.throw(error.text());
+          }
+        }
+      );
   }
 
   getToken(): string {
