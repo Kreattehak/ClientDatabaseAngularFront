@@ -12,8 +12,9 @@ import {RouterStub} from '../../test/router.stub';
 import {ClientFormComponent} from './client-form.component';
 import {ClientService} from './client.service';
 import {ClientServiceStub} from '../../test/client.service.stub';
-import {CLIENT_DATA, CLIENT_FORM_DATA, TestUtils} from '../../test/test-utils';
 import {Client} from './client';
+import {TestData} from '../../test/test-data';
+import {TestUtils} from '../../test/test-utils';
 
 const activatedRouteStub = new ActivatedRouteStub();
 const routerStub = new RouterStub();
@@ -79,13 +80,13 @@ describe('ClientDetailComponent', () => {
   });
 
   it('should populate form with fetched data', () => {
-    activatedRouteStub.testParamMap = {id: 1};
+    const client = TestData.CLIENT_DATA;
     activatedRouteStub.testData = {
-      client: CLIENT_DATA
+      client: client
     };
     fixture.detectChanges();
 
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    expect(component.activeClient).toBe(client);
   });
 
   it('should create form for new client', () => {
@@ -136,19 +137,20 @@ describe('ClientDetailComponent', () => {
     expect(spy).toHaveBeenCalledWith(activeClient);
   });
 
-  it('should navigate to AddressForm after client was successfully saved', inject([Router], (router: Router) => {
-    fixture.detectChanges();
-    component.isNewClient = true;
-    component.shouldRedirectToAddressForm = true;
-    setActiveClient();
+  it('should navigate to AddressForm after client was successfully saved',
+    inject([Router], (router: Router) => {
+      fixture.detectChanges();
+      component.isNewClient = true;
+      component.shouldRedirectToAddressForm = true;
+      setActiveClient();
 
-    setClientFormWithDuplicatedData();
-    const spy = spyOn(router, 'navigate');
+      setClientFormWithDuplicatedData();
+      const spy = spyOn(router, 'navigate');
 
-    component.onSubmit(1); // '1' is only used when updating
+      component.onSubmit(1); // '1' is only used when updating
 
-    expect(spy).toHaveBeenCalledWith(['/clients', 1, 'newAddress']);
-  }));
+      expect(spy).toHaveBeenCalledWith(['/clients', 1, 'newAddress']);
+    }));
 
   it('should show error when trying to add new address', () => {
     fixture.detectChanges();
@@ -197,8 +199,85 @@ describe('ClientDetailComponent', () => {
     expect(toastsManagerStub.message).toContain('wrong');
   });
 
+  it('should display legend for new client', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('legend').textContent).toContain('new client');
+  });
+
+  it('should display legend for editing client', () => {
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      client: client
+    };
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('legend').textContent).toContain(client.firstName);
+    expect(compiled.querySelector('legend').textContent).toContain(client.lastName);
+  });
+
+  it('should display redirect to new address checkbox for new client', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('input[type="checkbox"]').parentElement.textContent).toContain('forward');
+  });
+
+  it('input with type submit should have value add when adding new client', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('input[type="submit"]').value).toContain('Add');
+  });
+
+  it('input with type submit should have value edit when editing existing client', () => {
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      client: client
+    };
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('input[type="submit"]').value).toContain('Edit');
+  });
+
+
+  it('should disable submit button when input is invalid, e.g. after template init', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+
+    expect(compiled.querySelector('input[type="submit"]').outerHTML).toContain('disabled');
+  });
+
+  it('should disable submit button after submit', () => {
+    const client = TestData.CLIENT_DATA;
+    activatedRouteStub.testData = {
+      client: client
+    };
+    component.submitted = true;
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('input[type="submit"]').outerHTML).toContain('disabled');
+  });
+
+  it('should display form error messages in paragraphs', () => {
+    const errors = TestData.CLIENT_FORM_ERRORS;
+    component.formErrors = errors;
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const errorMessageParagraphs = compiled.querySelectorAll('#form-error-messages p');
+    expect(errorMessageParagraphs[0].textContent).toContain(errors.firstName);
+    expect(errorMessageParagraphs[1].textContent).toContain(errors.lastName);
+  });
+
   function setActiveClient() {
-    component.activeClient = CLIENT_DATA;
+    component.activeClient = TestData.CLIENT_DATA;
   }
 
   function setAnotherActiveClient() {
@@ -212,6 +291,6 @@ describe('ClientDetailComponent', () => {
   }
 
   function setClientFormWithDuplicatedData() {
-    return <Client>TestUtils.setFormWithDuplicatedData(CLIENT_FORM_DATA, component.clientForm);
+    return <Client>TestUtils.setFormWithDuplicatedData(TestData.CLIENT_FORM_DATA, component.clientForm);
   }
 });
