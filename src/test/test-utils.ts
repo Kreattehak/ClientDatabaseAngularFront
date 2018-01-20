@@ -14,9 +14,9 @@ export class TestUtils {
     );
   }
 
-  static createError(mockBackend: MockBackend, body: string): void {
+  static createError(mockBackend: MockBackend, body: string, status: number): void {
     const response = new ResponseOptions({
-      status: 401,
+      status: status,
       body: body
     });
     const baseError: Error = new MockError(response);
