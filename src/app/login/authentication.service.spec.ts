@@ -47,7 +47,7 @@ describe('AuthenticationServiceIntegrationTests', () => {
   it('should catch error when trying to authenticate', inject([AuthenticationService, MockBackend],
     (authService: AuthenticationService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
-      TestUtils.createError(mockBackend, bodyMessage);
+      TestUtils.createError(mockBackend, bodyMessage, 401);
 
       authService.login(fakeData.username, 'wrongPassword').subscribe(
         null,

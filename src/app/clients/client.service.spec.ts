@@ -83,7 +83,7 @@ describe('ClientServiceTests', () => {
   it('should catch error', inject([ClientService, MockBackend],
     (clientService: ClientService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
-      TestUtils.createError(mockBackend, bodyMessage);
+      TestUtils.createError(mockBackend, bodyMessage, 401);
 
       clientService.getClient(1).subscribe(
         null,

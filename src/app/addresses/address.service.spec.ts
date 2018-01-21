@@ -89,7 +89,7 @@ describe('AddressServiceTests', () => {
   it('should catch error', inject([AddressService, MockBackend],
     (addressService: AddressService, mockBackend: MockBackend) => {
       const bodyMessage = 'Unauthorized';
-      TestUtils.createError(mockBackend, bodyMessage);
+      TestUtils.createError(mockBackend, bodyMessage, 401);
 
       addressService.getAllAddresses(1).subscribe(
         null,
