@@ -26,7 +26,7 @@ describe('AddressDetailResolverTests', () => {
     const data = resolver.resolve(activatedRouteSnapshot);
 
     data.subscribe((addresses: Address[]) => {
-      expect(addresses.length).toBe(2);
+      expect(addresses.length).toBe(1);
       expect(addresses[0].id).toBe(expectedId);
     });
   }));

@@ -12,5 +12,4 @@ export class ClientListResolver implements Resolve<Client[]> {
   resolve(route: ActivatedRouteSnapshot): Observable<Client[]> {
     return this._clientService.getAllClients();
   }
-
 }

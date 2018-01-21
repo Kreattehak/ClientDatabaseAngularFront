@@ -3,7 +3,7 @@ import {Toast} from 'ng2-toastr';
 
 @Injectable()
 export class ToastsManagerStub {
-  public message;
+  public message: string;
 
   success(message, title, options): Promise<Toast> {
     this.message = message;
