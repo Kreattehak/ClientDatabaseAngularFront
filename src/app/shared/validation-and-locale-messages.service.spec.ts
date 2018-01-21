@@ -5,7 +5,7 @@ const form = new FormGroup({
   id: new FormControl(''),
   firstName: new FormControl('', [Validators.required, Validators.minLength(3)])
 });
-const formErrors = { firstName: '' };
+const formErrors = {firstName: ''};
 
 describe('ValidationAndLocaleMessagesService', () => {
 
@@ -22,7 +22,7 @@ describe('ValidationAndLocaleMessagesService', () => {
   });
 
   it('should get english validation message', () => {
-    const validationMessage = service.getLocalizedValidationMessages('firstName');
+    const validationMessage: ValidationMessage = service.getLocalizedValidationMessages('firstName');
 
     expect(validationMessage.required).toContain('First name');
   });
@@ -30,7 +30,7 @@ describe('ValidationAndLocaleMessagesService', () => {
   it('should get polish validation message', () => {
     service.localeId = 'pl';
 
-    const validationMessage = service.getLocalizedValidationMessages('firstName');
+    const validationMessage: ValidationMessage = service.getLocalizedValidationMessages('firstName');
 
     expect(validationMessage.required).toContain('Imię');
   });
@@ -73,3 +73,7 @@ describe('ValidationAndLocaleMessagesService', () => {
     });
   }
 });
+
+interface ValidationMessage {
+  [key: string]: string;
+}
