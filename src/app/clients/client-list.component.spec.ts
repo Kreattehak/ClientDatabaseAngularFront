@@ -12,7 +12,8 @@ import {ClientServiceStub} from '../../test/client.service.stub';
 import {ToastsManagerStub} from '../../test/toasts-manager.stub';
 import {BootboxStub} from '../../test/bootbox.stub';
 import {FormsModule} from '@angular/forms';
-import {CLIENT_DATA} from '../../test/test-utils';
+import {TestData} from '../../test/test-data';
+import {DatePipe} from '@angular/common';
 
 const clientServiceStub = new ClientServiceStub();
 const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
@@ -39,6 +40,7 @@ describe('ClientListComponentTests', () => {
         {provide: ToastsManager, useValue: toastsManagerStub},
         {provide: Router, useValue: routerStub},
         {provide: BOOTBOX_TOKEN, useValue: bootboxStub},
+        DatePipe
       ]
     });
     fixture = TestBed.createComponent(ClientListComponent);
@@ -67,7 +69,7 @@ describe('ClientListComponentTests', () => {
     fixture.detectChanges();
 
     expect(component.filteredClients.length).toBe(1);
-    expect(component.filteredClients).toContain(CLIENT_DATA);
+    expect(component.filteredClients).toContain(TestData.CLIENT_DATA);
   });
 
   it('should show message when database is empty', () => {
@@ -127,15 +129,18 @@ describe('ClientListComponentTests', () => {
   });
 
   it('should set active client after selecting a row', () => {
-    component.markAsActive(CLIENT_DATA);
+    const client = TestData.CLIENT_DATA;
 
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    component.markAsActive(client);
+
+    expect(component.activeClient).toBe(client);
   });
 
   it('should delete active mark from table row', () => {
-    component.activeClient = CLIENT_DATA;
+    const client = TestData.CLIENT_DATA;
+    component.activeClient = client;
 
-    component.markAsActive(CLIENT_DATA);
+    component.markAsActive(client);
 
     expect(component.activeClient).toBe(null);
   });
@@ -143,11 +148,11 @@ describe('ClientListComponentTests', () => {
   it('should navigate to ClientDetailComponent after clicking info button',
     inject([Router], (router: Router) => {
       const spy = spyOn(router, 'navigate');
-      component.activeClient = CLIENT_DATA;
+      component.activeClient = TestData.CLIENT_DATA;
 
       component.onInfo();
 
-      expect(spy).toHaveBeenCalledWith(['/clients', CLIENT_DATA.id, 'details']);
+      expect(spy).toHaveBeenCalledWith(['/clients', component.activeClient.id, 'details']);
 
     }));
 
@@ -160,11 +165,11 @@ describe('ClientListComponentTests', () => {
   it('should navigate to ClientFormComponent after clicking edit button',
     inject([Router], (router: Router) => {
       const spy = spyOn(router, 'navigate');
-      component.activeClient = CLIENT_DATA;
+      component.activeClient = TestData.CLIENT_DATA;
 
       component.onEditClient();
 
-      expect(spy).toHaveBeenCalledWith(['/clients', CLIENT_DATA.id]);
+      expect(spy).toHaveBeenCalledWith(['/clients', component.activeClient.id]);
 
     }));
 
@@ -177,7 +182,7 @@ describe('ClientListComponentTests', () => {
 
   it('should check if user is logged before undertake an delete client action',
     inject([Router], (router: Router) => {
-      component.activeClient = CLIENT_DATA;
+      component.activeClient = TestData.CLIENT_DATA;
       spyOn(localStorage, 'getItem').and.returnValue(null);
       const spy = spyOn(router, 'navigate');
 
@@ -188,7 +193,7 @@ describe('ClientListComponentTests', () => {
 
   it('should use bootbox for user confirmation', () => {
     fixture.detectChanges();
-    component.activeClient = CLIENT_DATA;
+    component.activeClient = TestData.CLIENT_DATA;
     spyOn(localStorage, 'getItem').and.returnValue('"someData"');
 
     component.onRemove();
@@ -198,7 +203,7 @@ describe('ClientListComponentTests', () => {
 
   it('should perform delete client action', () => {
     fixture.detectChanges();
-    component.activeClient = CLIENT_DATA;
+    component.activeClient = clientServiceStub.returnedClient;
     spyOn(localStorage, 'getItem').and.returnValue('"someData"');
     bootboxStub.isConfirmedAction = true;
 
@@ -211,21 +216,22 @@ describe('ClientListComponentTests', () => {
 
   it('should perform delete client action, server side error response', () => {
     fixture.detectChanges();
-    component.activeClient = CLIENT_DATA;
+    const client = TestData.CLIENT_DATA;
+    component.activeClient = client;
     spyOn(localStorage, 'getItem').and.returnValue('"someData"');
     bootboxStub.isConfirmedAction = true;
     clientServiceStub.errorOccurred = true;
 
     component.onRemove();
 
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    expect(component.activeClient).toBe(client);
     expect(component.filteredClients.length).toBe(1);
     expect(toastsManagerStub.message).toContain('wrong');
   });
 
   it('after deleting client, should check if array is not empty', () => {
     fixture.detectChanges();
-    component.activeClient = CLIENT_DATA;
+    component.activeClient = clientServiceStub.returnedClient;
     spyOn(localStorage, 'getItem').and.returnValue('"someData"');
     bootboxStub.isConfirmedAction = true;
 
@@ -241,12 +247,34 @@ describe('ClientListComponentTests', () => {
 
   it('should not delete any row from clients table without user confirmation', () => {
     fixture.detectChanges();
-    component.activeClient = CLIENT_DATA;
+    const client = TestData.CLIENT_DATA;
+    component.activeClient = client;
     spyOn(localStorage, 'getItem').and.returnValue('"someData"');
 
     component.onRemove();
 
     expect(component.filteredClients.length).toBe(1);
-    expect(component.activeClient).toBe(CLIENT_DATA);
+    expect(component.activeClient).toBe(client);
+  });
+
+  it('should display addresses in a table', inject([DatePipe], (datePipe: DatePipe) => {
+    const client = TestData.CLIENT_DATA;
+    fixture.detectChanges();
+
+    const table = fixture.debugElement.nativeElement.querySelector('tbody tr').textContent;
+
+    expect(table).toContain(client.id);
+    expect(table).toContain(client.firstName);
+    expect(table).toContain(client.lastName);
+    expect(table).toContain(datePipe.transform(client.dateOfRegistration, 'dd.MM.y'));
+    expect(table).toContain(client.mainAddress.cityName);
+  }));
+
+  it('should display message when server returned empty array', () => {
+    clientServiceStub.errorOccurred = true;
+    fixture.detectChanges();
+
+    const paragraph = fixture.debugElement.nativeElement.querySelector('.jumbotron p').textContent;
+    expect(paragraph).toContain('fake');
   });
 });
