@@ -1,4 +1,4 @@
-import {bootboxFactory} from './bootbox';
+import {bootboxFactory} from '../../app/utils/bootbox';
 
 describe('BootboxTests', () => {
   it('should return bootbox object', () => {

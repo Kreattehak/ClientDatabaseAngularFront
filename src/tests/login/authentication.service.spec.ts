@@ -1,10 +1,10 @@
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationService} from '../../app/login/authentication.service';
 import {BaseRequestOptions, Http} from '@angular/http';
 import {inject, TestBed} from '@angular/core/testing';
 import {MockBackend} from '@angular/http/testing';
-import {TestUtils} from '../../test/test-utils';
-import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
-import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
+import {TestUtils} from '../testdata/common/test-utils';
+import {ValidationAndLocaleMessagesService} from '../../app/shared/validation-and-locale-messages.service';
+import {ValidationAndLocaleMessagesServiceStub} from '../testdata/stubs/validation-and-locale-messages.service.stub';
 
 const validationServiceStub = new ValidationAndLocaleMessagesServiceStub();
 

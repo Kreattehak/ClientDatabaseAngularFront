@@ -1,9 +1,9 @@
 import {inject, TestBed} from '@angular/core/testing';
 import {ActivatedRouteSnapshot} from '@angular/router';
-import {ClientDetailResolver} from './client-detail-resolver.service';
-import {ClientService} from './client.service';
-import {ClientServiceStub} from '../../test/client.service.stub';
-import {Client} from './client';
+import {ClientDetailResolver} from '../../app/clients/client-detail-resolver.service';
+import {ClientService} from '../../app/clients/client.service';
+import {ClientServiceStub} from '../testdata/stubs/client.service.stub';
+import {Client} from '../../app/clients/client';
 
 const clientServiceStub = new ClientServiceStub();
 

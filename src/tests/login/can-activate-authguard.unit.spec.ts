@@ -1,9 +1,10 @@
-import {AuthenticationService} from './authentication.service';
-import {CanActivateAuthGuard} from './can-activate-authguard';
+import {AuthenticationService} from '../../app/login/authentication.service';
+import {CanActivateAuthGuard} from '../../app/login/can-activate-authguard';
 import {Router} from '@angular/router';
-import {RouterStub} from '../../test/router.stub';
+import {RouterStub} from '../testdata/stubs/router.stub';
 import {inject, TestBed} from '@angular/core/testing';
 import {HttpModule} from '@angular/http';
+import {ValidationAndLocaleMessagesService} from '../../app/shared/validation-and-locale-messages.service';
 
 describe('CanActivateAuthGuardUnitTests', () => {
 
@@ -16,8 +17,8 @@ describe('CanActivateAuthGuardUnitTests', () => {
       providers: [
         {provide: Router, useClass: RouterStub},
         AuthenticationService,
+        ValidationAndLocaleMessagesService,
         CanActivateAuthGuard
-        // { provide: AuthenticationService, useValue: authServiceMock }
       ]
     });
   });
@@ -57,5 +58,4 @@ describe('CanActivateAuthGuardUnitTests', () => {
         expect(result).toBeFalsy();
         expect(spy).toHaveBeenCalledWith(['/login', {expired: 'true'}]);
       }));
-
 });

@@ -1,17 +1,17 @@
-import {ClientDetailComponent} from './client-detail.component';
+import {ClientDetailComponent} from '../../app/clients/client-detail.component';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {AddressService} from '../addresses/address.service';
-import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {AddressService} from '../../app/addresses/address.service';
+import {ValidationAndLocaleMessagesService} from '../../app/shared/validation-and-locale-messages.service';
 import {ToastsManager} from 'ng2-toastr';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AddressServiceStub} from '../../test/address.service.stub';
-import {ToastsManagerStub} from '../../test/toasts-manager.stub';
-import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
-import {RouterStub} from '../../test/router.stub';
-import {BootboxStub} from '../../test/bootbox.stub';
-import {BOOTBOX_TOKEN} from '../utils/bootbox';
-import {ActivatedRouteStub} from '../../test/route.stub';
-import {TestData} from '../../test/test-data';
+import {AddressServiceStub} from '../testdata/stubs/address.service.stub';
+import {ToastsManagerStub} from '../testdata/stubs/toasts-manager.stub';
+import {ValidationAndLocaleMessagesServiceStub} from '../testdata/stubs/validation-and-locale-messages.service.stub';
+import {RouterStub} from '../testdata/stubs/router.stub';
+import {BootboxStub} from '../testdata/stubs/bootbox.stub';
+import {BOOTBOX_TOKEN} from '../../app/utils/bootbox';
+import {ActivatedRouteStub} from '../testdata/stubs/route.stub';
+import {TestData} from '../testdata/common/test-data';
 import {DatePipe} from '@angular/common';
 
 const addressServiceStub = new AddressServiceStub();

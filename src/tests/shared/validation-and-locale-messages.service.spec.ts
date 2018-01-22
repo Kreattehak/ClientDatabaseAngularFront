@@ -1,4 +1,4 @@
-import {ValidationAndLocaleMessagesService} from './validation-and-locale-messages.service';
+import {ValidationAndLocaleMessagesService} from '../../app/shared/validation-and-locale-messages.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 const form = new FormGroup({

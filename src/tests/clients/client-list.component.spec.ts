@@ -1,18 +1,18 @@
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
-import {ClientListComponent} from './client-list.component';
-import {ClientService} from './client.service';
-import {BOOTBOX_TOKEN} from '../utils/bootbox';
+import {ClientListComponent} from '../../app/clients/client-list.component';
+import {ClientService} from '../../app/clients/client.service';
+import {BOOTBOX_TOKEN} from '../../app/utils/bootbox';
 import {ToastsManager} from 'ng2-toastr/src/toast-manager';
 import {Router} from '@angular/router';
-import {ValidationAndLocaleMessagesService} from '../shared/validation-and-locale-messages.service';
+import {ValidationAndLocaleMessagesService} from '../../app/shared/validation-and-locale-messages.service';
 import {RouterTestingModule} from '@angular/router/testing';
-import {RouterStub} from '../../test/router.stub';
-import {ValidationAndLocaleMessagesServiceStub} from '../../test/validation-and-locale-messages.service.stub';
-import {ClientServiceStub} from '../../test/client.service.stub';
-import {ToastsManagerStub} from '../../test/toasts-manager.stub';
-import {BootboxStub} from '../../test/bootbox.stub';
+import {RouterStub} from '../testdata/stubs/router.stub';
+import {ValidationAndLocaleMessagesServiceStub} from '../testdata/stubs/validation-and-locale-messages.service.stub';
+import {ClientServiceStub} from '../testdata/stubs/client.service.stub';
+import {ToastsManagerStub} from '../testdata/stubs/toasts-manager.stub';
+import {BootboxStub} from '../testdata/stubs/bootbox.stub';
 import {FormsModule} from '@angular/forms';
-import {TestData} from '../../test/test-data';
+import {TestData} from '../testdata/common/test-data';
 import {DatePipe} from '@angular/common';
 
 const clientServiceStub = new ClientServiceStub();

@@ -1,4 +1,4 @@
-import {AuthenticationService} from './authentication.service';
+import {AuthenticationService} from '../../app/login/authentication.service';
 import {Http} from '@angular/http';
 
 describe('AuthenticationServiceUnitTests', () => {
@@ -15,7 +15,7 @@ describe('AuthenticationServiceUnitTests', () => {
 
   beforeEach(() => {
     fakeHttp = new Http(null, null);
-    service = new AuthenticationService(fakeHttp);
+    service = new AuthenticationService(fakeHttp, null);
     spyOn(localStorage, 'getItem').and.callFake(() => {
       return fakeStorage;
     });

@@ -1,9 +1,9 @@
-import {AddressDetailResolver} from './address-detail-resolver.service';
-import {AddressServiceStub} from '../../test/address.service.stub';
-import {AddressService} from './address.service';
+import {AddressDetailResolver} from '../../app/addresses/address-detail-resolver.service';
+import {AddressServiceStub} from '../testdata/stubs/address.service.stub';
+import {AddressService} from '../../app/addresses/address.service';
 import {inject, TestBed} from '@angular/core/testing';
 import {ActivatedRouteSnapshot} from '@angular/router';
-import {Address} from './address';
+import {Address} from '../../app/addresses/address';
 
 const addressServiceStub = new AddressServiceStub();
 

@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {PathNotFoundComponent} from './path-not-found.component';
+import {PathNotFoundComponent} from '../../app/utils/path-not-found.component';
 
 describe('PathNotFoundComponent', () => {
   let component: PathNotFoundComponent;

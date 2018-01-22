@@ -1,12 +1,12 @@
 import {inject, TestBed} from '@angular/core/testing';
-import {AuthenticationServiceStub} from '../../test/authentication.service.stub';
-import {AuthenticationService} from '../login/authentication.service';
+import {AuthenticationServiceStub} from '../testdata/stubs/authentication.service.stub';
+import {AuthenticationService} from '../../app/login/authentication.service';
 import {MockBackend} from '@angular/http/testing';
 import {BaseRequestOptions, Http} from '@angular/http';
-import {ClientService} from './client.service';
-import {Client} from './client';
-import {TestUtils} from '../../test/test-utils';
-import {TestData} from '../../test/test-data';
+import {ClientService} from '../../app/clients/client.service';
+import {Client} from '../../app/clients/client';
+import {TestUtils} from '../testdata/common/test-utils';
+import {TestData} from '../testdata/common/test-data';
 
 const authenticationServiceStub = new AuthenticationServiceStub();
 
