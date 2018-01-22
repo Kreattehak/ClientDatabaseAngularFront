@@ -1,5 +1,5 @@
-import {Address} from '../app/addresses/address';
-import {Client} from '../app/clients/client';
+import {Address} from '../../app/addresses/address';
+import {Client} from '../../app/clients/client';
 
 export class TestData {
   static _ADDRESS_DATA: Address = {

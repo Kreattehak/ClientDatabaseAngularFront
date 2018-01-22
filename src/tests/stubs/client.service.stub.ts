@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {Client} from '../app/clients/client';
-import {TestData} from './test-data';
+import {Client} from '../../app/clients/client';
+import {TestData} from '../common/test-data';
 
 @Injectable()
 export class ClientServiceStub {

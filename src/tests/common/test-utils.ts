@@ -1,6 +1,6 @@
 import {MockBackend, MockConnection} from '@angular/http/testing';
 import {Response, ResponseOptions} from '@angular/http';
-import {MockError} from './mock-error';
+import {MockError} from '../stubs/mock-error';
 import {FormGroup} from '@angular/forms';
 
 export class TestUtils {
@@ -26,7 +26,7 @@ export class TestUtils {
   }
 
   static setFormWithDuplicatedData(duplicatedData: {}, form: FormGroup): any {
-    const data = {...duplicatedData}; // prevent test model object to change
+    const data = {...duplicatedData}; // prevent tests model object to change
     form.setValue(data);
 
     return data;

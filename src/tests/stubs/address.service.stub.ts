@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {Address} from '../app/addresses/address';
-import {TestData} from './test-data';
+import {Address} from '../../app/addresses/address';
+import {TestData} from '../common/test-data';
 
 @Injectable()
 export class AddressServiceStub {
