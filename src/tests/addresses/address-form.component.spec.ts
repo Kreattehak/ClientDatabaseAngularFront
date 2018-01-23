@@ -53,8 +53,9 @@ describe('AddressFormComponent', () => {
 
   afterEach(() => {
     activatedRouteStub.resetData();
-    toastsManagerStub.message = '';
+    validationServiceStub.resetData();
     addressServiceStub.resetData();
+    toastsManagerStub.message = '';
   });
 
   it('should create the app', () => {
@@ -257,6 +258,17 @@ describe('AddressFormComponent', () => {
 
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('input[type="submit"]').outerHTML).toContain('disabled');
+  });
+
+  it('should validate input fields on blur', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const streetNameInput = compiled.querySelector('#streetName');
+    streetNameInput.dispatchEvent(new Event('blur'));
+
+    // first call to ValidationService happens in ngOnInit()
+    expect(validationServiceStub.timesCalled).toBe(2);
   });
 
   function setActiveAddress() {

@@ -51,8 +51,9 @@ describe('ClientDetailComponent', () => {
 
   afterEach(() => {
     activatedRouteStub.resetData();
-    toastsManagerStub.message = '';
+    validationServiceStub.resetData();
     clientServiceStub.resetData();
+    toastsManagerStub.message = '';
   });
 
   it('should create the app', () => {
@@ -243,7 +244,6 @@ describe('ClientDetailComponent', () => {
     expect(compiled.querySelector('input[type="submit"]').value).toContain('Edit');
   });
 
-
   it('should disable submit button when input is invalid, e.g. after template init', () => {
     fixture.detectChanges();
 
@@ -274,6 +274,17 @@ describe('ClientDetailComponent', () => {
     const errorMessageParagraphs = compiled.querySelectorAll('#form-error-messages p');
     expect(errorMessageParagraphs[0].textContent).toContain(errors.firstName);
     expect(errorMessageParagraphs[1].textContent).toContain(errors.lastName);
+  });
+
+  it('should validate input fields on blur', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const firstNameInput = compiled.querySelector('#firstName');
+    firstNameInput.dispatchEvent(new Event('blur'));
+
+    // first call to ValidationService happens in ngOnInit()
+    expect(validationServiceStub.timesCalled).toBe(2);
   });
 
   function setActiveClient() {

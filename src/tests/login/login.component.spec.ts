@@ -53,8 +53,11 @@ describe('LoginComponent', () => {
   });
 
   afterEach(() => {
-    activatedRouteStub.resetData();
     authenticationServiceStub.resetData();
+    activatedRouteStub.resetData();
+    validationServiceStub.resetData();
+    addressServiceStub.resetData();
+    toastsManagerStub.message = '';
     bootboxStub.resetData();
   });
 
@@ -166,6 +169,17 @@ describe('LoginComponent', () => {
     const errorMessageParagraphs = compiled.querySelectorAll('#form-error-messages p');
     expect(errorMessageParagraphs[0].textContent).toContain(errors.username);
     expect(errorMessageParagraphs[1].textContent).toContain(errors.password);
+  });
+
+  it('should validate input fields on blur', () => {
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    const usernameInput = compiled.querySelector('#username');
+    usernameInput.dispatchEvent(new Event('blur'));
+
+    // first call to ValidationService happens in ngOnInit()
+    expect(validationServiceStub.timesCalled).toBe(2);
   });
 
   function changeFieldValues() {
