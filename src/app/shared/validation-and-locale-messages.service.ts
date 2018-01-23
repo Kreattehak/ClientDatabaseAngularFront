@@ -151,7 +151,7 @@ export class ValidationAndLocaleMessagesService {
         // check field
         formErrors[field] = '';
         const control = form.get(field);
-        if (control && control.dirty && !control.valid) {
+        if (control && control.touched && !control.valid) {
           const messages = this.getLocalizedValidationMessages(field);
           for (const key in control.errors) {
             if (control.errors.hasOwnProperty(key)) {
