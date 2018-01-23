@@ -29,7 +29,7 @@
         <div class="col-lg-5">
           <input class="form-control" id="firstName" type="text"
                  placeholder="First Name" formControlName="firstName"
-                 i18n-placeholder="@@clientForm.firstName"/>
+                 i18n-placeholder="@@clientForm.firstName" (blur)="validateOnBlur()"/>
         </div>
       </div>
 
@@ -38,7 +38,7 @@
         <div class="col-lg-5">
           <input class="form-control" id="lastName" type="text"
                  placeholder="Last Name" formControlName="lastName"
-                 i18n-placeholder="@@clientForm.lastName"/>
+                 i18n-placeholder="@@clientForm.lastName" (blur)="validateOnBlur()"/>
         </div>
       </div>
 

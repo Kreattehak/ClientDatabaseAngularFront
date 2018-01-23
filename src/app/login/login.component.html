@@ -15,7 +15,8 @@
           <label class="control-label col-lg-2" for="username" i18n="@@login.username">Username</label>
           <div class="col-lg-5">
             <input class="form-control" id="username" type="text" placeholder="Username"
-                   formControlName="username" required i18n-placeholder="@@login.username"/>
+                   formControlName="username" required i18n-placeholder="@@login.username"
+                   (blur)="validateOnBlur()"/>
           </div>
         </div>
 
@@ -23,7 +24,8 @@
           <label class="col-md-2 control-label" for="password" i18n="@@login.password">Password</label>
           <div class="col-lg-5">
             <input class="form-control" id="password" type="password"
-                   placeholder="Password" formControlName="password" i18n-placeholder="@@login.password"/>
+                   placeholder="Password" formControlName="password" i18n-placeholder="@@login.password"
+                   (blur)="validateOnBlur()"/>
           </div>
         </div>
 

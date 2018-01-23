@@ -29,7 +29,7 @@
         <div class="col-lg-5">
           <input class="form-control" id="streetName" type="text"
                  placeholder="Street Name" formControlName="streetName"
-                 i18n-placeholder="@@addressForm.streetName"/>
+                 i18n-placeholder="@@addressForm.streetName" (blur)="validateOnBlur()"/>
         </div>
       </div>
 
@@ -38,7 +38,7 @@
         <div class="col-lg-5">
           <input class="form-control" id="cityName" type="text"
                  placeholder="City Name" formControlName="cityName"
-                 i18n-placeholder="@@addressForm.cityName"/>
+                 i18n-placeholder="@@addressForm.cityName" (blur)="validateOnBlur()"/>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
         <div class="col-lg-5">
           <input class="form-control" id="zipCode" type="text"
                  placeholder="Zip Code" formControlName="zipCode"
-                 i18n-placeholder="@@addressForm.zipCode"/>
+                 i18n-placeholder="@@addressForm.zipCode" (blur)="validateOnBlur()"/>
         </div>
       </div>
 
