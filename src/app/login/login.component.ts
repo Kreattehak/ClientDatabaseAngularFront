@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(data => this._validationService.onValueChanged(
         this.userForm, this.formErrors, data));
 
-    this._validationService.onValueChanged(this.userForm, this.formErrors);
+    this.validateOnBlur(); // validation on blur is solved better in Angular 5
   }
 
   login(): void {
@@ -73,6 +73,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  validateOnBlur(): void {
+    this._validationService.onValueChanged(this.userForm, this.formErrors);
   }
 
   private loginFailed(message: Response): void {

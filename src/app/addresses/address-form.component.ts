@@ -42,7 +42,7 @@ export class AddressFormComponent implements OnInit, OnDestroy {
       .subscribe(data => this._validationService.onValueChanged(
         this.addressForm, this.formErrors, data));
 
-    this._validationService.onValueChanged(this.addressForm, this.formErrors);
+    this.validateOnBlur();
   }
 
   onSubmit(id: number): void {
@@ -66,6 +66,10 @@ export class AddressFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  validateOnBlur(): void {
+    this._validationService.onValueChanged(this.addressForm, this.formErrors);
   }
 
   private tryToSaveNewAddress(): void {

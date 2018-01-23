@@ -39,8 +39,8 @@ export class ClientFormComponent implements OnInit, OnDestroy {
       .subscribe(data => this._validationService.onValueChanged(
         this.clientForm, this.formErrors, data));
 
-    // (re)set validation messages now
-    this._validationService.onValueChanged(this.clientForm, this.formErrors);
+
+    this.validateOnBlur(); // (re)set validation messages now
   }
 
   onSubmit(id: number): void {
@@ -66,28 +66,32 @@ export class ClientFormComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  validateOnBlur(): void {
+    this._validationService.onValueChanged(this.clientForm, this.formErrors);
+  }
+
   private tryToSaveNewClient(): void {
     this.activeClient = this.clientForm.value;
     this._clientService.saveNewClient(this.activeClient)
       .takeUntil(this.ngUnsubscribe)
       .subscribe(
-      response => {
-        if (this.shouldRedirectToAddressForm) {
-          this._router.navigate(['/clients', response, 'newAddress']);
-        } else {
-          this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
-            this._validationService.getLocalizedMessages('successTitle')).then(
-            () => this.onBack());
+        response => {
+          if (this.shouldRedirectToAddressForm) {
+            this._router.navigate(['/clients', response, 'newAddress']);
+          } else {
+            this._toastr.success(this._validationService.getLocalizedMessages('clientAdded'),
+              this._validationService.getLocalizedMessages('successTitle')).then(
+              () => this.onBack());
+          }
+        }, error => {
+          if (error === -1) {
+            this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
+              this._validationService.getLocalizedMessages('errorTitle'));
+          } else {
+            this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
+          }
         }
-      }, error => {
-        if (error === -1) {
-          this._toastr.error(this._validationService.getLocalizedMessages('clientNotAdded'),
-            this._validationService.getLocalizedMessages('errorTitle'));
-        } else {
-          this._toastr.error(error, this._validationService.getLocalizedMessages('errorTitle'));
-        }
-      }
-    );
+      );
   }
 
   private tryToUpdateClient(id: number): void {
