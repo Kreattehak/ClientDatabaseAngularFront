@@ -45,8 +45,9 @@ describe('ClientDetailComponentTests', () => {
   });
 
   afterEach(() => {
-    toastsManagerStub.message = '';
     addressServiceStub.resetData();
+    validationServiceStub.resetData();
+    toastsManagerStub.message = '';
     activatedRouteStub.resetData();
     bootboxStub.resetData();
   });

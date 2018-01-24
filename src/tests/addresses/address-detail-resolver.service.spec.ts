@@ -18,6 +18,10 @@ describe('AddressDetailResolverTests', () => {
     }));
   });
 
+  afterEach(() => {
+    addressServiceStub.resetData();
+  });
+
   it('should resolve addresses', inject([AddressDetailResolver], (resolver: AddressDetailResolver) => {
     const activatedRouteSnapshot = new ActivatedRouteSnapshot();
     const expectedId = 1;

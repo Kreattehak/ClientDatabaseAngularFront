@@ -25,7 +25,6 @@ import {AddressFormComponent} from './addresses/address-form.component';
 
 import './shared/rxjs-operators';
 
-
 @NgModule({
   declarations: [
     AppComponent,

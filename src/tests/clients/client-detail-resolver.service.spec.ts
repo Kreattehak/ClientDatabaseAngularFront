@@ -18,6 +18,10 @@ describe('ClientDetailResolverTests', () => {
     }));
   });
 
+  afterEach(() => {
+    clientServiceStub.resetData();
+  });
+
   it('should resolve client', inject([ClientDetailResolver], (resolver: ClientDetailResolver) => {
     const activatedRouteSnapshot = new ActivatedRouteSnapshot();
     const expectedId = 1;

@@ -34,6 +34,10 @@ describe('AuthenticationServiceIntegrationTests', () => {
     }));
   });
 
+  afterEach(() => {
+    validationServiceStub.resetData();
+  });
+
   it('should map login response to truthy boolean', inject([AuthenticationService, MockBackend],
     (authService: AuthenticationService, mockBackend: MockBackend) => {
       TestUtils.createResponse(mockBackend, fakeData);

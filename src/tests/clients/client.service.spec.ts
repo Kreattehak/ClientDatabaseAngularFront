@@ -30,6 +30,10 @@ describe('ClientServiceTests', () => {
     }));
   });
 
+  afterEach(() => {
+    authenticationServiceStub.resetData();
+  });
+
   it('should get all clients', inject([ClientService, MockBackend],
     (clientService: ClientService, mockBackend: MockBackend) => {
       TestUtils.createResponse(mockBackend, [TestData.CLIENT_DATA]);

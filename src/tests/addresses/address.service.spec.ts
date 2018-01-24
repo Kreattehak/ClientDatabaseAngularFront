@@ -30,6 +30,10 @@ describe('AddressServiceTests', () => {
     }));
   });
 
+  afterEach(() => {
+    authenticationServiceStub.resetData();
+  });
+
   it('should get all addresses', inject([AddressService, MockBackend],
     (addressService: AddressService, mockBackend: MockBackend) => {
       const address: Address = TestData.ADDRESS_DATA;

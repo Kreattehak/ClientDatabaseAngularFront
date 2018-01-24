@@ -48,8 +48,9 @@ describe('ClientListComponentTests', () => {
   });
 
   afterEach(() => {
-    toastsManagerStub.message = '';
     clientServiceStub.resetData();
+    validationServiceStub.resetData();
+    toastsManagerStub.message = '';
     bootboxStub.resetData();
   });
 
