@@ -115,5 +115,9 @@ font-awesome - awesome fonts
 
 ## Future of this project
 
-It's very likely possible that I will provide some data which would allow this app to work even without rest resources. 
-It's very likely possible that I will implement Angular unit tests in this project, then I probably use it as a base for more complex project.
+[DONE] It's very likely possible that I will provide some data which would allow this app to work even without rest resources.
+
+[DONE] It's very likely possible that I will implement Angular unit and integration tests in this project.
+
+<p>Now this project is used as a part of AnimalShelterManagement - <a href="https://github.com/Kreattehak/AnimalShelterManagement/" target="_blank">
+Click here to visit AnimalShelterManagement</a></p>
