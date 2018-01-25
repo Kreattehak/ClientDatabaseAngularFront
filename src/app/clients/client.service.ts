@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
-
-import {Observable} from 'rxjs/Observable';
-
 import {Client} from './client';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {AuthenticationService} from '../login/authentication.service';
+import {ErrorHandler} from '../shared/error-handler';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class ClientService {
@@ -22,41 +20,31 @@ export class ClientService {
   getAllClients(): Observable<Client[]> {
     return this._http.get(this._getAllClients)
       .map((response: Response) => response.json() as Client[])
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   deleteClient(activeClient: Client): Observable<string> {
     return this._http.post(this._deleteClient, activeClient, this.requestBearer())
       .map((response: Response) => response.text())
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   updateClient(activeClient: Client): Observable<string> {
     return this._http.put(this._updateClient, activeClient, this.requestBearer())
       .map((response: Response) => response.text())
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   getClient(clientId: number): Observable<Client> {
     return this._http.get(this._getClient + clientId, this.requestBearer())
       .map((response: Response) => response.json() as Client)
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   saveNewClient(newClient: Client): Observable<number> {
     return this._http.post(this._saveNewClient, newClient, this.requestBearer())
       .map((response: Response) => Number(response.text()))
-      .catch(this.handleError);
-  }
-
-  private handleError(error: Response): ErrorObservable {
-    let errorMessage;
-    try {
-      errorMessage = error.json().errorMessage;
-    } catch (e) {
-      errorMessage = error.text();
-    }
-    return Observable.throw(errorMessage || 'Server error');
+      .catch(ErrorHandler.handleError);
   }
 
   private requestBearer(): RequestOptions {

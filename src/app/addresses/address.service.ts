@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Headers, Http, RequestOptions, Response} from '@angular/http';
-
-import {Observable} from 'rxjs/Observable';
-
 import {Address} from './address';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {AuthenticationService} from '../login/authentication.service';
+import {ErrorHandler} from '../shared/error-handler';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class AddressService {
@@ -22,19 +20,19 @@ export class AddressService {
   getAllAddresses(id: number): Observable<Address[]> {
     return this._http.get(this._getAllAddresses + id, this.requestBearer())
       .map((response: Response) => response.json() as Address[])
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   saveNewAddress(newAddress: Address, clientId: number): Observable<number> {
     return this._http.post(this._saveNewAddress + clientId, newAddress, this.requestBearer())
       .map((response: Response) => Number(response.text()))
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   updateAddress(activeAddress: Address): Observable<string> {
     return this._http.put(this._updateAddress, activeAddress, this.requestBearer())
       .map((response: Response) => response.text())
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   deleteAddress(addressId: number, clientId: number): Observable<string> {
@@ -43,7 +41,7 @@ export class AddressService {
       'clientId': clientId
     }), this.requestBearer())
       .map((response: Response) => response.text())
-      .catch(this.handleError);
+      .catch(ErrorHandler.handleError);
   }
 
   setAsMainAddress(addressId: number, clientId: number): Observable<string> {
@@ -52,17 +50,7 @@ export class AddressService {
       clientId: clientId
     }), this.requestBearer())
       .map((response: Response) => response.text())
-      .catch(this.handleError);
-  }
-
-  private handleError(error: Response): ErrorObservable {
-    let errorMessage;
-    try {
-      errorMessage = error.json().errorMessage;
-    } catch (e) {
-      errorMessage = error.text();
-    }
-    return Observable.throw(errorMessage || 'Server error');
+      .catch(ErrorHandler.handleError);
   }
 
   private requestBearer(): RequestOptions {
