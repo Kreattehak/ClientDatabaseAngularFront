@@ -1,16 +1,16 @@
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 
-import {AppComponent} from './app.component';
+import {AppComponent} from '../app/app.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {AuthenticationService} from './login/authentication.service';
-import {ValidationAndLocaleMessagesService} from './shared/validation-and-locale-messages.service';
+import {AuthenticationService} from '../app/login/authentication.service';
+import {ValidationAndLocaleMessagesService} from '../app/shared/validation-and-locale-messages.service';
 import {HttpModule} from '@angular/http';
 import {ToastModule} from 'ng2-toastr';
 import {Router, RouterLinkWithHref, RouterOutlet} from '@angular/router';
-import {AboutAuthorComponent} from './utils/about-author.component';
+import {AboutAuthorComponent} from '../app/utils/about-author.component';
 import {By} from '@angular/platform-browser';
 
-import './shared/rxjs-operators';
+import '../app/shared/rxjs-operators';
 
 describe('AppComponent', () => {
   let component: AppComponent;
