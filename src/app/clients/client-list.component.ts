@@ -58,12 +58,7 @@ export class ClientListComponent implements OnInit, OnDestroy {
   }
 
   markAsActive(activeRow: Client): void {
-    if (this.activeClient === activeRow) {
-      this.activeClient = null;
-    } else {
-      this.activeClient = activeRow;
-    }
-    // this.activeClient = this.activeClient === activeRow ? null : activeRow;
+    this.activeClient = this.activeClient === activeRow ? null : activeRow;
   }
 
   onInfo(): boolean {

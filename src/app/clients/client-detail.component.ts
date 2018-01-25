@@ -31,11 +31,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   }
 
   markAsActive(activeRow: Address): void {
-    if (this.activeAddress === activeRow) {
-      this.activeAddress = null;
-    } else {
-      this.activeAddress = activeRow;
-    }
+    this.activeAddress = this.activeAddress === activeRow ? null : activeRow;
   }
 
   onAddAddress(): boolean {
