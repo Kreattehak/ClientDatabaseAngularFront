@@ -21,7 +21,7 @@ const toastsManagerStub = new ToastsManagerStub();
 const routerStub = new RouterStub();
 const bootboxStub = new BootboxStub();
 
-describe('ClientListComponentTests', () => {
+describe('ClientListComponent', () => {
   let component: ClientListComponent;
   let fixture: ComponentFixture<ClientListComponent>;
 

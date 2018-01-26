@@ -1,6 +1,6 @@
 import {bootboxFactory} from '../../app/utils/bootbox';
 
-describe('BootboxTests', () => {
+describe('Bootbox', () => {
   it('should return bootbox object', () => {
     const data = {field: 'value'};
     window['bootbox'] = data;

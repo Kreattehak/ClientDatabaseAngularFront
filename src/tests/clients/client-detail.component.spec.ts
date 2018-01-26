@@ -21,7 +21,7 @@ const activatedRouteStub = new ActivatedRouteStub();
 const routerStub = new RouterStub();
 const bootboxStub = new BootboxStub();
 
-describe('ClientDetailComponentTests', () => {
+describe('ClientDetailComponent', () => {
   let component: ClientDetailComponent;
   let fixture: ComponentFixture<ClientDetailComponent>;
 

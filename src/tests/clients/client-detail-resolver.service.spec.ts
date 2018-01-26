@@ -7,7 +7,7 @@ import {Client} from '../../app/clients/client';
 
 const clientServiceStub = new ClientServiceStub();
 
-describe('ClientDetailResolverTests', () => {
+describe('ClientDetailResolver', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule(({

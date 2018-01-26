@@ -26,7 +26,7 @@ export class TestUtils {
   }
 
   static setFormWithDuplicatedData(duplicatedData: {}, form: FormGroup): any {
-    const data = {...duplicatedData}; // prevent tests model object to change
+    const data = {...duplicatedData}; // prevent test model objects to change
     form.setValue(data);
 
     return data;

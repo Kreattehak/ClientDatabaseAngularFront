@@ -130,7 +130,7 @@ export class ValidationAndLocaleMessagesService {
   constructor(@Inject(LOCALE_ID) public localeId: string) {
   }
 
-  public setCookie(): void {
+  public setCookie(): void { // value of this cookie is used to internationalize backend messages
     document.cookie = 'myLocaleCookie=' + this.localeId;
   }
 
@@ -142,7 +142,7 @@ export class ValidationAndLocaleMessagesService {
     return this.applicationMessages[this.localeId][field];
   }
 
-  public onValueChanged(form: FormGroup, formErrors: {}, data ?: any): void {
+  public onValueChanged(form: FormGroup, formErrors: {}, data?: any): void {
     if (!form) {
       return;
     }

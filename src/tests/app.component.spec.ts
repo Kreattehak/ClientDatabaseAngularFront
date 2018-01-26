@@ -42,7 +42,7 @@ describe('AppComponent', () => {
   });
 
   it('should not display info about author after component init', () => {
-    expect(component.isAboutAuthorDisplayed).toBeUndefined();
+    expect(component.isAboutAuthorDisplayed).toBeFalsy();
   });
 
   it('should display info about author', () => {

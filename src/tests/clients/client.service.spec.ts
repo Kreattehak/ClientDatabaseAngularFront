@@ -10,7 +10,7 @@ import {TestData} from '../testdata/common/test-data';
 
 const authenticationServiceStub = new AuthenticationServiceStub();
 
-describe('ClientServiceTests', () => {
+describe('ClientService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule(({
