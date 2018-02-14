@@ -27,7 +27,7 @@ All changes made by user are stored in browser local storage.
 
 ```
 1. Create folder on your drive
-2. Clone this repo git clone https://github.com/Kreattehak/ClientDatabaseAngularFront.git
+2. Clone this repo git clone https://github.com/kamil-olejniczak/ClientDatabaseAngularFront.git
 3. npm install
   3.1. In meantime you can run my other back-end project `ClientDatabase` 
   It will deliver data to front-end app. More info on the project github page.
@@ -50,19 +50,19 @@ This project shows client data stored in database. You can add new, delete or mo
 
 ## Screenshots
 
-![main page](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/main_page.png "Main page with table of clients")
+![main page](https://github.com/kamil-olejniczak/ClientDatabaseAngularFront/blob/screenshots/main_page.png "Main page with table of clients")
 Main page with table of clients
 
-![filtering clients](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/filter_applied.png "Filtering clients by <any devito>")
+![filtering clients](https://github.com/kamil-olejniczak/ClientDatabaseAngularFront/blob/screenshots/filter_applied.png "Filtering clients by <any devito>")
 Filtering clients by `any devito`
 
-![client details](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/client_details.png "Client details page")
+![client details](https://github.com/kamil-olejniczak/ClientDatabaseAngularFront/blob/screenshots/client_details.png "Client details page")
 Client details page
 
-![secondary route](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/secondary_route.png "Use of secondary route when clicking About Author")
+![secondary route](https://github.com/kamil-olejniczak/ClientDatabaseAngularFront/blob/screenshots/secondary_route.png "Use of secondary route when clicking About Author")
 Use of secondary route when clicking About Author
 
-![selected client](https://github.com/Kreattehak/ClientDatabaseAngularFront/blob/screenshots/selected_row.png "Selected row with client data")
+![selected client](https://github.com/kamil-olejniczak/ClientDatabaseAngularFront/blob/screenshots/selected_row.png "Selected row with client data")
 Table on main page is 'clickable', before you can perform any action from buttons below you need to select
 one row.
 
@@ -119,5 +119,5 @@ font-awesome - awesome fonts
 
 [DONE] It's very likely possible that I will implement Angular unit and integration tests in this project.
 
-<p>Now this project is used as a part of AnimalShelterManagement - <a href="https://github.com/Kreattehak/AnimalShelterManagement/" target="_blank">
+<p>Now this project is used as a part of AnimalShelterManagement - <a href="https://github.com/kamil-olejniczak/AnimalShelterManagement/" target="_blank">
 Click here to visit AnimalShelterManagement</a></p>

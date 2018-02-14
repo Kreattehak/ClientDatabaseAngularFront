@@ -26,7 +26,7 @@ describe('AboutAuthorComponent', () => {
     expect(compiled.querySelector('h1').textContent).toContain('Hello,');
     expect(compiled.querySelector('h2').textContent).toContain('secondary route');
     expect(compiled.querySelector('p').textContent).toContain('other projects');
-    expect(compiled.querySelector('p').nextElementSibling.textContent).toContain('Kreattehak');
-    expect(compiled.querySelector('a').href).toContain('https://github.com/Kreattehak');
+    expect(compiled.querySelector('p').nextElementSibling.textContent).toContain('Kamil Olejniczak');
+    expect(compiled.querySelector('a').href).toContain('https://github.com/kamil-olejniczak');
   });
 });
