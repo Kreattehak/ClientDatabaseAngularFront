@@ -8,7 +8,7 @@ For the best user experience please use this app with that project.
 
 ## Live Preview
 
-<p><a href="https://kreattehak.github.io/ClientDatabaseAngularFront/" target="_blank">
+<p><a href="https://kamil-olejniczak.github.io/ClientDatabaseAngularFront/" target="_blank">
 Click to visit the project website.</a></p>
 
 ### Live preview compared to original project
